@@ -1,0 +1,86 @@
+﻿.page {
+	background: none repeat scroll 0 0 #FFF;
+	width: 855px;
+	height: 634px;
+	margin-left: 0px;
+	box-shadow:2px 2px 6px #999;
+	-o-box-shadow: 2px 2px 6px #999;
+	-moz-box-shadow: 2px 2px 6px #999;
+	-webkit-box-shadow:	2px 2px 6px #999;
+	border-radius: 5px;
+	z-index: 45;
+}
+
+.pageTitle {
+	margin-top: 0.25em;
+    padding-left: 25px;
+	color: #004D82;
+	font-size: 170%;
+	font-weight: bold;
+	text-align:left;
+    padding: 3px;
+    width: 843px;
+    /*border:1px solid gray;*/
+}
+
+.row {
+    width: 790px;
+    /*border:1px solid gray;*/
+    display:table;
+    word-spacing: normal;
+    letter-spacing: normal;
+    font-size: small;
+    padding: 10px 2px 10px 2px;
+    font-family: Arial, Helvetica, sans-serif;
+	/*-moz-box-shadow: 1px 1px 3px #999;
+	-webkit-box-shadow:	1px 1px 3px #999;*/
+}
+
+.r0-left {
+    width:840px;
+    /*border:1px solid gray;*/
+    padding:3px;
+    float: left;
+    text-align: center;
+}
+
+.r1-left {
+    width:80px;
+    /*border:1px solid gray;*/
+    padding:3px;
+    float: left;
+    text-align: left;
+}
+
+.r1-right {
+    width: 600px;
+    /*border: 1px solid green;*/
+    float:left;
+    padding:3px;
+    text-align:left;
+}
+
+.expValError
+{
+	font-style:italic;
+	font-size: smaller;	
+	font-weight: lighter;
+	color: #e46c6d;
+	position: relative;	
+}
+
+
+#grid .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 1px solid #c5dbec;
+    font-size: smaller;
+    font-weight: bold ;
+    color: #2e6e9e;
+}
+
+.ui-jqgrid tr.jqgrow td {
+  white-space: normal !important;
+  height:15px;
+  vertical-align:middle;
+  padding-top:2px;
+    font-size: small;
+}
