@@ -6,7 +6,7 @@
 <%--<%@ Register Assembly="Microsoft.ReportViewer.WebForms, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
     Namespace="Microsoft.Reporting.WebForms" TagPrefix="rsweb" %>--%>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
-<div style="width:92%; margin: 0 auto; text-align:left; left: 56px; position: absolute; top: 125px;" 
+<div style="margin: 0 auto; text-align:left; left: 56px; position: absolute; top: 195px;" 
         class="central" >
 
     <table  align="Center" 

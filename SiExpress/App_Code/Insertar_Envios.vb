@@ -286,6 +286,145 @@ Public Class Insertar_Envios
         Return id_cliente
         Session("id_cliente") = id_cliente
     End Function
+
+    Public Function Update_PreRegistro_Envios(ByVal id_agente As Integer, ByVal datos_envio As ObjEnvio, ByVal id_envio_imp As Integer) As Integer
+
+        'Recuperar el ID de la tarifa
+        Dim id_envio As Integer
+        Dim MyConnection As ConnectionStringSettings
+        MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
+        Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
+        connection.ConnectionString = MyConnection.ConnectionString
+        Dim cmd As Data.IDbCommand = connection.CreateCommand()
+        cmd.CommandType = Data.CommandType.StoredProcedure
+        cmd.CommandText = "dbo.sp_Update_Envios"
+
+        'Parámetros de entrada --El agente pasa como argumento de lallamda del método
+        Dim parm1 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm1.ParameterName = "@id_agente"
+        parm1.Value = id_agente 'datos_envio.id_agente
+        cmd.Parameters.Add(parm1)
+
+        Dim parm2 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm2.ParameterName = "@precio"
+        parm2.Value = datos_envio.precio
+        cmd.Parameters.Add(parm2)
+
+        Dim parm13 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm13.ParameterName = "@valor_seguro"
+        parm13.Value = datos_envio.valor_seguro
+        cmd.Parameters.Add(parm13)
+
+        Dim parm3 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm3.ParameterName = "@id_tarifa_agencia"
+        parm3.Value = datos_envio.id_tarifa_agencia  'datos_envio.id_tarifa_agencia (Pendiente!!!!!!) En caso que necesitemos el id_tarifa
+        cmd.Parameters.Add(parm3)
+
+        Dim parm4 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm4.ParameterName = "@id_codigo_promocion"
+        parm4.Value = datos_envio.id_codigo_promocion
+        cmd.Parameters.Add(parm4)
+
+        Dim parm5 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm5.ParameterName = "@total_envio"
+        parm5.Value = datos_envio.total_envio
+        cmd.Parameters.Add(parm5)
+
+        Dim parm6 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm6.ParameterName = "@fecha"
+        parm6.Value = datos_envio.fecha
+        cmd.Parameters.Add(parm6)
+
+        'Dim parm7 As Data.Common.DbParameter = cmd.CreateParameter() --NO Aplica en este método
+        'parm7.ParameterName = "@fecha_corte"
+        'parm7.Value = datos_envio.fecha_corte
+        'cmd.Parameters.Add(parm7)
+
+        Dim parm8 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm8.ParameterName = "@instrucciones_entrega"
+        parm8.Value = datos_envio.instrucciones_entrega
+        cmd.Parameters.Add(parm8)
+
+        Dim parm9 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm9.ParameterName = "@observaciones"
+        parm9.Value = datos_envio.observaciones
+        cmd.Parameters.Add(parm9)
+
+        Dim parm10 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm10.ParameterName = "@id_usuario"
+        parm10.Value = datos_envio.id_usuario
+        cmd.Parameters.Add(parm10)
+
+        Dim parm11 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm11.ParameterName = "@id_ruta"
+        parm11.Value = datos_envio.id_ruta
+        cmd.Parameters.Add(parm11)
+
+        Dim parm12 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm12.ParameterName = "@id_envio"
+        parm12.Value = datos_envio.id_envio
+        cmd.Parameters.Add(parm12)
+
+        Dim parm14 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm14.ParameterName = "@largo"
+        parm14.Value = datos_envio.largo
+        cmd.Parameters.Add(parm14)
+
+        Dim parm15 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm15.ParameterName = "@ancho"
+        parm15.Value = datos_envio.ancho
+        cmd.Parameters.Add(parm15)
+
+        Dim parm16 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm16.ParameterName = "@alto"
+        parm16.Value = datos_envio.alto
+        cmd.Parameters.Add(parm16)
+
+        Dim parm17 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm17.ParameterName = "@peso"
+        parm17.Value = datos_envio.peso
+        cmd.Parameters.Add(parm17)
+
+        Dim parm18 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm18.ParameterName = "@id_contenido"
+        parm18.Value = datos_envio.contenido
+        cmd.Parameters.Add(parm18)
+
+        Dim parm19 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm19.ParameterName = "@referencia1"
+        parm19.Value = datos_envio.referencia
+        cmd.Parameters.Add(parm19)
+
+        Dim parm20 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm20.ParameterName = "@valor_aduana"
+        parm20.Value = datos_envio.valor_aduana
+        cmd.Parameters.Add(parm20)
+
+        Dim parm21 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm21.ParameterName = "@contenedores"
+        parm21.Value = datos_envio.contenedores
+        cmd.Parameters.Add(parm21)
+
+        Dim parm22 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm22.ParameterName = "@id_envio_imp"
+        parm22.Value = id_envio_imp
+        cmd.Parameters.Add(parm22)
+
+        Dim parm23 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm23.ParameterName = "@ref_fedex"
+        parm23.Value = datos_envio.FedExRef
+        cmd.Parameters.Add(parm23)
+
+
+        connection.Open()
+        cmd.ExecuteNonQuery()
+        id_envio = parm12.Value
+        connection.Close()
+
+        Return id_envio
+
+    End Function
+
     Public Function PreRegistro_Envios(ByVal id_agente As Integer, ByVal datos_envio As ObjEnvio, ByVal id_envio_imp As Integer) As Integer
 
         'Recuperar el ID de la tarifa
@@ -487,19 +626,15 @@ Public Class Insertar_Envios
             Return "Seleccione un gente"
         ElseIf datos_envio.id_tarifa_agencia = 0 Or datos_envio.id_tarifa_agencia Is Nothing Then
             Return "EL producto es inválido"
-        ElseIf datos_envio.precio = 0 And Not esAgenteCod Then
-            Return "La tarifa es incorrecta, seleccione un subprodcuto"
+        'ElseIf datos_envio.precio = 0 And Not esAgenteCod Then
+        '    Return "La tarifa es incorrecta, seleccione un subprodcuto"
         ElseIf datos_envio.largo Is Nothing Or datos_envio.ancho Is Nothing _
             Or datos_envio.alto Is Nothing Or datos_envio.peso Is Nothing Then
             Return "Las dimensiones del paquete son incorrectas"
-        ElseIf datos_envio.peso Is Nothing Or datos_envio.peso = 0 Then
-            Return "El peso es obligatorio y distinto de cero, aún en sobres"
         ElseIf datos_envio.dimension_peso = "oz" And datos_envio.peso < 1 Then
             Return "El peso es en Onzas  debe ser al menos 1.0"
         ElseIf esAgenteCod And datos_envio.valor_seguro < valorCOD Then
             Return "Valor COD no puede ser menor que " + valorCOD.ToString() + "."
-        ElseIf datos_envio.contenedores Is Nothing Or datos_envio.contenedores = 0 Then
-            Return "El número de cajas no púede ser cero"
         Else
             Return "OK"
         End If

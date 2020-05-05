@@ -1,15 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SiExpress", "..\SiExpress", "{EADFAA41-51AB-4735-8F73-45A6E169C4AA}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SiExpress", ".", "{EADFAA41-51AB-4735-8F73-45A6E169C4AA}"
 	ProjectSection(WebsiteProperties) = preProject
 		SccProjectName = "SAK"
 		SccAuxPath = "SAK"
 		SccLocalPath = "SAK"
 		SccProvider = "SAK"
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{1e8483a1-299d-45ce-bc05-11dce9b7e1d8}|SiExProData.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/SiExpress"
 		Debug.AspNetCompiler.PhysicalPath = "..\SiExpress\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\SiExpress\"
@@ -28,30 +29,37 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "SiExpress", "..\SiExpress",
 		SlnRelativePath = "..\SiExpress\"
 	EndProjectSection
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SiExProData", "..\SiExProData\SiExProData.vbproj", "{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|X86 = Debug|X86
+		Release|Any CPU = Release|Any CPU
+		Release|X86 = Release|X86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Debug|X86.ActiveCfg = Debug|Any CPU
 		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Debug|X86.Build.0 = Debug|Any CPU
+		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Release|X86.ActiveCfg = Debug|Any CPU
+		{EADFAA41-51AB-4735-8F73-45A6E169C4AA}.Release|X86.Build.0 = Debug|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Debug|X86.ActiveCfg = Debug|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Debug|X86.Build.0 = Debug|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Release|X86.ActiveCfg = Release|Any CPU
+		{1E8483A1-299D-45CE-BC05-11DCE9B7E1D8}.Release|X86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 1
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://rubendm.visualstudio.com/defaultcollection
-		SccWebProject0 = true
-		SccProjectUniqueName0 = .
-		SccProjectName0 = .
-		SccAuxPath0 = https://rubendm.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectEnlistmentChoice0 = 2
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C69E398-20E4-4FC4-ABE7-3D31DB70DF91}
 	EndGlobalSection
 EndGlobal

@@ -2,43 +2,16 @@
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
+<asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">    
     <link rel="stylesheet" type="text/css" media="screen" href="../css/jquery-ui-1.8.2.custom.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="../css/ui.jqgrid.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="../css/ui.multiselect.css" />
-    <link rel="Stylesheet" type="text/css" media="screen" href="../css/uploadify.css" />
+    <link rel="Stylesheet" type="text/css" media="screen" href="../css/jquery.fileupload.css" />
+    <link rel="Stylesheet" type="text/css" media="screen" href="../css/jquery.fileupload.ui.css" />
     <link rel="Stylesheet" type="text/css" media="screen" href="../css/Punto_Venta2.css" />
 
-    <script type="text/javascript" src="../scripts/jquery-1.9.0.min.js"></script>
-    <script type="text/javascript" src="../scripts/jquery-1.7.2.js"></script>
-    <script type="text/javascript" src="../scripts/jquery.uploadify.js"></script>
-    <script type="text/javascript" src="../scripts/grid.locale-en.js"></script>
-    <script type="text/javascript" src="../scripts/jquery-ui-custom.min.js"></script>
-    <script type="text/javascript" src="../scripts/jquery.jqGrid.min.js"></script>
-    <script type="text/javascript" src="../scripts/Punto_Venta2.js"></script>
-
-    <script type="text/javascript">
-        $(window).load(
-                   function () {
-                       $("#<%=FileUpload1.ClientID%>").fileUpload({
-                           'uploader': '../scripts/uploader.swf',
-                           'cancelImg': '../images/cancel.png',
-                           'buttonText': 'Buscar Archivos',
-                           'script': '../scripts/Upload.ashx',
-                           'folder': '/scripts/uploads',
-                           'fileDesc': 'Image Files',
-                           'fileExt': '.xls',
-                           'multi': false,
-                           'auto': false,
-                           'onComplete': function (event, ID, file, response, data) {
-                               readFile(file.name, $("#selTemplates").val());
-                               $("#attachedfiles").text(file.name);
-                           }
-                       });
-                   }
-                );
-
-    </script>
+    
+    
     <div id="page-wrapper">
         <div class="container-fluid">
             <div class="row">
@@ -162,13 +135,26 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="6" style="height: 17px; text-align: left">Instrucciones de entrega
-                      <asp:TextBox CssClass="form-control" Height="27px" ID="TxtInstEntrega" runat="server" Width="472px"></asp:TextBox>
-                                                </td>
+                                                    <asp:TextBox CssClass="form-control" Height="27px" ID="TxtInstEntrega" runat="server" Width="472px"></asp:TextBox>
+                                                </td>                                                
                                             </tr>
                                         </tbody>
                                     </table>
-                                </asp:Panel>
+                                </asp:Panel>                                
                                 <br/>
+                                <table style="width: 875px; height: 1px">
+                                    <tr>
+                                        <td style="width: 236px; height: 9px">
+                                            <strong><span style="font-size: 10pt">Busca Envio Prechequeado :</span></strong>
+                                        </td>
+                                        <td style="width: 81px; height: 9px">
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtIdEnvioPrechequeado" runat="server" Width="172px"></asp:TextBox>                                                    
+                                        </td>
+                                        <td>
+                                            <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnEnvioPrechequeado" runat="server" Text="Buscar Envio"></asp:Button>
+                                        </td>
+                                    </tr>
+                                </table>
                                 <br/>
                                 <table style="width: 875px; height: 1px">
                                     <tr>
@@ -407,23 +393,26 @@
                                                         <td colspan="2" style="height: 16px; text-align: left">
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="TxtMpio" runat="server" Width="350px"></asp:TextBox>
                                                         </td>
+                                                    </tr>                                                    
+                                                    <tr style="font-size: 12pt">
+                                                        <td style="width: 302px; height: 16px; text-align: left">
+                                                            <strong><span style="font-size: 10pt">Estado</span></strong></td>
+                                                        <td colspan="2" style="height: 16px; text-align: left">
+                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="txtEdo" runat="server" DataSourceID="Estados"
+                                                                DataTextField="estado" DataValueField="codigo" Width="180px"  AutoPostBack="True">
+                                                            </asp:DropDownList>
+                                                        </td>
                                                     </tr>
                                                     <tr style="font-size: 12pt">
                                                         <td style="width: 302px; height: 16px; text-align: left">
                                                             <strong><span style="font-size: 10pt">Ciudad</span></strong></td>
                                                         <td style="height: 16px; text-align: left" colspan="2">
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad" runat="server" Width="350px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">Estado</span></strong></td>
-                                                        <td colspan="2" style="height: 16px; text-align: left">
-                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="txtEdo" runat="server" DataSourceID="Estados"
-                                                                DataTextField="estado" DataValueField="codigo" Width="180px">
+                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownCiudades" runat="server" DataSourceID="Ciudades"
+                                                                DataTextField="ciudad" DataValueField="id_ciudad" Width="180px"  >
                                                             </asp:DropDownList>
                                                         </td>
-                                                    </tr>
+                                                    </tr>                                                    
                                                     <tr style="font-size: 12pt">
                                                         <td style="width: 302px; height: 16px; text-align: left">
                                                             <strong><span style="font-size: 10pt">CP</span></strong>
@@ -522,19 +511,22 @@
                                                         <td style="height: 20px; text-align: left">
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="TxtMpio2" runat="server" Width="350px"></asp:TextBox>
                                                         </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="width: 9px; height: 11px; text-align: left"><strong><span style="font-size: 10pt">Ciudad</span></strong></td>
-                                                        <td style="height: 11px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad2" runat="server" Width="350px" Wrap="False"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
+                                                    </tr>                                                    
                                                     <tr style="font-size: 12pt">
                                                         <td style="width: 302px; height: 16px; text-align: left">
                                                             <strong><span style="font-size: 10pt">Estado</span></strong></td>
                                                         <td colspan="2" style="height: 16px; text-align: left">
                                                             <asp:DropDownList CssClass="form-control" Height="30px" ID="txtEdo2" runat="server" DataSourceID="Estados2"
-                                                                DataTextField="estado" DataValueField="codigo" Width="180px">
+                                                                DataTextField="estado" DataValueField="codigo" Width="180px" AutoPostBack="true">
+                                                            </asp:DropDownList>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="width: 9px; height: 11px; text-align: left"><strong><span style="font-size: 10pt">Ciudad</span></strong></td>
+                                                        <td style="height: 11px; text-align: left">
+                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad2" runat="server" Width="350px" Wrap="False"></asp:TextBox>
+                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownCiudades2" runat="server" DataSourceID="Ciudades2"
+                                                                DataTextField="ciudad" DataValueField="id_ciudad" Width="180px"  >
                                                             </asp:DropDownList>
                                                         </td>
                                                     </tr>
@@ -580,7 +572,7 @@
                                             <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="Button4" runat="server" OnClick="Button4_Click" Text="Imprimir Guía FedEx"
                                                 Width="154px" Enabled="False" Visible="False" />
                                             <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAddBook" runat="server" OnClientClick="DisplayAddBookForm()" Text="Importar Direcciones" Width="148px"></asp:Button>
-                                            <%--<input class="primary" type="button" id="btnAddBook" name="btnAddBook" value="Importar Direcciones" />--%>
+                                            <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnDatosUltimoEnvio" runat="server" Text="Datos Ultimo Envio" Width="148px"></asp:Button>
                                         </td>
                                         <td colspan="3" valign="top" rowspan="2">
                                             <asp:TextBox CssClass="form-control" Height="41px" ID="txtMessage" runat="server" TextMode="MultiLine" Width="422px"></asp:TextBox></td>
@@ -667,6 +659,18 @@
                                         Type="Int32" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
+                            <asp:SqlDataSource ID="Ciudades" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
+                                SelectCommand="sp_SelectCiudades" SelectCommandType="StoredProcedure">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="txtEdo" Name="codigo" PropertyName="SelectedValue" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
+                            <asp:SqlDataSource ID="Ciudades2" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
+                                SelectCommand="sp_SelectCiudades" SelectCommandType="StoredProcedure">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="txtEdo2" Name="codigo" PropertyName="SelectedValue" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
                             <br />
 
                             <asp:Button CssClass="btn btn-outline btn-success btn-sm invisible" ID="Button6" runat="server" Text="Button" Visible="True" />
@@ -675,132 +679,194 @@
 
                         </ContentTemplate>
                     </asp:UpdatePanel>
-                    <div id="popupAddBook">
-                        <a id="popupAddBookClose">x</a>
-                        <h1></h1>
-                        <p id="addBookArea">
-                        </p>
-                        <table width="960px" style="border: 3px solid #E5E5E5; background: #f3f7fe;" id="fileTable">
-                            <tr>
-                                <td style="width: 300px">
-                                    <asp:FileUpload ID="FileUpload1" type="file" runat="server" size="50" />
-                                </td>
-                                <td>
-                                    <input class="primary" type="button" id="btnReadFile" name="btnReadFile" style="background-color: #F5F5F5; border: 3px solid #E5E5E5; margin-top: 5px; padding: 10px; width: 200px;" value="Leer Archivo" onclick="javascript: if(validUpload()) { $('#<%=FileUpload1.ClientID%>        ').fileUploadStart()}" />
-                                    <br />
-                                    <label style="font-weight: 600;">Nombre de hoja: </label>
-                                    <input type="text" name="sheetName" id="sheetName" size="10" maxlength="10" value="" />
-                                    <br />
-                                    <label style="font-weight: 600;">Renglon de Encabezado : </label>
-                                    <input type="text" name="rowHead" id="rowHead" size="3" maxlength="3" value="" />
-                                </td>
-                                <td style="width: 350px">
-                                    <label style="font-weight: 600;">Nombre de Archivo: </label>
-                                    <label id="attachedfiles" style="font-weight: 600;"></label>
-                                    <br />
-                                    <br />
-                                    <label>Leer de template: </label>
-                                    <br />
-                                    <br />
-                                    <select id="selTemplates" name="selTemplates" style="width: 250"></select>
-                                </td>
-                            </tr>
-                        </table>
-                        <table width="960px" style="border: 3px solid #E5E5E5; background: #f3f7fe;" id="fieldsTable">
-                            <tr>
-                                <td style="width: 400px">
-                                    <label>Campos de Archivo: </label>
-                                    <br />
-                                    <br />
-                                    <select multiple="multiple" id='lstFileFields' size="6" style="width: 290px; border: 3px solid #E5E5E5;">
-                                    </select>
-                                </td>
-                                <td align="center" style="width: 100px">
-                                    <input class="primary" type="button" id="btnMerge" name="btnMerge" value="<< - >>" />
-                                </td>
-                                <td style="width: 300px">
-                                    <label>Campos Obligatorios: </label>
-                                    <br />
-                                    <br />
-                                    <select multiple="multiple" id='lstDBFields' size="6" style="width: 290px; border: 3px solid #E5E5E5;">
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                        <table width="960px" style="border: 3px solid #E5E5E5; background: #f3f7fe;" id="matchTable">
-                            <tr>
-                                <td style="width: 300px">
-                                    <label>Campos Relacionados: </label>
-                                    <br />
-                                    <br />
-                                    <select multiple="multiple" id='lstBoxMatches' style="width: 390px; border: 3px solid #E5E5E5;" size="6">
-                                    </select>
-                                </td>
-                                <td align="center" style="width: 100px">
-                                    <input class="primary" id="btnMatchRemove" name="btnMatchRemove" type="button" value="Remove" />
-                                    <br />
-                                    <br />
-                                    <input class="primary" type="button" id="btnPreview" name="btnPreview" value="Vista Previa" />
-                                </td>
-                                <td style="width: 300px"></td>
-                            </tr>
-                        </table>
-                        <table width="960px" style="border: 3px solid #E5E5E5; background: #f3f7fe;" id="gridTable">
-                            <tr>
-                                <td>
-                                    <div>
-                                        <table id="gridAddBook"></table>
-                                        <div id="pagerAddBook"></div>
+                    <div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="addBookModalLabel">Importar Direcciones</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group" id="fileTable">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-5 ">
+                                                <div class="form-group">
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                        <span class="btn btn-success btn-xs fileinput-button">
+                                                            <i class="glyphicon glyphicon-plus"></i>
+                                                            <span>Agregar Archivo...</span>
+                                                            <!-- The file input field used as target for the file upload widget -->
+                                                            <input id="FileUpload1" type="file" onclick="javascript: if (!validUpload()) { return false; }" name="files[]" multiple/>                                      
+                                                        </span>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label >Nombre de hoja: </label>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <input type="text" name="sheetName" id="sheetName" size="10" maxlength="10" value="Sheet1" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <label >Renglon de Encabezado : </label>
+                                                            <input type="text" name="rowHead" id="rowHead" size="3" maxlength="3" value="1" />    
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <!-- The container for the uploaded files -->
+                                                        <div id="files" class="files"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <!-- The global progress bar -->
+                                                    <div id="progress" class="progress">
+                                                        <div class="progress-bar progress-bar-success"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="col-lg-12">
+                                                    <label class="col-lg-4 control-label" for="datepicker">Nombre Archivo:</label>
+                                                    <div class="col-lg-8">
+                                                        <h6>
+                                                            <label id="attachedfiles" class="label label-success"></label>
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12 ">
+                                                    <label class="col-lg-4 control-label" for="selTemplates">Leer Template:</label>
+                                                    <div class="col-lg-8">
+                                                        <select id="selTemplates" name="selTemplates" style="width: 250px;"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <input type="button" id="bedata" value="Ver Mensaje de error" />
-                                    <input type="button" id="btnDelete" value="Eliminar registros seleccionados" />
-                                </td>
-
-                            </tr>
-                        </table>
-                        <table width="960px" style="border: 3px solid #E5E5E5; background: #f3f7fe;">
-                            <tr>
-                                <td align="center">
-                                    <input class="primary" type="button" id="btnClean" name="btnClean" value="Limpiar Datos" onclick="javascript:clearAddBookFields();$('#<%=FileUpload1.ClientID%>    ').fileUploadClearQueue();" />
-                                    <%--<input class="primary" type="button" id="btnSave" name="btnSave" value="Crear Envios de Libro" />  --%>
-                                    <input class="primary" type="button" id="btnImport" name="btnImport" value="Importar Direcciones" />
-                                    <%--<input class="primary" type="button" id="btnAddBook" name="btnAddBook" value="Importar Direcciones" />--%>                     
-
-                                </td>
-                            </tr>
-                        </table>
-                        <div id="dialogValAddBook" title="Salvar Template" style="width: 350px;">
-                            <table style="width: 220px; border: 3px solid #E5E5E5; background: #f3f7fe;">
-                                <tr>
-                                    <td>
-                                        <label>Pais: </label>
-                                        <br />
-                                        <br />
-
-                                    </td>
-                                    <td>
-                                        <select id="selPaisAB" name="selPaisAB">
-                                            <option value="52">Mexico</option>
-                                            <option value="0">Otro</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <label>Nombre Template: </label>
-                                        <br />
-                                        <br />
-                                        <label>Libro de direcciones: </label>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="templateName" id="templateName" size="44" maxlength="40" value="" /><br />
-                                        <br />
-                                        <input type="checkbox" name="saveNewAddBook" id="saveNewAddBook" value="AddressBook" />Salvar nuevo libro<br />
-                                        <br />
-                                        <input type="text" name="addBookName" id="addBookName" size="44" maxlength="40" value="" />
-                                    </td>
-                                </tr>
-                            </table>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-5 text-left">
+                                                <h5>
+                                                    <label class="label label-default " for="">Campos de Archivo</label></h5>
+                                            </div>
+                                            <div class="col-lg-2 text-center ">
+                                            </div>
+                                            <div class="col-lg-5 text-left">
+                                                <h5>
+                                                    <label class="label label-default" for="">Campos Obligatorios</label></h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-5 text-left">
+                                                <select multiple="multiple" id='lstFileFields' class="form-control"></select>
+                                            </div>
+                                            <div class="col-lg-2 text-center ">
+                                                <input class="btn btn-info btn-sm" type="button" id="btnMerge" name="btnMerge" value="<< - >>" />
+                                            </div>
+                                            <div class="col-lg-5 text-left">
+                                                <select multiple="multiple" id='lstDBFields' class="form-control"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-8 text-left">
+                                                <h5>
+                                                    <label class="label label-default " for="">Campos Relacionados</label></h5>
+                                            </div>
+                                            <div class="col-lg-4 text-left">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-8 text-left">
+                                                <select multiple="multiple" id='lstBoxMatches' class="form-control">
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-4 text-center">
+                                                <input class="btn btn-info btn-sm" id="btnMatchRemove" name="btnMatchRemove" type="button" value="Remover" />
+                                                <br />
+                                                <br />
+                                                <input class="btn btn-info btn-sm" type="button" id="btnPreview" name="btnPreview" value="Vista Previa" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-12 col-xs-12 col-sm-12 text-center" style="overflow: auto;">
+                                            <table id="gridAddBook" class=" table table-striped table-bordered table-condensed"></table>
+                                            <div id="pagerAddBook"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-3">
+                                            <input class="btn btn-danger btn-sm" id="bedata" value="Ver Mensaje de error" />                                            
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <input class="btn btn-success btn-sm" id="btnDelete" value="Eliminar Seleccionados" />
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <input class="btn btn-info btn-sm" type="button" id="btnClean" name="btnClean" value="Limpiar Datos" onclick="javascript: clearAddBookFields();" />
+                                        </div>
+                                        <%--<div class="col-lg-3">
+                                            <input class="btn btn-primary btn-sm" type="button" id="btnNormaliza" name="btnNormaliza" value="Normalizar Direcciones" />
+                                        </div>--%>
+                                        <div class="col-lg-3">
+                                            <input class="btn btn-primary btn-sm" type="button" id="btnImport" name="btnImport" value="Importar Direcciones" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="createAddBookModal" tabindex="-1" role="dialog" aria-labelledby="createAddBookModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="createAddBookModalLabel">Salvar Template</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <label class="col-lg-2 control-label" for="selPaisAB">Pais</label>
+                                            <div class="col-lg-3">
+                                                <select class="form-control small" id="selPaisAB" name="selPaisAB">
+                                                    <option value="52">México</option>
+                                                    <option value="0">Otro</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-lg-2 control-label" for="templateName">Nombre Template</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" name="templateName" class="form-control" id="templateName" maxlength="40" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-lg-2 control-label" for="templateName">Libro de direcciones</label>
+                                            <div class="col-lg-6">
+                                                <input type="text" name="addBookName" class="form-control" id="addBookName" maxlength="40" value="" />
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <label class="col-lg-2 control-label" for="templateName"></label>
+                                            <div class="col-lg-6">
+                                                <input type="checkbox" name="saveNewAddBook" id="saveNewAddBook" value="AddressBook"/>Salvar nuevo libro<br/><br/>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" id="btnConfirmAddbook" name="btnConfirmAddbook" value="Aceptar">Importar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div id="dialogConfirmMasive" title="Confirmar salvado..." style="width: 300px;">
@@ -809,6 +875,49 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>      
+     
 </asp:Content>
+  <asp:Content ContentPlaceHolderID="ScriptSection" runat="server">
+      
+    <script type="text/javascript" src="../Scripts/grid.locale-en.js"></script>        
+    <script type="text/javascript" src="../Scripts/jquery.jqGrid.min.js"></script
+    <script type="text/javascript" src="../Scripts/jquery.validator.js"></script>    
+
+    <script type="text/javascript" src="../Scripts/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="../Scripts/jquery.fileupload.js"></script>
+      <script language="javascript" type="text/javascript">
+        $("#FileUpload1")
+            .fileupload({
+                url: '../Scripts/Upload.ashx?upload=start',
+                acceptFileTypes: /(\.|\/)(csv)$/i,
+                maxFileSize: 999000,
+                add: function (e, data) {
+                    console.log('add', data);
+                    $('#progress').show();
+                    data.context = $('<div/>').appendTo('#files');
+                    $.each(data.files, function (index, file) {
+                        $("#attachedfiles").text(file.name);
+                    });
+                    data.submit();
+                },
+                progress: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress div').css('width', progress + '%');
+                },
+                success: function (response, status) {
+                    console.log('success');
+                    readFile($("#attachedfiles").text(), $("#selTemplates").val());
+                },
+                error: function (error) {
+                    $('#progress').hide();
+                    $('#progress div').css('width', '0%');
+                    alert('Ocurrio un error al subir el archivo. Nombre de hoja no existe.');
+                }
+            });
+    </script>
+      <script type="text/javascript" src="../Scripts/Punto_Venta2.js"></script>
+</asp:Content>
+    
 

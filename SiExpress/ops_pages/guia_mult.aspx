@@ -10,7 +10,7 @@
     <form id="form1" runat="server">
     <div style="text-align: center">
             &nbsp;<asp:SqlDataSource ID="Guia" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
-            SelectCommand="sp_Select_Datos_Envio_Mult" SelectCommandType="StoredProcedure">
+            SelectCommand="sp_Select_Datos_Envio_mult" SelectCommandType="StoredProcedure">
             <SelectParameters>
                 <asp:QueryStringParameter Name="id_envio1" QueryStringField="id_envio1" 
                     Type="Int32" DefaultValue="" />

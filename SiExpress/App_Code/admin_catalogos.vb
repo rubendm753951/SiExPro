@@ -78,6 +78,16 @@ Public Class admin_catalogos
         parm21.Value = agente.requiere_asignacion
         cmd.Parameters.Add(parm21)
 
+        Dim parm14 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm14.ParameterName = "@factor"
+        parm14.Value = agente.Factor
+        cmd.Parameters.Add(parm14)
+
+        Dim parm15 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm15.ParameterName = "@esquema_por_factor"
+        parm15.Value = agente.EsquemaPorFactor
+        cmd.Parameters.Add(parm15)
+
         Dim parm13 As Data.Common.DbParameter = cmd.CreateParameter()
         parm13.ParameterName = "@id_agencia"
         parm13.Size = 20

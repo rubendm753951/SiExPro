@@ -29,6 +29,8 @@ Partial Class admin_agentes
         agente.NIT = TxtBoxNIT.Text
         agente.telefono = TxtBoxTel.Text
         agente.requiere_asignacion = Chk_requiere_asignacion.Checked
+        agente.Factor = txtFactor.Text
+        agente.EsquemaPorFactor = chkFactorAgent.Checked
 
         'Llamar método para insertar el agente
         nuevo_agente = crea_agente.insertar_agente(agente)

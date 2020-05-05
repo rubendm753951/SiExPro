@@ -1,5 +1,7 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="admin_usuarios.aspx.vb" Inherits="admin_usuarios" Title="Untitled Page" %>
-
+<asp:Content ID="Content3" ContentPlaceHolderID="StyleSection" runat="server" >
+     <link rel="Stylesheet" type="text/css" href="../Skin/CSS/bootstrap-multiselect.css" />
+</asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="Server">
     <div style="position: absolute; top: 160px; left: 220px; width: 626px;">
         <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -62,7 +64,7 @@
                                                     DataSourceID="SqlDataSource1" Font-Size="8pt" PageSize="10"
                                                     HorizontalAlign="Center">
                                                     <Columns>
-                                                        <asp:CommandField ShowEditButton="True" ShowSelectButton="True" />
+                                                        <asp:CommandField ShowEditButton="True" ShowSelectButton="True"  />
                                                         <asp:BoundField DataField="id_usuario" HeaderText="id_usuario" ReadOnly="True" SortExpression="id_usuario" />
                                                         <asp:BoundField DataField="nombre" HeaderText="nombre" SortExpression="nombre" />
                                                         <asp:BoundField DataField="LOGIN" HeaderText="LOGIN" SortExpression="LOGIN" />
@@ -115,10 +117,14 @@
                                         <td></td>
                                     </tr>
                                     <tr>
-                                        <td style="width: 263px">
+                                        <%--<td style="width: 263px">
                                             <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownList1" runat="server" DataSourceID="SqlDataSource3"
                                                 DataTextField="nombre" DataValueField="id_agencia" Width="247px">
-                                            </asp:DropDownList></td>
+                                            </asp:DropDownList></td>--%>
+                                        <td style="width: 263px">
+                                            <asp:ListBox CssClass="form-control" Height="30px" ID="DropDownList7" runat="server" DataSourceID="SqlDataSource3"
+                                                DataTextField="nombre" DataValueField="id_agencia" Width="247px" SelectionMode="Multiple">
+                                            </asp:ListBox></td>
                                         <td style="width: 82px">
                                             <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="Button2" runat="server" Text="Agregar" /></td>
                                         <td style="width: 245px">
@@ -141,8 +147,6 @@
                                                     <asp:BoundField DataField="agente" HeaderText="agente" ReadOnly="True" SortExpression="agente" />
                                                 </Columns>
                                                 <PagerStyle CssClass="pagination-ys"></PagerStyle>
-                                                <SelectedRowStyle Height="12px" Width="100px" Wrap="False" />
-                                                <HeaderStyle Height="12px" Width="100px" Wrap="False" />
                                             </asp:GridView>
                                         </td>
                                         <td colspan="2" style="text-align: center">
@@ -196,7 +200,7 @@
                     </DeleteParameters>
                 </asp:SqlDataSource>
                 <asp:SqlDataSource ID="SqlDataSource3" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
-                    SelectCommand="SELECT [id_agencia], [nombre] FROM [C_AGENCIAS]"></asp:SqlDataSource>
+                    SelectCommand="SELECT [id_agencia], [nombre] FROM [C_AGENCIAS] Where fecha_termino > getdate()"></asp:SqlDataSource>
                 <asp:SqlDataSource ID="SqlDataSource4" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
                     SelectCommand="sp_select_modulos" SelectCommandType="StoredProcedure"></asp:SqlDataSource>
                 <asp:SqlDataSource ID="SqlDataSource5" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
@@ -221,3 +225,17 @@
     </div>
 </asp:Content>
 
+<asp:Content ID="Content2" ContentPlaceHolderID="ScriptSection" runat="server" >
+    <script type="text/javascript" src="../Skin/js/bootstrap-multiselect.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('[id*=DropDownList7]').multiselect({
+                includeSelectAllOption: true,
+                nonSelectedText: "No hay elementos seleccionados.",
+                nSelectedText: 'seleccionados',
+                allSelectedText: 'Todos seleccionados',
+                selectAllText: ' Seleccionar todos'
+            });
+        });
+    </script>
+</asp:Content>

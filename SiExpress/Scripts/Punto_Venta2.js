@@ -1,36 +1,21 @@
 ﻿$(document).ready(function () {
     var context = this;
 
-    $('#btnAddBook').click(function () {
-        
-    });
+    $('#btnConfirmAddbook').click(function () {
+        if ($('#saveNewAddBook').prop('checked') == true && $('#addBookName').val() == '') {
+            alert('Debe proporcionar el nombre del libro.');
+        } else {
+            var saveTemp = saveAddressBook();
 
-    $("#dialogValAddBook").dialog({
-        width: 500,
-        autoOpen: false,
-        modal: true,
-        buttons: {
-            "Importar": function () {
-                if ($(this).is(":checked") && $('#addBookName').val() == '') {
-                    alert('Debe proporcionar el nombre del libro.');
-                } else {
-                    var saveTemp = saveAddressBook();
-
-                    if (saveTemp == 1) {
-                        $('#templateName').empty();
-                        $('#addBookName').empty();
-                        $(this).dialog("close");
-                        clearAddBookFields();
-                        disablePopup();
-                        loadAddBook();
-                    }
-                }
-            },
-            "Cancelar": function () {
-                $(this).dialog("close");
+            if (saveTemp == 1) {
+                $('#templateName').empty();
+                $('#addBookName').empty();
+                $('#createAddBookModal').modal("hide");
+                clearAddBookFields();                
+                loadAddBook();
             }
         }
-    });
+    });  
 
     $("#btnMerge").click(function () {
         var fileFieldValue = $("#lstFileFields option:selected").val();
@@ -38,6 +23,8 @@
 
         var DBFieldValue = $("#lstDBFields option:selected").val();
         var DBFieldText = $("#lstDBFields option:selected").text();
+
+        console.log('btnMerge');
 
         if (DBFieldText == "" || fileFieldText == "") {
             alert("Para relacionar los campos: Debes seleccionar un campo de cada lista.");
@@ -103,7 +90,7 @@
         e.preventDefault();
         var rows = jQuery("#gridAddBook").jqGrid('getRowData');
         if (rows.length > 0) {
-            $("#dialogValAddBook").dialog("open");
+            $("#createAddBookModal").modal('show');
             $('#templateName').empty();
             $('#addBookName').empty();
         } else {
@@ -168,12 +155,22 @@
     });
 
     $('#saveNewAddBook').change(function () {
-        if ($(this).is(":checked")) {
+        if ($('#saveNewAddBook').prop('checked') == true) {
             $("#addBookName").removeAttr("disabled");
         } else {
             $("#addBookName").attr("disabled", "disabled");
         }
     });
+
+    //$('#btnReadFile').click(function () {
+    //    console.log($('#FileUpload1'));
+    //    if (validUpload()) {            
+    //        console.log($('#FileUpload1'));
+    //        $('#FileUpload1').fileUploadStart();
+    //    }
+    //});    
+
+    
 
     loadAddBook();
     $("#addBookName").attr("disabled", "disabled");
@@ -195,18 +192,9 @@ function crearEnviosLibro() {
     }
 }
 
-function DisplayAddBookForm() {
-    $('#popupAddBook h1').text('Importar Direcciones');
-    //centering with css
-    centerPopup("#popupAddBook");
-    //load popup
-    loadPopup("#popupAddBook");
+function DisplayAddBookForm() {    
 
-    $('#fileTable').show();
-    $('#fieldsTable').show();
-    $('#matchTable').show();
-    $("#AddBookLabel").show();
-    $("#popupAddBook").show();
+    $('#addBookModal').modal('show');    
 
     $("#lstDBFields").empty();
     clearAddBookFields();
@@ -422,8 +410,7 @@ function centerPopup(popup) {
 }
 
 function loadAddBook() {
-    $("#selAddBook").empty();
-    $("#selAddBook").get(0).options[0] = new Option("Cargando libro de direcciones", "0");
+    $("#selAddBook").empty();    
 
     var url = "Punto_Venta2.aspx/getAddBook";
     var params = '{}';
@@ -432,8 +419,11 @@ function loadAddBook() {
     var response = genericCallWebMethod(url, params, errMsg, false);
 
     if (response.d.responseMessage == "") {
-        $("#selAddBook").empty();
-        $("#selAddBook").get(0).options[0] = new Option("Seleccione libro de direcciones", "0");
+        $("#selAddBook").empty();        
+        $('#selAddBook').append($('<option>', {
+            value: 0,
+            text: 'Seleccione libro de direcciones'
+        }));
         $.each(response.d.responseArray, function (index, item) {
             addOption("selAddBook", item.id_book, item.nombre);
         });
@@ -441,7 +431,7 @@ function loadAddBook() {
 
 }
 
-function validUpload() {
+function validUpload() {    
     if ($('#sheetName').val() == '') {
         alert('Debe proporcionar el nombre de la hoja que desea leer.');
         return false;
@@ -468,6 +458,8 @@ function readFile(fileName, idTemplate) {
     var errMsg = "Error al leer archivo: ";
 
     var response = genericCallWebMethod(url, params, errMsg, false);
+
+    console.log(response);
 
     if (response.d.responseMessage == "") {
         $.each(response.d.fileFields, function (index, item) {
@@ -508,6 +500,12 @@ function readFile(fileName, idTemplate) {
                 alert("Template invalido, campos no coinciden.");
             }
         }
+    } else {
+        if (response.d.responseMessage.indexOf('valid name') >= 0) {
+            alert('Nombre de hoja invalido.');
+        } else {
+            alert(response.d.responseMessage);
+        }        
     }
 }
 
@@ -520,7 +518,12 @@ function getTemplates() {
     var response = genericCallWebMethod(url, params, errMsg, false);
 
     $("#selTemplates").empty();
-    $("#selTemplates").get(0).options[0] = new Option("Seleccionar Template", "0");
+    $('#selTemplates').append($('<option>', {
+        value: 0,
+        text: 'Seleccionar Template'
+    }));
+
+    // $("#selTemplates").get(0).options[0] = new Option("Seleccionar Template", "0");
 
     $.each(response.d.responseArray, function (index, item) {
         addOption("selTemplates", item.id_template, item.nombre);
@@ -655,8 +658,7 @@ function clearAddBookFields() {
     $("#lstBoxMatches").empty();
     $("#attachedfiles").empty();
     $('#templateName').empty();
-    $('#addBookName').empty();
-    $("#gridAddBook").jqGrid('GridUnload');
+    $('#addBookName').empty();    
 
     addBookGrid("", true);
 
@@ -723,8 +725,9 @@ function getPosition(fieldName) {
     return position[0];
 }
 
+
 function createEmptyGrid(mydata, gridName, gridPager) {
-    jQuery("#" + gridName).jqGrid({
+    $("#" + gridName).jqGrid({
         data: mydata,
         datatype: "local",
         async: false,
@@ -755,7 +758,7 @@ function createEmptyGrid(mydata, gridName, gridPager) {
         rowNum: 100,
         hidegrid: false,
         height: '200',
-        width: "945",
+        width: "345",
         rowList: [100, 200, 300, 400, 500],
         recordtext: "{0} - {1} de {2} elementos",
         emptyrecords: 'No hay resultados',

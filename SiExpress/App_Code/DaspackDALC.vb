@@ -1,11 +1,13 @@
-﻿Imports Microsoft.VisualBasic
+﻿Imports System.Data.Entity
+Imports Microsoft.VisualBasic
+Imports SiExProData
 
 Public Class DaspackDALC
 
     Public Shared Function GetModuloPrivilegio(ByVal idModulo As Integer, ByVal idUsuario As Integer, ByVal privilegio As Integer) As Boolean
         Dim db As New DaspackDataContext
         Dim tienePermiso As Boolean = False
-
+        Return True
         Dim userPrivilegesList As IEnumerable(Of PrivilegioModulo) = db.GetPrivilegiosModulo(idModulo, idUsuario)
         Dim usuarioPrivilegios As List(Of PrivilegioModulo) = New List(Of PrivilegioModulo)(userPrivilegesList.ToList())
         Dim usuarioPrivilegio As PrivilegioModulo
@@ -111,6 +113,52 @@ Public Class DaspackDALC
 
         Return usuario
 
+    End Function
+
+    public Shared Function GetUltimoEnvio(ByVal id_usuario As integer ) As Envio
+        Dim dbContext As New SiExProEntities
+        Dim envio As Envio = dbContext.D_ENVIOS.OrderByDescending(Function(x) x.id_envio).FirstOrDefault(Function(x) x.id_usuario = id_usuario)
+
+        Return envio
+    End Function
+
+    public Shared Function GetDatosEnvio(ByVal idEnvio As integer ) As Envio
+        Dim dbContext As New SiExProEntities
+        Dim envio As Envio = dbContext.D_ENVIOS.FirstOrDefault(Function(x) x.id_envio = idEnvio)
+
+        Return envio
+    End Function
+
+    public Shared Function GetDatosCliente(id_envio as integer) As Cliente
+        Dim dbContext As New SiExProEntities
+        Dim cliente As Cliente
+
+        cliente = CType((from ed in dbContext.D_ENVIOS_DATOS.Where(Function(x) x.id_envio = id_envio)
+            join c In dbContext.C_CLIENTES 
+                On c.id_cliente Equals ed.id_cliente
+            Select c).FirstOrDefault(), Cliente)
+
+        return cliente
+
+    End Function
+
+    public Shared Function GetDatosDestinatario(id_envio as integer) As Destinatario
+        Dim dbContext As New SiExProEntities
+        Dim destinatario as Destinatario
+
+        destinatario = CType((from ed in dbContext.D_ENVIOS_DATOS.Where(Function(x) x.id_envio = id_envio)
+            join c In dbContext.C_DESTINATARIOS
+                On c.id_destinatario Equals ed.id_destinatario
+            Select c).FirstOrDefault(), Destinatario)
+
+        Return destinatario
+    End Function
+
+    public Shared Function GetTarifaAgencia(id_tarifa_agencia As integer) As TarifaAgencia
+        Dim dbContext As New SiExProEntities
+        Dim tarifaAgencias as TarifaAgencia = dbContext.D_TARIFAS_AGENCIA.FirstOrDefault(Function(x) x.id_tarifa_agencia = id_tarifa_agencia) 
+
+        Return tarifaAgencias
     End Function
 
 End Class

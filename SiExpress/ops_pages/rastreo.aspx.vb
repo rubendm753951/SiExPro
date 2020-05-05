@@ -1,7 +1,7 @@
 ﻿Imports System.Data.SqlClient
 
 Partial Class ops_pages_rastreo
-    Inherits System.Web.UI.Page 'Inherits BasePageNoLogin
+    Inherits BasePageNoLogin
 
     Protected Sub BtnRastreo_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnRastreo.Click
         TextBox1.Visible = False

@@ -1,7 +1,5 @@
 ﻿
 Imports Microsoft.Reporting.WebForms
-Imports BasePage
-
 
 Partial Class Reports_manifiesto_dia
     Inherits BasePage

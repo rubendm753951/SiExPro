@@ -16,7 +16,7 @@
             <table style="width: 375px; left: 227px; position: absolute; top: -5px;">
                 <tr>
                     <td colspan="2" style="height: 46px; text-align: center;">
-                        <asp:Image ID="Image1" runat="server"  Style="text-align: center" Height="22px" Width="30px" />
+                        <asp:Image ID="Image1" runat="server"  Style="text-align: center" />
                     </td>
                 </tr>
                 <tr>
@@ -24,6 +24,7 @@
                         <asp:Label ID="Label1" runat="server" Font-Bold="True" Font-Names="Arial" ForeColor="Blue"
                             Text="Sistema de Control de Mensajería y Paquetería" Width="472px"
                             Style="text-align: center" Font-Size="Small"></asp:Label>
+                        <h4><a href="../admin_pages/admin_adeudo_empresa.aspx"><asp:Label ID="lblAdeudo" runat="server"   CssClass="label label-danger" Text="" Width="561px"></asp:Label></a></h4>
                     </td>
                 </tr>
                 <tr>

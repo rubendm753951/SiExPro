@@ -25,6 +25,7 @@
             position: relative;
         }
     </style>
+    <asp:ContentPlaceHolder ID="StyleSection" runat="server" />
 </head>
 
 <body>
@@ -105,13 +106,15 @@
             <br />
 
         </form>
-    </div>
-    <script type="text/javascript" src="../Skin/js/jquery.min.js"></script>
+    </div>    
+    <script type="text/javascript" src="../Skin/js/jquery.min.js"></script>    
+    <script type="text/javascript" src="../Scripts/jquery-ui-1.11.4.min.js"></script>
     <script type="text/javascript" src="../Skin/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../Skin/js/metisMenu.min.js"></script>
     <script type="text/javascript" src="../Skin/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="../Skin/js/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript" src="../Skin/js/dataTables.responsive.js"></script>
     <script type="text/javascript" src="../Skin/js/sb-admin-2.min.js"></script>
+    <asp:ContentPlaceHolder ID="ScriptSection" runat="server" />
 </body>
 </html>

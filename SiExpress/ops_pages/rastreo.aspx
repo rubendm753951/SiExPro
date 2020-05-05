@@ -45,7 +45,9 @@
                 Width="609px">
                 <RowStyle BackColor="White" ForeColor="#333333" />
                 <Columns>
-                    <asp:CommandField ShowSelectButton="True" />
+                    <asp:CommandField ShowSelectButton="True" SelectText="Ver Detalle" >
+                        <HeaderStyle Width="100px" />
+                    </asp:CommandField>
                     <asp:BoundField DataField="id_envio" HeaderText="Guía" ReadOnly="True" 
                         SortExpression="id_envio" />
                     <asp:BoundField DataField="referencia1" HeaderText="Referencia" 

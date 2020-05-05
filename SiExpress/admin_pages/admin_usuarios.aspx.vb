@@ -2,8 +2,8 @@
 Partial Class admin_usuarios
     Inherits BasePage
 
-    Protected Sub TextBox2_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles TxtPassword.TextChanged
-
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        ScriptManager.RegisterStartupScript(UpdatePanel1, Me.GetType(), "AutoCompleteDropDowns", "$(function () {  $('[id*=DropDownList7]').multiselect({includeSelectAllOption: true,nonSelectedText: 'No hay elementos seleccionados.',nSelectedText: 'seleccionados',allSelectedText: 'Todos seleccionados',selectAllText: ' Seleccionar todos'}); });", True)
     End Sub
 
     Protected Sub GridView2_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridView2.SelectedIndexChanged
@@ -72,26 +72,27 @@ Partial Class admin_usuarios
             MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
             Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
             connection.ConnectionString = MyConnection.ConnectionString
+            For Each item As ListItem In DropDownList7.Items
+                If item.Selected Then
+                    connection.Open()
+                    'ejecuta SP para insertar el nuevo usuario
+                    Dim cmd As Data.IDbCommand = connection.CreateCommand()
+                    cmd.CommandType = Data.CommandType.StoredProcedure
+                    cmd.CommandText = "sp_insert_agentes_por_usuario"
 
-            'ejecuta SP para insertar el nuevo usuario
-            Dim cmd As Data.IDbCommand = connection.CreateCommand()
-            cmd.CommandType = Data.CommandType.StoredProcedure
-            cmd.CommandText = "sp_insert_agentes_por_usuario"
+                    Dim parm1 As Data.Common.DbParameter = cmd.CreateParameter()
+                    parm1.ParameterName = "@id_usuario"
+                    parm1.Value = Session("id_usuario_selected") 'GridView1.SelectedIndex
+                    cmd.Parameters.Add(parm1)
 
-            Dim parm1 As Data.Common.DbParameter = cmd.CreateParameter()
-            parm1.ParameterName = "@id_usuario"
-            parm1.Value = Session("id_usuario_selected") 'GridView1.SelectedIndex
-            cmd.Parameters.Add(parm1)
-
-            Dim parm2 As Data.Common.DbParameter = cmd.CreateParameter()
-            parm2.ParameterName = "@id_agente"
-            parm2.Value = DropDownList1.SelectedValue
-            cmd.Parameters.Add(parm2)
-
-
-            connection.Open()
-            cmd.ExecuteNonQuery()
-            connection.Close()
+                    Dim parm2 As Data.Common.DbParameter = cmd.CreateParameter()
+                    parm2.ParameterName = "@id_agente"
+                    parm2.Value = item.value
+                    cmd.Parameters.Add(parm2)                    
+                    cmd.ExecuteNonQuery()
+                    connection.Close()
+                End If
+            Next
             GridView2.DataBind()
         Catch ex As Exception
             TxtError.Text = "Ocurrió un error, por favor revise los datos -->" + ex.Message.ToString

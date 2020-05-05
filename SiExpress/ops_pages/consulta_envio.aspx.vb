@@ -120,21 +120,21 @@ Partial Class ops_pages_consulta_envio
         connection.Close()
 
         'get tracking from FedEX
-        'Dim Tracking As New FedEx_TrackService
-        'Dim TrackData As Data.DataSet = New Data.DataSet("TrackData")
-        'Dim stream As MemoryStream = New MemoryStream()
+        Dim Tracking As New FedEx_TrackService
+        Dim TrackData As Data.DataSet = New Data.DataSet("TrackData")
+        Dim stream As MemoryStream = New MemoryStream()
 
-        'stream = Tracking.Track_FedEx(tracking_number)
-        'stream.Position = 0
-        'TrackData.ReadXml(stream)
-        'stream.Close()
+        stream = Tracking.Track_FedEx(tracking_number)
+        stream.Position = 0
+        TrackData.ReadXml(stream)
+        stream.Close()
 
-        'If Not TrackData Is Nothing Then
-        '    'GridView2.DataSourceID = Nothing
-        '    GridView2.DataSource = TrackData
-        '    GridView2.DataBind()
-        'End If
-        'TextBox1.Focus()
+        If Not TrackData Is Nothing Then
+            'GridView2.DataSourceID = Nothing
+            GridView2.DataSource = TrackData
+            GridView2.DataBind()
+        End If
+        TextBox1.Focus()
     End Sub
     Protected Sub Button2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button2.Click
         If TextBox1.Text > "" And IsNumeric(TextBox1.Text) Then

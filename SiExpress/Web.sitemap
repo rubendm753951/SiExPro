@@ -24,7 +24,8 @@
           <siteMapNode url="ops_Pages/excepcion_entrega.aspx" title="Excepción de Entrega"  description="Excepción de Entrega" />
           <siteMapNode url="ops_pages/devolucion.aspx" title="Devolución"  description="Devolución de envío" />
           <siteMapNode url="ops_pages/entrega.aspx" title="Confirma Entrega"  description="Confirma Entrega" />
-          <siteMapNode url="ops_pages/ActualizaFedEx.aspx" title="Actualiza Referencia FedEx"  description="Actualiza Referencia FedEx" />          
+          <siteMapNode url="ops_pages/ActualizaFedEx.aspx" title="Actualiza Referencia FedEx"  description="Actualiza Referencia FedEx" />
+          <siteMapNode url="ops_pages/PreChequeo.aspx" title="PreChequeo"  description="PreChequeo" />
         </siteMapNode>
 
       <siteMapNode url="ops_pages/cliente_corporativo.aspx" title="Cliente Corporativo"  description="Cliente Corporativo">

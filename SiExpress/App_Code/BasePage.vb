@@ -1,5 +1,6 @@
 ﻿Imports System.Web.Services
 Imports Microsoft.VisualBasic
+Imports SiExProData
 
 Public MustInherit Class BasePage
     Inherits System.Web.UI.Page
@@ -9,7 +10,7 @@ Public MustInherit Class BasePage
     Public Shared PuedeModificar As Boolean = False
     Public Shared PuedeBorrar As Boolean = False
     Public Shared PuedeGuardar As Boolean = False
-    Public Shared LogoImageBase As Byte()
+    Public LogoImageBase As Byte()
 
     Private Sub BasePage_Load(sender As Object, e As EventArgs) Handles Me.Load
         '*************Bloque para validar al usuario ********************
@@ -52,15 +53,25 @@ Public MustInherit Class BasePage
                 Else
                     logoImage.ImageUrl = "~/Images/451logoUnavailable.png"
                 End If
-
-
             Catch ex As Exception
                 logoImage.ImageUrl = "~/Images/451logoUnavailable.png"
             End Try
         Else
             Response.Redirect("~/no_access.aspx")
         End If
+        dim idPerfil as Integer = Session("id_perfil") 
+        dim idOficina as Integer = Session("id_oficina") 
+        If Not Me.AppRelativeVirtualPath.ToString.Contains("EnviosPendientes") and  idPerfil = 3 and Not Me.AppRelativeVirtualPath.ToString.Contains("consulta_envio") Then
+            Dim dbContext As New SiExProEntities
+            Dim envioComentarioResult as SelectEnviosComentariosPendientesResult = dbContext.sp_Select_envios_comentarios_pendientes(idOficina).FirstOrDefault()
+            If envioComentarioResult IsNot Nothing Then
+                Response.Redirect("~/ops_pages/EnviosPendientes.aspx")
+            End If
+        End If
+
     End Sub
+
+
 
     Public Shared Function IsUserLogged() As Integer
         Dim usuarioId As Integer = 0
