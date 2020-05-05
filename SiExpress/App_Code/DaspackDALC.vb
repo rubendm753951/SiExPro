@@ -16,6 +16,7 @@ Public Class DaspackDALC
             usuarioPrivilegio = usuarioPrivilegios.FirstOrDefault()
         End If
 
+
         If usuarioPrivilegio IsNot Nothing Then
             Select Case privilegio
                 Case TipoPrivilegio.Lee
