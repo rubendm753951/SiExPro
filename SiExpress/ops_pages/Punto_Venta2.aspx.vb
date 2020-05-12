@@ -1,6 +1,7 @@
 ﻿Imports System.Data
 Imports System.Web.Services
 Imports System.Data.OleDb
+Imports System.Data.Entity
 Imports SiExProData
 
 Partial Class Punto_Venta
@@ -971,7 +972,7 @@ Partial Class Punto_Venta
         Dim response As New readFileResponse
         Dim listField As New ArrayList
         Try
-            listField = GetFileHeadColumnName(fileFullName, sheetName, rowHead - 2)
+            listField = GetFileHeadColumnName(fileFullName, sheetName, rowHead)
             response.fileFields = listField
 
             If idTemplate > 0 Then
@@ -1002,13 +1003,25 @@ Partial Class Punto_Venta
 
             excelDt = dt
             Dim rowIndex = 0
-            For Each dr As DataRow In dt.Rows
-                If rowIndex >= rowHead Then
-                    listField = New ArrayList(dr.ItemArray)
-                    Exit For
-                End If
-                rowIndex = rowIndex + 1
-            Next
+
+            If rowHead = 1 Then
+                Dim name(dt.Columns.Count - 1) As String
+                Dim i As Integer = 0
+                For Each column As DataColumn In dt.Columns
+                    name(i) = column.ColumnName
+                    i += 1
+                Next
+                listField = New ArrayList(name.ToArray)
+            Else
+                For Each dr As DataRow In dt.Rows
+                    If rowIndex >= rowHead Then
+                        listField = New ArrayList(dr.ItemArray)
+                        Exit For
+                    End If
+                    rowIndex = rowIndex + 1
+                Next
+            End If
+
         Catch ex As Exception
             Throw
         End Try
@@ -1063,10 +1076,9 @@ Partial Class Punto_Venta
         Dim listHeadField As ArrayList
         Dim dt As New DataTable
         Try
-            ReadExcelFile(fileName, sheetName, rowHead - 2)
-            listHeadField = GetFileHeadColumnName(fileName, sheetName, rowHead - 2, dt)
+            ReadExcelFile(fileName, sheetName, rowHead)
+            listHeadField = GetFileHeadColumnName(fileName, sheetName, rowHead, dt)
 
-            Dim rowIndex = 0
             Dim DBposition As Integer
             Dim fieldFile As String
             response.responseMessage = ""
@@ -1074,96 +1086,93 @@ Partial Class Punto_Venta
             pos = positions.Split("|")
             rowCount = 1
             For Each dr As DataRow In dt.Rows
-                If rowIndex >= rowHead - 2 Then
-                    Dim addBook As New addressBook
-                    addBook.Observaciones = ""
-                    addBook.Message = ""
-                    For Each matches In pos
-                        addBook.id = rowCount
+                Dim addBook As New addressBook
+                addBook.Observaciones = ""
+                addBook.Message = ""
+                For Each matches In pos
+                    addBook.id = rowCount
 
-                        match = matches.Split(":")
-                        DBposition = CInt(match(1))
+                    match = matches.Split(":")
+                    DBposition = CInt(match(1))
 
-                        fieldFile = dr.ItemArray(CInt(match(0)) - 1).ToString()
-                        Select Case DBposition
-                            Case 1
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Contenedor = fieldFile.Trim
-                                Else
-                                    addBook.Message = addBook.Message + "Contenedor Vacio, "
-                                End If
-                            Case 2
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Inventario = fieldFile.Trim
-                                Else
-                                    addBook.Message = addBook.Message + "Inventario Vacio, "
-                                End If
-                            Case 3
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Destinatario = fieldFile.Trim
-                                Else
-                                    addBook.Message = addBook.Message + "Destinatario Vacio, "
-                                End If
-                            Case 4
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Ciudad = fieldFile.Trim
-                                Else
-                                    addBook.Message = addBook.Message + "Ciudad Vacio, "
-                                End If
-                            Case 5
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Estado = fieldFile.Trim
-                                Else
-                                    addBook.Message = addBook.Message + "Estado Vacio, "
-                                End If
-                            Case 6
-                                addBook.Direccion = fieldFile.Trim
-                            Case 7
-                                addBook.codigo_postal = fieldFile.Trim
-                            Case 8
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Telefono = fieldFile.Trim
-                                Else
-                                    addBook.Message = addBook.Message + "Telefono Vacio, "
-                                End If
-                            Case 9
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Servicio = fieldFile.Trim()
-                                Else
-                                    addBook.Message = addBook.Message + "Servicio Vacio, "
-                                End If
-                            Case 10
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Cobranza = fieldFile.Trim()
-                                Else
-                                    addBook.Message = addBook.Message + "Cobranza Vacio, "
-                                End If
-                            Case 11
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Transporte = fieldFile.Trim()
-                                Else
-                                    addBook.Message = addBook.Message + "Transporte Vacio, "
-                                End If
-                            Case 12
-                                If fieldFile.Trim <> "" Then
-                                    addBook.Guia = fieldFile.Trim()
-                                Else
-                                    addBook.Message = addBook.Message + "Guia Vacio, "
-                                End If
-                            Case 13
-                                addBook.Observaciones = addBook.Observaciones + ", " + listHeadField(CInt(match(0)) - 1).ToString() + ":" + fieldFile.Trim()
-                        End Select
-                    Next
+                    fieldFile = dr.ItemArray(CInt(match(0)) - 1).ToString()
+                    Select Case DBposition
+                        Case 1
+                            If fieldFile.Trim <> "" Then
+                                addBook.Contenedor = fieldFile.Trim
+                            Else
+                                addBook.Message = addBook.Message + "Contenedor Vacio, "
+                            End If
+                        Case 2
+                            If fieldFile.Trim <> "" Then
+                                addBook.Inventario = fieldFile.Trim
+                            Else
+                                addBook.Message = addBook.Message + "Inventario Vacio, "
+                            End If
+                        Case 3
+                            If fieldFile.Trim <> "" Then
+                                addBook.Destinatario = fieldFile.Trim
+                            Else
+                                addBook.Message = addBook.Message + "Destinatario Vacio, "
+                            End If
+                        Case 4
+                            If fieldFile.Trim <> "" Then
+                                addBook.Ciudad = fieldFile.Trim
+                            Else
+                                addBook.Message = addBook.Message + "Ciudad Vacio, "
+                            End If
+                        Case 5
+                            If fieldFile.Trim <> "" Then
+                                addBook.Estado = fieldFile.Trim
+                            Else
+                                addBook.Message = addBook.Message + "Estado Vacio, "
+                            End If
+                        Case 6
+                            addBook.Direccion = fieldFile.Trim
+                        Case 7
+                            addBook.codigo_postal = fieldFile.Trim
+                        Case 8
+                            If fieldFile.Trim <> "" Then
+                                addBook.Telefono = fieldFile.Trim
+                            Else
+                                addBook.Message = addBook.Message + "Telefono Vacio, "
+                            End If
+                        Case 9
+                            If fieldFile.Trim <> "" Then
+                                addBook.Servicio = fieldFile.Trim()
+                            Else
+                                addBook.Message = addBook.Message + "Servicio Vacio, "
+                            End If
+                        Case 10
+                            If fieldFile.Trim <> "" Then
+                                addBook.Cobranza = fieldFile.Trim()
+                            Else
+                                addBook.Message = addBook.Message + "Cobranza Vacio, "
+                            End If
+                        Case 11
+                            If fieldFile.Trim <> "" Then
+                                addBook.Transporte = fieldFile.Trim()
+                            Else
+                                addBook.Message = addBook.Message + "Transporte Vacio, "
+                            End If
+                        Case 12
+                            If fieldFile.Trim <> "" Then
+                                addBook.Guia = fieldFile.Trim()
+                            Else
+                                addBook.Message = addBook.Message + "Guia Vacio, "
+                            End If
+                        Case 13
+                            addBook.Observaciones = addBook.Observaciones + ", " + listHeadField(CInt(match(0)) - 1).ToString() + ":" + fieldFile.Trim()
+                    End Select
+                Next
 
-                    If (rowCount > 1) Then
-                        listField.Add(addBook)
-                        If addBook.Message <> "" Then
-                            response.responseMessage = "Algunos registros del archivo contienen campos vacios."
-                        End If
+                If (rowCount >= 1) Then
+                    listField.Add(addBook)
+                    If addBook.Message <> "" Then
+                        response.responseMessage = "Algunos registros del archivo contienen campos vacios."
                     End If
-                    rowCount = rowCount + 1
                 End If
-                rowIndex = rowIndex + 1
+                rowCount = rowCount + 1
             Next
             response.responseSuccess = 1
             response.responseArray = New ArrayList(listField.ToArray)

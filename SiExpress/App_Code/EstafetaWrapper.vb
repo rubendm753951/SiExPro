@@ -4,13 +4,13 @@ Imports Estafeta
 
 Public Class EstafetaWrapper
 
-    Public Function FrecuenciaCotizador() As String
+    Public Function FrecuenciaCotizador(enviosExportar As List(Of FrecuenciaCotizadorExport)) As String
 
         Dim estafetaService As New Frecuenciacotizador.Service()
         Dim estafetaUser = GetEstafetaUser(1)
         Dim tipoEnvio = New Estafeta.Frecuenciacotizador.TipoEnvio()
-        Dim cpOrigen = New String() {"62020"}
-        Dim cpDestino = New String() {"62580"}
+        'Dim cpOrigen = New String() {"45016"}
+        'Dim cpDestino = New String() {"58060"}
 
         tipoEnvio.EsPaquete = True
         tipoEnvio.Alto = 2
@@ -18,7 +18,17 @@ Public Class EstafetaWrapper
         tipoEnvio.Largo = 2
         tipoEnvio.Peso = 1
 
-        Dim frecuenciaCotizadorResponse = estafetaService.FrecuenciaCotizador(estafetaUser.UserId, estafetaUser.UserName, estafetaUser.Password, False, True, tipoEnvio, cpOrigen, cpDestino)
+        For Each envioExportar As FrecuenciaCotizadorExport In enviosExportar
+            Dim cpOrigen = New String() {envioExportar.CPRemitente}
+            Dim cpDestino = New String() {envioExportar.CPDestinatario}
+
+            Dim frecuenciaCotizadorResponse = estafetaService.FrecuenciaCotizador(estafetaUser.UserId, estafetaUser.UserName, estafetaUser.Password, False, True, tipoEnvio, cpOrigen, cpDestino)
+
+            Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
+            Dim jsonString = serializer.Serialize(frecuenciaCotizadorResponse)
+
+        Next
+
 
         Return ""
     End Function

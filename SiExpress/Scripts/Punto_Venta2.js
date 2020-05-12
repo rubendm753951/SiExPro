@@ -59,7 +59,7 @@
     });
 
     $("#btnPreview").click(function () {
-        var fileName = $("#attachedfiles").text();
+        var fileName = $("#nombreRealArchivo").text();
         var mandFileds = $("#lstDBFields option").length;
 
         if (mandFileds > 1) {
@@ -443,7 +443,7 @@ function validUpload() {
     return true;
 }
 
-function readFile(fileName, idTemplate) {
+function readFile(fileName, idTemplate, fileUploadName) {
 
     if (!validUpload()) {
         return false;
@@ -467,7 +467,8 @@ function readFile(fileName, idTemplate) {
             addOption("lstFileFields", position, item);
         });
 
-        $("#attachedfiles").text(fileName);
+        $("#attachedfiles").text(fileUploadName);
+        $("#nombreRealArchivo").text(fileName);
 
         if (idTemplate > 0) {
             try {

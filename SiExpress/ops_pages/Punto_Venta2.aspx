@@ -872,6 +872,7 @@
                     <div id="dialogConfirmMasive" title="Confirmar salvado..." style="width: 300px;">
                         <label id="lblConfirm"></label>
                     </div>
+                    <input id="nombreRealArchivo" name="nombreRealArchivo" type="hidden" value="" />
                 </div>
             </div>
         </div>
@@ -893,10 +894,10 @@
                 url: '../Scripts/Upload.ashx?upload=start',
                 acceptFileTypes: /(\.|\/)(csv)$/i,
                 maxFileSize: 999000,
-                add: function (e, data) {
-                    console.log('add', data);
+                add: function (e, data) {                    
                     $('#progress').show();
                     data.context = $('<div/>').appendTo('#files');
+                    console.log('add', data.files);
                     $.each(data.files, function (index, file) {
                         $("#attachedfiles").text(file.name);
                     });
@@ -907,8 +908,9 @@
                     $('#progress div').css('width', progress + '%');
                 },
                 success: function (response, status) {
-                    console.log('success');
-                    readFile($("#attachedfiles").text(), $("#selTemplates").val());
+                    var fileProperties = JSON.parse(response);
+                    console.log('success', fileProperties);
+                    readFile(fileProperties.fileName, $("#selTemplates").val(), fileProperties.name);
                 },
                 error: function (error) {
                     $('#progress').hide();
