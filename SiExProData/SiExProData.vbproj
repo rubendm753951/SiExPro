@@ -95,6 +95,15 @@
     <Compile Include="EnvioDatos.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EstafetaFrecuenciaCotizador.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EstafetaLabel.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EstafetaTipoServicio.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

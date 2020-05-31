@@ -2,6 +2,5 @@
 <DiscoveryClientResultsFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Results>
     <DiscoveryClientResult referenceType="System.Web.Services.Discovery.ContractReference" url="https://tracking.estafeta.com/Service.asmx?wsdl" filename="Service.wsdl" />
-    <DiscoveryClientResult referenceType="System.Web.Services.Discovery.DiscoveryDocumentReference" url="https://tracking.estafeta.com/Service.asmx?disco" filename="Service.disco" />
   </Results>
 </DiscoveryClientResultsFile>

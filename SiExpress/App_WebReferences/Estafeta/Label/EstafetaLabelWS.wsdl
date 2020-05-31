@@ -1154,7 +1154,7 @@
   </wsdl:binding>
   <wsdl:service name="EstafetaLabelService">
     <wsdl:port name="EstafetaLabelWS" binding="impl:EstafetaLabelWSSoapBinding">
-      <wsdlsoap:address location="https://label.estafeta.com/EstafetaLabel20/services/EstafetaLabelWS" />
+      <wsdlsoap:address location="https://labelqa.estafeta.com/EstafetaLabel20/services/EstafetaLabelWS" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

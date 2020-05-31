@@ -1,4 +1,4 @@
-﻿<%@ Page Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="Exportacion_Estafeta.aspx.vb" Inherits="ops_pages_Exportacion_Estafeta" Title="Exportacion Estafeta" %>
+﻿<%@ Page Language="VB" MasterPageFile="~/Site.master" AutoEventWireup="false" CodeFile="Exportacion_Estafeta.aspx.vb" EnableViewState="true" Inherits="ops_pages_Exportacion_Estafeta" Title="Exportacion Estafeta" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
@@ -82,7 +82,32 @@
                                                         </asp:BoundField>
                                                         <asp:BoundField DataField="cp_dest" HeaderText="CP Dest" SortExpression="cp_dest" >
                                                             <ItemStyle Height="1px" Width="50px" HorizontalAlign="Left" Wrap="True" />
+                                                        </asp:BoundField>                                                        
+                                                        <asp:TemplateField HeaderText="TipoServicio" SortExpression="TipoServicio">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblTipoServicio" runat="server" Text='<%# Eval("TipoServicio") %>' Visible = "false" />
+                                                                <asp:DropDownList ID="DropDownTipoServicio" runat="server"
+                                                                    AutoPostBack="true" 
+                                                                    ViewStateMode="Enabled"
+                                                                    OnSelectedIndexChanged="DropDownTipoServicio_SelectedIndexChanged" >
+                                                                </asp:DropDownList>
+                                                                <asp:DataList runat="server" ID="dlTipoServicio"></asp:DataList>                                                                
+                                                            </ItemTemplate>                                                            
+                                                        </asp:TemplateField>                                                        
+                                                        <asp:BoundField DataField="mensaje" HeaderText="Mensaje" SortExpression="mensaje" >
+                                                            <ItemStyle Height="1px" Width="50px" HorizontalAlign="Left" Wrap="True" />
                                                         </asp:BoundField>
+                                                        <asp:TemplateField HeaderText="Ver Etiqueta" SortExpression="Etiqueta">
+                                                            <ItemTemplate>
+                                                                <asp:Label ID="lblEtiqueta" runat="server" Text='<%# Eval("Etiqueta") %>' Visible = "false" />                                                                                                                          
+                                                            </ItemTemplate>                                                            
+                                                        </asp:TemplateField> 
+
+                                                        <%--<asp:hyperlinkfield ID="linkLabel" headertext="Ver Etiqueta"
+                                                              datatextfield="id_envio"
+                                                              datanavigateurlfields="id_envio"
+                                                              datanavigateurlformatstring="~\Reposrt\EstafetaLabel.aspx?id_envio={0}" 
+                                                              target="_blank"/>--%>
                                                     </Columns>
                                                     <PagerStyle CssClass="pagination-ys"></PagerStyle>
                                                 </asp:GridView>                                                    
@@ -90,7 +115,9 @@
                                         </td>
                                     </tr>
                                 </table>
+                                <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnCotizar" runat="server" Text="Cotizar"></asp:Button>
                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnExport" runat="server" Text="Exportar"></asp:Button><br />
+                                
                                 <br />
                             </div>
                         </div>

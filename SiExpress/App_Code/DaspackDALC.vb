@@ -155,11 +155,121 @@ Public Class DaspackDALC
         Return destinatario
     End Function
 
-    public Shared Function GetTarifaAgencia(id_tarifa_agencia As integer) As TarifaAgencia
+    Public Shared Function GetTarifaAgencia(id_tarifa_agencia As Integer) As TarifaAgencia
         Dim dbContext As New SiExProEntities
-        Dim tarifaAgencias as TarifaAgencia = dbContext.D_TARIFAS_AGENCIA.FirstOrDefault(Function(x) x.id_tarifa_agencia = id_tarifa_agencia) 
+        Dim tarifaAgencias As TarifaAgencia = dbContext.D_TARIFAS_AGENCIA.FirstOrDefault(Function(x) x.id_tarifa_agencia = id_tarifa_agencia)
 
         Return tarifaAgencias
+    End Function
+
+    Public Shared Function EstafetaLabel(id_envio As Integer) As EstafetaLabel
+        Dim dbContext As New SiExProEntities
+        Return dbContext.D_ESTAFETA_LABEL.FirstOrDefault(Function(x) x.id_envio = id_envio)
+    End Function
+
+    Public Shared Function InsEstafetaLabel(id_envio As Integer, respuesta As Estafeta.Label.EstafetaLabelResponse) As Boolean
+        Dim dbContext As New SiExProEntities
+
+        Dim envio As Envio = dbContext.D_ENVIOS.FirstOrDefault(Function(x) x.id_envio = id_envio)
+
+        'envio.Referencia_FedEx = respuesta.globalResult.resultDescription
+        'dbContext.SaveChanges()
+
+        Dim estafetaLabel As EstafetaLabel = dbContext.D_ESTAFETA_LABEL.FirstOrDefault(Function(x) x.id_envio = id_envio)
+        Dim existeLabel As Boolean = True
+
+        If estafetaLabel Is Nothing Then
+            estafetaLabel = New EstafetaLabel()
+            existeLabel = False
+        End If
+
+        With estafetaLabel
+            .id_envio = id_envio
+            .fecha = DateTime.Now()
+            .labelPDF = respuesta.labelPDF
+            .trackId = respuesta.globalResult.resultDescription
+        End With
+
+        If Not existeLabel Then
+            dbContext.D_ESTAFETA_LABEL.Add(estafetaLabel)
+        End If
+
+        dbContext.SaveChanges()
+
+    End Function
+
+    Public Shared Function InsFrecuanciaCotizador(id_envio As Integer, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta(), servicioSeleccionado As Estafeta.Frecuenciacotizador.TipoServicio) As Boolean
+        Dim dbContext As New SiExProEntities
+
+        For Each respuesta As Estafeta.Frecuenciacotizador.Respuesta In respuestaFrecuenciaCotizador
+            Dim frecuenciaCotizador As EstafetaFrecuenciaCotizador = dbContext.D_ESTAFETA_FRECUENCIA_COTIZADOR.FirstOrDefault(Function(x) x.id_envio = id_envio)
+            Dim existeFrecuenciaCotizador As Boolean = True
+            If frecuenciaCotizador Is Nothing Then
+                frecuenciaCotizador = New EstafetaFrecuenciaCotizador()
+                existeFrecuenciaCotizador = False
+            End If
+
+            With frecuenciaCotizador
+                .id_envio = id_envio
+                .EsPaquete = respuesta.TipoEnvio.EsPaquete
+                .Largo = respuesta.TipoEnvio.Largo
+                .Peso = respuesta.TipoEnvio.Peso
+                .Alto = respuesta.TipoEnvio.Alto
+                .Ancho = respuesta.TipoEnvio.Ancho
+                .OcurreForzoso = respuesta.ModalidadEntrega.OcurreForzoso
+                .Frecuencia = respuesta.ModalidadEntrega.Frecuencia
+                .CostoReexpedicion = respuesta.CostoReexpedicion
+                .ExistenteSiglaOri = respuesta.ExistenteSiglaOri
+                .ExistenteSiglaDes = respuesta.ExistenteSiglaDes
+                .Lunes = respuesta.DiasEntrega.Lunes
+                .Martes = respuesta.DiasEntrega.Martes
+                .Miercoles = respuesta.DiasEntrega.Miercoles
+                .Jueves = respuesta.DiasEntrega.Jueves
+                .Viernes = respuesta.DiasEntrega.Viernes
+                .Sabado = respuesta.DiasEntrega.Sabado
+                .Domingo = respuesta.DiasEntrega.Domingo
+                .FechaCotizacion = DateTime.Now()
+            End With
+
+            If Not existeFrecuenciaCotizador Then
+                dbContext.D_ESTAFETA_FRECUENCIA_COTIZADOR.Add(frecuenciaCotizador)
+            End If
+
+            dbContext.SaveChanges()
+
+            Dim tiposServicio = dbContext.D_ESTAFETA_TIPO_SERVICIO.Where(Function(x) x.id_envio = id_envio)
+
+            If tiposServicio IsNot Nothing Then
+                dbContext.D_ESTAFETA_TIPO_SERVICIO.RemoveRange(tiposServicio)
+            End If
+
+            For Each tipoServicio In respuesta.TipoServicio
+                Dim ts As New EstafetaTipoServicio()
+                With ts
+                    .id_envio = id_envio
+                    .DescripcionServicio = tipoServicio.DescripcionServicio
+                    .TipoEnvioRes = tipoServicio.TipoEnvioRes
+                    .AplicaCotizacion = tipoServicio.AplicaCotizacion
+                    .TarifaBase = tipoServicio.TarifaBase
+                    .CCTarifaBase = tipoServicio.CCTarifaBase
+                    .CargosExtra = tipoServicio.CargosExtra
+                    .SobrePeso = tipoServicio.SobrePeso
+                    .CCSobrePeso = tipoServicio.CCSobrePeso
+                    .CostoTotal = tipoServicio.CostoTotal
+                    .Peso = tipoServicio.Peso
+                    .AplicaServicio = tipoServicio.AplicaServicio
+                    .FechaCotizacion = DateTime.Now()
+                End With
+
+                If servicioSeleccionado.DescripcionServicio = ts.DescripcionServicio Then
+                    ts.Selecccionado = 1
+                End If
+                dbContext.D_ESTAFETA_TIPO_SERVICIO.Add(ts)
+            Next
+            dbContext.SaveChanges()
+        Next
+
+        Return True
     End Function
 
 End Class

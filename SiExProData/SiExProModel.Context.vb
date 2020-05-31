@@ -32,6 +32,9 @@ Partial Public Class SiExProEntities
     Public Overridable Property D_TARIFAS_AGENCIA() As DbSet(Of TarifaAgencia)
     Public Overridable Property D_ENVIO_COMENTARIOS() As DbSet(Of EnvioComentario)
     Public Overridable Property D_CIUDADES_RUTAS() As DbSet(Of CiudadesRutas)
+    Public Overridable Property D_ESTAFETA_FRECUENCIA_COTIZADOR() As DbSet(Of EstafetaFrecuenciaCotizador)
+    Public Overridable Property D_ESTAFETA_TIPO_SERVICIO() As DbSet(Of EstafetaTipoServicio)
+    Public Overridable Property D_ESTAFETA_LABEL() As DbSet(Of EstafetaLabel)
 
     Public Overridable Function sp_Select_envios_comentarios_pendientes(id_oficina As Nullable(Of Integer)) As ObjectResult(Of SelectEnviosComentariosPendientesResult)
         Dim id_oficinaParameter As ObjectParameter = If(id_oficina.HasValue, New ObjectParameter("id_oficina", id_oficina), New ObjectParameter("id_oficina", GetType(Integer)))

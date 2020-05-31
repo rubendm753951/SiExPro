@@ -17,6 +17,9 @@
         <AssociationConnector Association="MasupackModel.D_TARIFAS_AGENCIA_D_ENVIOS_fk" />
         <EntityTypeShape EntityType="MasupackModel.EnvioComentario" Width="1.5" PointX="7.375" PointY="6.75" />
         <EntityTypeShape EntityType="MasupackModel.CiudadesRutas" Width="1.5" PointX="9.375" PointY="5.75" />
+        <EntityTypeShape EntityType="MasupackModel.EstafetaFrecuenciaCotizador" Width="1.5" PointX="9.375" PointY="8.75" />
+        <EntityTypeShape EntityType="MasupackModel.EstafetaTipoServicio" Width="1.5" PointX="10.375" PointY="0.75" />
+        <EntityTypeShape EntityType="MasupackModel.EstafetaLabel" Width="1.5" PointX="5.375" PointY="10.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

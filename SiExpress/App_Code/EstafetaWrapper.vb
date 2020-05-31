@@ -33,39 +33,60 @@ Public Class EstafetaWrapper
         Return ""
     End Function
 
-    Public Function Label() As String
+    Public Function FrecuenciaCotizadorSingle(envioExportar As FrecuenciaCotizadorExport) As Estafeta.Frecuenciacotizador.Respuesta()
+
+        Dim estafetaService As New Frecuenciacotizador.Service()
+        Dim estafetaUser = GetEstafetaUser(1)
+        Dim tipoEnvio = New Estafeta.Frecuenciacotizador.TipoEnvio()
+        'Dim cpOrigen = New String() {"45016"}
+        'Dim cpDestino = New String() {"58060"}
+
+        tipoEnvio.EsPaquete = True
+        tipoEnvio.Alto = 2
+        tipoEnvio.Ancho = 2
+        tipoEnvio.Largo = 2
+        tipoEnvio.Peso = 1
+
+
+        Dim cpOrigen = New String() {envioExportar.CPRemitente}
+        Dim cpDestino = New String() {envioExportar.CPDestinatario}
+
+        Return estafetaService.FrecuenciaCotizador(estafetaUser.UserId, estafetaUser.UserName, estafetaUser.Password, False, True, tipoEnvio, cpOrigen, cpDestino)
+
+    End Function
+
+    Public Function Label(envio As System.Data.DataRowView, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta()) As String
         Dim estafetaService As New Estafeta.Label.EstafetaLabelService()
         Dim estafetaUser = GetEstafetaUser(3)
 
         Dim origen As New Estafeta.Label.OriginInfo()
         With origen
-            .address1 = "origen addr1"
-            .address2 = "origen Addr2"
-            .city = "Ciudad"
-            .contactName = "Contact"
-            .corporateName = "Corporate"
-            .customerNumber = "1234567"
-            .neighborhood = "neighborhood"
-            .phoneNumber = "1111111"
-            .cellPhone = "0447777777777"
-            .state = "Mexico"
-            .zipCode = "01000"
+            .address1 = envio("calle_remit")
+            .address2 = "N/A"
+            .city = envio("ciudad_remit")
+            .contactName = envio("nombre_remit")
+            .corporateName = IIf(String.IsNullOrEmpty(envio("empresa_remit")), "N/A", Strings.Left(envio("empresa_remit"), 50))
+            .customerNumber = "0000000"
+            .neighborhood = "N/A"
+            .phoneNumber = envio("tel_remit")
+            .cellPhone = ""
+            .state = envio("estadoprovincia_remit")
+            .zipCode = envio("cp_remit")
         End With
 
         Dim destino As New Estafeta.Label.DestinationInfo()
         With destino
-            .address1 = "Destino addr1"
-            .address2 = "Destino Addr2"
-            .city = "Ciudad"
-            .contactName = "Cliente"
-            .corporateName = "Corporate"
-            .customerNumber = "1234568"
-            .neighborhood = "neighborhood"
-            .phoneNumber = "1111111"
-            .phoneNumber = "1111111"
-            .cellPhone = "0447777777777"
-            .state = "Mexico"
-            .zipCode = "01000"
+            .address1 = envio("calle_dest")
+            .address2 = "N/A"
+            .city = envio("ciudad_dest")
+            .contactName = envio("nombre_dest")
+            .corporateName = IIf(String.IsNullOrEmpty(envio("empresa_dest")), "N/A", Strings.Left(envio("empresa_dest"), 50))
+            .customerNumber = "0000000"
+            .neighborhood = "N/A"
+            .phoneNumber = envio("tel_dest")
+            .cellPhone = ""
+            .state = envio("estadoprovincia_dest")
+            .zipCode = envio("cp_dest")
         End With
 
         Dim descripcionLista As New Estafeta.Label.LabelDescriptionList()
@@ -79,15 +100,15 @@ Public Class EstafetaWrapper
             .destinationCountryId = "MX"
             'Tipo de envio 1=SOBRE 4=PAQUETE
             .parcelTypeId = 4
-            .reference = "Referencia"
+            .reference = envio("id_envio")
             .weight = 1
             .numberOfLabels = 1
-            .originZipCodeForRouting = "62250"
+            .originZipCodeForRouting = envio("cp_dest")
             .serviceTypeId = "70"
             .officeNum = "130"
             .returnDocument = True
             .serviceTypeIdDocRet = "50"
-            .effectiveDate = "20200504"
+            .effectiveDate = "20200604"
             .contentDescription = "Descripcion del contenido del paquete"
         End With
 
@@ -107,7 +128,14 @@ Public Class EstafetaWrapper
 
         Dim response = estafetaService.createLabel(estafetaLabelRequest)
 
-        Return ""
+        If response.globalResult.resultCode = 0 Then
+            DaspackDALC.InsEstafetaLabel(envio("id_envio"), response)
+            DaspackDALC.InsFrecuanciaCotizador(envio("id_envio"), respuestaFrecuenciaCotizador, tipoServicio)
+            Return "Envio Exportado"
+        Else
+            Return response.globalResult.resultDescription
+        End If
+
     End Function
 
     Public Function Tracking() As String
