@@ -1,6 +1,6 @@
 ﻿Imports Microsoft.VisualBasic
 Imports Estafeta
-
+Imports System.Net
 
 Public Class EstafetaWrapper
 
@@ -138,7 +138,7 @@ Public Class EstafetaWrapper
 
     End Function
 
-    Public Function Tracking() As String
+    Public Function Tracking(ByVal trackingId As String) As List(Of EstafetaTrackingStep)
         Dim estafetaService As New Estafeta.Tracking.Service()
         Dim estafetaUser = GetEstafetaUser(2)
         Dim searchType As New Estafeta.Tracking.SearchType()
@@ -146,8 +146,8 @@ Public Class EstafetaWrapper
         searchType.type = "L"
 
         Dim waybillList = New Estafeta.Tracking.WaybillList()
-        waybillList.waybills = New String() {"8055241528464720099314"}
-        waybillList.waybillType = "L"
+        waybillList.waybills = New String() {trackingId}
+        waybillList.waybillType = "G"
 
         searchType.waybillList = waybillList
 
@@ -171,16 +171,60 @@ Public Class EstafetaWrapper
             .includeReturnDocumentData = True
             .includeMultipleServiceData = False
             .includeInternationalData = False
-            .includeSignature = True
+            .includeSignature = False
             .includeCustomerInfo = True
             .historyConfiguration = historyConfiguration
             .filterType = filterType
         End With
 
+        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12
+
         estafetaService.Timeout = 200000
         Dim queryResult = estafetaService.ExecuteQuery(estafetaUser.UserId.ToString, estafetaUser.UserName, estafetaUser.Password, searchType, searchConfiguration)
 
-        Return ""
+        Dim trackHistory = New List(Of EstafetaTrackingStep)
+        Dim newStep = New EstafetaTrackingStep()
+        If queryResult IsNot Nothing Then
+            If queryResult.errorCode = "0" Then
+                If queryResult.trackingData IsNot Nothing Then
+                    If queryResult.trackingData(0).deliveryData IsNot Nothing Then
+                        With newStep
+                            .EventTime = queryResult.trackingData(0).deliveryData.deliveryDateTime
+                            .EventDescription = "Entregado - " + queryResult.trackingData(0).deliveryData.receiverName + " " + queryResult.trackingData(0).deliveryData.destinationName
+                        End With
+                        trackHistory.Add(newStep)
+                    End If
+
+                    For Each historyStep As Estafeta.Tracking.History In queryResult.trackingData(0).history
+                        newStep = New EstafetaTrackingStep()
+                        With newStep
+                            .EventTime = historyStep.eventDateTime
+                            .EventDescription = historyStep.eventDescriptionSPA
+                            .EventException = historyStep.exceptionCodeDetails
+                            .EventPlace = historyStep.eventPlaceName
+                        End With
+                        trackHistory.Add(newStep)
+                    Next
+                Else
+                    With newStep
+                        .EventDescription = "Aun no hay registros de este envio"
+                    End With
+                    trackHistory.Add(newStep)
+                End If
+            Else
+                With newStep
+                    .EventDescription = queryResult.errorCodeDescriptionSPA
+                End With
+                trackHistory.Add(newStep)
+            End If
+        Else
+            With newStep
+                .EventDescription = "Envio No Encontrado"
+            End With
+            trackHistory.Add(newStep)
+        End If
+
+        Return trackHistory
     End Function
 
     Public Function GetEstafetaUser(servicio As Integer) As EstafetaUser

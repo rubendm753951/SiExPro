@@ -41,7 +41,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="9" style="text-align: center">
-                                            <div class="table-responsive">                                                
+                                            <div class="table-responsive" style="padding-bottom: 15pxs">                                                
                                                 <asp:GridView class="table table-striped table-bordered table-hover" ID="GridView1" runat="server" Height="25px" Width="1215px" AllowPaging="True"
                                                     AutoGenerateColumns="False" DataKeyNames="id_envio"
                                                     DataSourceID="EnviosAExportar" PageSize="10"

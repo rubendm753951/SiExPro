@@ -27,6 +27,7 @@
           <siteMapNode url="ops_pages/ActualizaFedEx.aspx" title="Actualiza Referencia FedEx"  description="Actualiza Referencia FedEx" />
           <siteMapNode url="ops_pages/PreChequeo.aspx" title="PreChequeo"  description="PreChequeo" />
           <siteMapNode url="ops_pages/Exportacion_estafeta.aspx" title="Exportacion Estafeta"  description="Exportacion Estafeta" />
+          <siteMapNode url="ops_pages/Estafeta_Tracking.aspx" title="Estafeta Tracking"  description="Estafeta Tracking" />
         </siteMapNode>
 
       <siteMapNode url="ops_pages/cliente_corporativo.aspx" title="Cliente Corporativo"  description="Cliente Corporativo">

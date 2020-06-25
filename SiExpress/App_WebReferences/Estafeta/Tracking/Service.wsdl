@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.estafeta.com/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.estafeta.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.estafeta.com/" xmlns:s1="http://www.estafeta.com/AbstractTypes" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.estafeta.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://www.estafeta.com/">
       <s:element name="ExecuteQuery">
@@ -183,6 +183,51 @@
           <s:element minOccurs="0" maxOccurs="1" name="exceptionCodeDetails" type="s:string" />
         </s:sequence>
       </s:complexType>
+      <s:element name="ExecuteQueryPlano">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="suscriberId" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="login" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="initialWaybill" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="finalWaybill" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="waybillType" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="waybills" type="tns:ArrayOfString" />
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeDimensions" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeWaybillReplaceData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeReturnDocumentData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeMultipleServiceData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeInternationalData" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeSignature" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeCustomerInfo" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeHistory" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="historyType" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="filterInformation" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="filterType" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExecuteQueryPlanoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExecuteQueryPlanoResult" type="tns:QueryResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="QueryResult" nillable="true" type="tns:QueryResult" />
+    </s:schema>
+    <s:schema targetNamespace="http://www.estafeta.com/AbstractTypes">
+      <s:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <s:complexType name="StringArray">
+        <s:complexContent mixed="false">
+          <s:restriction base="soapenc:Array">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="String" type="s:string" />
+            </s:sequence>
+          </s:restriction>
+        </s:complexContent>
+      </s:complexType>
     </s:schema>
   </wsdl:types>
   <wsdl:message name="ExecuteQuerySoapIn">
@@ -191,16 +236,65 @@
   <wsdl:message name="ExecuteQuerySoapOut">
     <wsdl:part name="parameters" element="tns:ExecuteQueryResponse" />
   </wsdl:message>
+  <wsdl:message name="ExecuteQueryPlanoSoapIn">
+    <wsdl:part name="parameters" element="tns:ExecuteQueryPlano" />
+  </wsdl:message>
+  <wsdl:message name="ExecuteQueryPlanoSoapOut">
+    <wsdl:part name="parameters" element="tns:ExecuteQueryPlanoResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExecuteQueryPlanoHttpPostIn">
+    <wsdl:part name="suscriberId" type="s:string" />
+    <wsdl:part name="login" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="initialWaybill" type="s:string" />
+    <wsdl:part name="finalWaybill" type="s:string" />
+    <wsdl:part name="waybillType" type="s:string" />
+    <wsdl:part name="waybills" type="s1:StringArray" />
+    <wsdl:part name="type" type="s:string" />
+    <wsdl:part name="includeDimensions" type="s:string" />
+    <wsdl:part name="includeWaybillReplaceData" type="s:string" />
+    <wsdl:part name="includeReturnDocumentData" type="s:string" />
+    <wsdl:part name="includeMultipleServiceData" type="s:string" />
+    <wsdl:part name="includeInternationalData" type="s:string" />
+    <wsdl:part name="includeSignature" type="s:string" />
+    <wsdl:part name="includeCustomerInfo" type="s:string" />
+    <wsdl:part name="includeHistory" type="s:string" />
+    <wsdl:part name="historyType" type="s:string" />
+    <wsdl:part name="filterInformation" type="s:string" />
+    <wsdl:part name="filterType" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ExecuteQueryPlanoHttpPostOut">
+    <wsdl:part name="Body" element="tns:QueryResult" />
+  </wsdl:message>
   <wsdl:portType name="ServiceSoap">
     <wsdl:operation name="ExecuteQuery">
       <wsdl:input message="tns:ExecuteQuerySoapIn" />
       <wsdl:output message="tns:ExecuteQuerySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteQueryPlano">
+      <wsdl:input message="tns:ExecuteQueryPlanoSoapIn" />
+      <wsdl:output message="tns:ExecuteQueryPlanoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="ServiceHttpPost">
+    <wsdl:operation name="ExecuteQueryPlano">
+      <wsdl:input message="tns:ExecuteQueryPlanoHttpPostIn" />
+      <wsdl:output message="tns:ExecuteQueryPlanoHttpPostOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="ServiceSoap" type="tns:ServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="ExecuteQuery">
       <soap:operation soapAction="http://www.estafeta.com/ExecuteQuery" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExecuteQueryPlano">
+      <soap:operation soapAction="http://www.estafeta.com/ExecuteQueryPlano" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -220,13 +314,37 @@
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="ExecuteQueryPlano">
+      <soap12:operation soapAction="http://www.estafeta.com/ExecuteQueryPlano" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceHttpPost" type="tns:ServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="ExecuteQueryPlano">
+      <http:operation location="/ExecuteQueryPlano" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
   </wsdl:binding>
   <wsdl:service name="Service">
     <wsdl:port name="ServiceSoap" binding="tns:ServiceSoap">
-      <soap:address location="https://tracking.estafeta.com/Service.asmx" />
+      <soap:address location="https://trackingqa.estafeta.com/Service.asmx" />
     </wsdl:port>
     <wsdl:port name="ServiceSoap12" binding="tns:ServiceSoap12">
-      <soap12:address location="https://tracking.estafeta.com/Service.asmx" />
+      <soap12:address location="https://trackingqa.estafeta.com/Service.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceHttpPost" binding="tns:ServiceHttpPost">
+      <http:address location="https://trackingqa.estafeta.com/Service.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

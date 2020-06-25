@@ -120,8 +120,6 @@ Partial Class ops_pages_Exportacion_Estafeta
                             checkRow.Visible = False
 
                         End If
-
-                        estafetaWrapper.Tracking()
                     End If
                 End If
             End If
