@@ -1,5 +1,6 @@
 ﻿
 Imports System.Data
+Imports SiExProData
 
 Partial Class ops_pages_Exportacion_Estafeta
     Inherits BasePage
@@ -26,58 +27,75 @@ Partial Class ops_pages_Exportacion_Estafeta
                         End With
 
                         Dim respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta() = estafetaWrapper.FrecuenciaCotizadorSingle(envioExportar)
+                        Dim envio As Envio = DaspackDALC.GetDatosEnvio(row.Cells(1).Text)
 
-                        If respuestaFrecuenciaCotizador.Length > 0 Then
+                        If respuestaFrecuenciaCotizador.Length > 0 And envio IsNot Nothing Then
                             If respuestaFrecuenciaCotizador(0).MensajeError <> "" Then
 
                                 row.Cells(12).Text = respuestaFrecuenciaCotizador(0).MensajeError
                             Else
+                                Dim costoInterno = envio.precio
+
+                                If envio.D_TARIFAS_AGENCIA.C_AGENCIAS.factor > 0 Then
+                                    costoInterno = costoInterno * envio.D_TARIFAS_AGENCIA.C_AGENCIAS.factor
+                                End If
+
                                 Dim ddlTiposServicio As DropDownList = CType(row.FindControl("DropDownTipoServicio"), DropDownList)
                                 Dim dsTipoServicio As DataList = CType(row.FindControl("dlTipoServicio"), DataList)
 
-                                For Each tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio In respuestaFrecuenciaCotizador(0).TipoServicio
-                                    Dim ddItem As New ListItem()
-                                    With ddItem
-                                        .Text = tipoServicio.DescripcionServicio
-                                        .Value = tipoServicio.DescripcionServicio
-                                    End With
-                                    ddItem.Attributes.Add("data-TarifaBase", tipoServicio.TarifaBase.ToString())
-                                    ddItem.Attributes.Add("data-TipoEnvioRes", tipoServicio.TipoEnvioRes.ToString())
-                                    ddItem.Attributes.Add("data-AplicaCotizacion", tipoServicio.AplicaCotizacion)
-                                    ddItem.Attributes.Add("data-CCTarifaBase", tipoServicio.CCTarifaBase.ToString())
-                                    ddItem.Attributes.Add("data-SobrePeso", tipoServicio.SobrePeso.ToString())
-                                    ddItem.Attributes.Add("data-CCSobrePeso", tipoServicio.CCSobrePeso.ToString())
-                                    ddItem.Attributes.Add("data-CostoTotal", tipoServicio.CostoTotal.ToString())
-                                    ddItem.Attributes.Add("data-Peso", tipoServicio.Peso.ToString())
-                                    ddItem.Attributes.Add("data-AplicaServicio", tipoServicio.AplicaServicio)
+                                Dim tiposServicio As New List(Of Estafeta.Frecuenciacotizador.TipoServicio)
 
-                                    ddlTiposServicio.Items.Add(ddItem)
+                                For Each tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio In respuestaFrecuenciaCotizador(0).TipoServicio
+                                    If tipoServicio.DescripcionServicio = "Terrestre" Or tipoServicio.DescripcionServicio = "Dia Sig." Then
+
+                                        Dim ddItem As New ListItem()
+                                        With ddItem
+                                            .Text = tipoServicio.DescripcionServicio
+                                            .Value = tipoServicio.DescripcionServicio
+                                        End With
+                                        ddItem.Attributes.Add("data-TarifaBase", tipoServicio.TarifaBase.ToString())
+                                        ddItem.Attributes.Add("data-TipoEnvioRes", tipoServicio.TipoEnvioRes.ToString())
+                                        ddItem.Attributes.Add("data-AplicaCotizacion", tipoServicio.AplicaCotizacion)
+                                        ddItem.Attributes.Add("data-CCTarifaBase", tipoServicio.CCTarifaBase.ToString())
+                                        ddItem.Attributes.Add("data-SobrePeso", tipoServicio.SobrePeso.ToString())
+                                        ddItem.Attributes.Add("data-CCSobrePeso", tipoServicio.CCSobrePeso.ToString())
+                                        ddItem.Attributes.Add("data-CostoTotal", (costoInterno + tipoServicio.CostoTotal).ToString())
+                                        ddItem.Attributes.Add("data-Peso", tipoServicio.Peso.ToString())
+                                        ddItem.Attributes.Add("data-AplicaServicio", tipoServicio.AplicaServicio)
+
+                                        ddlTiposServicio.Items.Add(ddItem)
+                                        tiposServicio.Add(tipoServicio)
+                                    End If
                                 Next
                                 Dim sessionTipoServico = row.Cells(1).Text
                                 Session(sessionTipoServico) = respuestaFrecuenciaCotizador
 
-                                ddlTiposServicio.DataSource = respuestaFrecuenciaCotizador(0).TipoServicio
+                                ddlTiposServicio.DataSource = tiposServicio
                                 ddlTiposServicio.DataTextField = "DescripcionServicio"
                                 ddlTiposServicio.DataValueField = "DescripcionServicio"
 
-                                dsTipoServicio.DataSource = respuestaFrecuenciaCotizador(0).TipoServicio
+                                dsTipoServicio.DataSource = tiposServicio
                                 dsTipoServicio.DataBind()
 
-                                Dim ts = respuestaFrecuenciaCotizador(0).TipoServicio.FirstOrDefault(Function(x) x.DescripcionServicio = ddlTiposServicio.SelectedValue)
+                                Dim ts = tiposServicio.FirstOrDefault(Function(x) x.DescripcionServicio = ddlTiposServicio.SelectedValue)
 
-                                row.Cells(12).Text = "CargosExtra:" + ts.CargosExtra.ToString() + vbCrLf +
-                                                    "TarifaBase:" + ts.TarifaBase.ToString() + vbCrLf +
-                                                    "AplicaCotizacion:" + ts.AplicaCotizacion + vbCrLf +
-                                                    "CCTarifaBase:" + ts.CCTarifaBase.ToString() + vbCrLf +
-                                                    "SobrePeso:" + ts.SobrePeso.ToString() + vbCrLf +
-                                                    "CCSobrePeso:" + ts.CCSobrePeso.ToString() + vbCrLf +
-                                                    "Peso:" + ts.Peso.ToString() + vbCrLf +
-                                                    "AplicaServicio:" + ts.AplicaServicio + vbCrLf +
-                                                    "CostoTotal:" + ts.CostoTotal.ToString()
+                                'row.Cells(12).Text = "CargosExtra:" + ts.CargosExtra.ToString() + vbCrLf +
+                                '                    "TarifaBase:" + ts.TarifaBase.ToString() + vbCrLf +
+                                '                    "AplicaCotizacion:" + ts.AplicaCotizacion + vbCrLf +
+                                '                    "CCTarifaBase:" + ts.CCTarifaBase.ToString() + vbCrLf +
+                                '                    "SobrePeso:" + ts.SobrePeso.ToString() + vbCrLf +
+                                '                    "CCSobrePeso:" + ts.CCSobrePeso.ToString() + vbCrLf +
+                                '                    "Peso:" + ts.Peso.ToString() + vbCrLf +
+                                '                    "AplicaServicio:" + ts.AplicaServicio + vbCrLf +
+                                '                    "CostoTotal:" + (costoInterno + ts.CostoTotal).ToString()
+
+                                row.Cells(12).Text = "CostoTotal:" + (costoInterno + ts.CostoTotal).ToString()
 
                                 'ddlTiposServicio.DataBind()
 
                             End If
+                        Else
+                            row.Cells(12).Text = "Ocurrion un error al cotizar envio"
                         End If
 
                     End If
@@ -138,15 +156,23 @@ Partial Class ops_pages_Exportacion_Estafeta
             Dim sessionTipoServico = respuestaFrecuenciaCotizador(0).TipoServicio
             Dim tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = ddlTiposServicio.SelectedValue)
 
-            row.Cells(12).Text = "CargosExtra:" + tipoServicio.CargosExtra.ToString() + vbCrLf +
-                        "TarifaBase:" + tipoServicio.TarifaBase.ToString() + vbCrLf +
-                        "AplicaCotizacion:" + tipoServicio.AplicaCotizacion + vbCrLf +
-                        "CCTarifaBase:" + tipoServicio.CCTarifaBase.ToString() + vbCrLf +
-                        "SobrePeso:" + tipoServicio.SobrePeso.ToString() + vbCrLf +
-                        "CCSobrePeso:" + tipoServicio.CCSobrePeso.ToString() + vbCrLf +
-                        "Peso:" + tipoServicio.Peso.ToString() + vbCrLf +
-                        "AplicaServicio:" + tipoServicio.AplicaServicio + vbCrLf +
-                        "CostoTotal:" + tipoServicio.CostoTotal.ToString()
+            Dim envio As Envio = DaspackDALC.GetDatosEnvio(row.Cells(1).Text)
+            Dim costoInterno = envio.precio
+
+            If envio.D_TARIFAS_AGENCIA.C_AGENCIAS.factor > 0 Then
+                costoInterno = costoInterno * envio.D_TARIFAS_AGENCIA.C_AGENCIAS.factor
+            End If
+
+            'row.Cells(12).Text = "CargosExtra:" + tipoServicio.CargosExtra.ToString() + vbCrLf +
+            '            "TarifaBase:" + tipoServicio.TarifaBase.ToString() + vbCrLf +
+            '            "AplicaCotizacion:" + tipoServicio.AplicaCotizacion + vbCrLf +
+            '            "CCTarifaBase:" + tipoServicio.CCTarifaBase.ToString() + vbCrLf +
+            '            "SobrePeso:" + tipoServicio.SobrePeso.ToString() + vbCrLf +
+            '            "CCSobrePeso:" + tipoServicio.CCSobrePeso.ToString() + vbCrLf +
+            '            "Peso:" + tipoServicio.Peso.ToString() + vbCrLf +
+            '            "AplicaServicio:" + tipoServicio.AplicaServicio + vbCrLf +
+
+            row.Cells(12).Text = "CostoTotal:" + (costoInterno + tipoServicio.CostoTotal).ToString()
         End If
 
     End Sub
