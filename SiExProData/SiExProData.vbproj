@@ -83,6 +83,9 @@
     <Compile Include="Cliente.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Cobertura.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Destinatario.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
@@ -93,6 +96,9 @@
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EnvioDatos.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EstadosGombar.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EstafetaFrecuenciaCotizador.vb">
@@ -138,6 +144,9 @@
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="TarifaAgencia.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Zonas.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

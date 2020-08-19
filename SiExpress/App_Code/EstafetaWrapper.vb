@@ -7,10 +7,7 @@ Public Class EstafetaWrapper
     Public Function FrecuenciaCotizador(enviosExportar As List(Of FrecuenciaCotizadorExport)) As String
 
         Dim estafetaService As New Frecuenciacotizador.Service()
-        Dim estafetaUser = GetEstafetaUser(1)
         Dim tipoEnvio = New Estafeta.Frecuenciacotizador.TipoEnvio()
-        'Dim cpOrigen = New String() {"45016"}
-        'Dim cpDestino = New String() {"58060"}
 
         tipoEnvio.EsPaquete = True
         tipoEnvio.Alto = 2
@@ -21,6 +18,7 @@ Public Class EstafetaWrapper
         For Each envioExportar As FrecuenciaCotizadorExport In enviosExportar
             Dim cpOrigen = New String() {envioExportar.CPRemitente}
             Dim cpDestino = New String() {envioExportar.CPDestinatario}
+            Dim estafetaUser = GetEstafetaUser(1, envioExportar.CPDestinatario)
 
             Dim frecuenciaCotizadorResponse = estafetaService.FrecuenciaCotizador(estafetaUser.UserId, estafetaUser.UserName, estafetaUser.Password, False, True, tipoEnvio, cpOrigen, cpDestino)
 
@@ -29,17 +27,13 @@ Public Class EstafetaWrapper
 
         Next
 
-
         Return ""
     End Function
 
     Public Function FrecuenciaCotizadorSingle(envioExportar As FrecuenciaCotizadorExport) As Estafeta.Frecuenciacotizador.Respuesta()
 
         Dim estafetaService As New Frecuenciacotizador.Service()
-        Dim estafetaUser = GetEstafetaUser(1)
         Dim tipoEnvio = New Estafeta.Frecuenciacotizador.TipoEnvio()
-        'Dim cpOrigen = New String() {"45016"}
-        'Dim cpDestino = New String() {"58060"}
 
         tipoEnvio.EsPaquete = True
         tipoEnvio.Alto = 2
@@ -50,6 +44,7 @@ Public Class EstafetaWrapper
 
         Dim cpOrigen = New String() {envioExportar.CPRemitente}
         Dim cpDestino = New String() {envioExportar.CPDestinatario}
+        Dim estafetaUser = GetEstafetaUser(1, envioExportar.CPDestinatario)
 
         Return estafetaService.FrecuenciaCotizador(estafetaUser.UserId, estafetaUser.UserName, estafetaUser.Password, False, True, tipoEnvio, cpOrigen, cpDestino)
 
@@ -57,7 +52,7 @@ Public Class EstafetaWrapper
 
     Public Function Label(envio As System.Data.DataRowView, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta()) As String
         Dim estafetaService As New Estafeta.Label.EstafetaLabelService()
-        Dim estafetaUser = GetEstafetaUser(3)
+        Dim estafetaUser = GetEstafetaUser(3, envio("cp_dest").ToString().Trim())
 
         Dim origen As New Estafeta.Label.OriginInfo()
         With origen
@@ -140,7 +135,7 @@ Public Class EstafetaWrapper
 
     Public Function Tracking(ByVal trackingId As String) As List(Of EstafetaTrackingStep)
         Dim estafetaService As New Estafeta.Tracking.Service()
-        Dim estafetaUser = GetEstafetaUser(2)
+        Dim estafetaUser = GetEstafetaUser(2, "")
         Dim searchType As New Estafeta.Tracking.SearchType()
 
         searchType.type = "L"
@@ -227,29 +222,48 @@ Public Class EstafetaWrapper
         Return trackHistory
     End Function
 
-    Public Function GetEstafetaUser(servicio As Integer) As EstafetaUser
+    Public Function GetEstafetaUser(servicio As Integer, zip_code As String) As EstafetaUser
         Dim estafetaUser As New EstafetaUser()
-        Select Case servicio
-            Case 1
-                With estafetaUser
-                    .UserId = 1
-                    .UserName = "AdminUser"
-                    .Password = ",1,B(vVi"
-                End With
-            Case 2
-                With estafetaUser
-                    .UserId = 25
-                    .UserName = "Usuario1"
-                    .Password = "1GCvGIu$"
-                End With
-            Case 3
-                With estafetaUser
-                    .UserId = 28
-                    .UserName = "prueba1"
-                    .Password = "lAbeL_K_11"
-                    .CustomerNumber = "0000000"
-                End With
-        End Select
+
+        If zip_code <> "" Then
+            Dim cobertura = DaspackDALC.FindZipCode(zip_code)
+            If cobertura IsNot Nothing Then
+                Dim estadozona = DaspackDALC.FindGombarState(cobertura.siglas_plaza)
+                If estadozona IsNot Nothing Then
+                    Dim usuarioZona = DaspackDALC.UserZone(estadozona.zona)
+                    Dim UserId As String = ConfigurationManager.AppSettings("Estafeta.Usuario" + usuarioZona.usuario_estafeta.ToString() + ".UserId")
+                    Dim UserName As String = ConfigurationManager.AppSettings("Estafeta.Usuario" + usuarioZona.usuario_estafeta.ToString() + ".UserName")
+                    Dim Password As String = ConfigurationManager.AppSettings("Estafeta.Usuario" + usuarioZona.usuario_estafeta.ToString() + ".Password")
+                    Dim CustomerNumber As String = ConfigurationManager.AppSettings("Estafeta.Usuario" + usuarioZona.usuario_estafeta.ToString() + ".CustomerNumber")
+
+                    Select Case servicio
+                        Case 1
+                            With estafetaUser
+                                .UserId = 1
+                                .UserName = "AdminUser"
+                                .Password = ",1,B(vVi"
+                            End With
+                        Case 2
+
+                        Case 3
+                            With estafetaUser
+                                .UserId = 28
+                                .UserName = "prueba1"
+                                .Password = "lAbeL_K_11"
+                                .CustomerNumber = "0000000"
+                            End With
+                    End Select
+                End If
+            End If
+        Else
+            With estafetaUser
+                .UserId = 25
+                .UserName = "Usuario1"
+                .Password = "1GCvGIu$"
+            End With
+        End If
+
+
 
 
         Return estafetaUser

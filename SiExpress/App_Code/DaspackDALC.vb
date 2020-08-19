@@ -3,7 +3,6 @@ Imports Microsoft.VisualBasic
 Imports SiExProData
 
 Public Class DaspackDALC
-
     Public Shared Function GetModuloPrivilegio(ByVal idModulo As Integer, ByVal idUsuario As Integer, ByVal privilegio As Integer) As Boolean
         Dim db As New DaspackDataContext
         Dim tienePermiso As Boolean = False
@@ -41,7 +40,7 @@ Public Class DaspackDALC
         Dim db As New DaspackDataContext
         Dim modulo As Modulo = Nothing
         Dim modulosList As IEnumerable(Of Modulo) = db.GetModuloPorDescripcion(descripcion)
-        
+
         Dim modulos As List(Of Modulo) = New List(Of Modulo)(modulosList.ToList())
 
         If modulos IsNot Nothing Then
@@ -116,41 +115,41 @@ Public Class DaspackDALC
 
     End Function
 
-    public Shared Function GetUltimoEnvio(ByVal id_usuario As integer ) As Envio
+    Public Shared Function GetUltimoEnvio(ByVal id_usuario As Integer) As Envio
         Dim dbContext As New SiExProEntities
         Dim envio As Envio = dbContext.D_ENVIOS.OrderByDescending(Function(x) x.id_envio).FirstOrDefault(Function(x) x.id_usuario = id_usuario)
 
         Return envio
     End Function
 
-    public Shared Function GetDatosEnvio(ByVal idEnvio As integer ) As Envio
+    Public Shared Function GetDatosEnvio(ByVal idEnvio As Integer) As Envio
         Dim dbContext As New SiExProEntities
         Dim envio As Envio = dbContext.D_ENVIOS.FirstOrDefault(Function(x) x.id_envio = idEnvio)
 
         Return envio
     End Function
 
-    public Shared Function GetDatosCliente(id_envio as integer) As Cliente
+    Public Shared Function GetDatosCliente(id_envio As Integer) As Cliente
         Dim dbContext As New SiExProEntities
         Dim cliente As Cliente
 
-        cliente = CType((from ed in dbContext.D_ENVIOS_DATOS.Where(Function(x) x.id_envio = id_envio)
-            join c In dbContext.C_CLIENTES 
-                On c.id_cliente Equals ed.id_cliente
-            Select c).FirstOrDefault(), Cliente)
+        cliente = CType((From ed In dbContext.D_ENVIOS_DATOS.Where(Function(x) x.id_envio = id_envio)
+                         Join c In dbContext.C_CLIENTES
+                             On c.id_cliente Equals ed.id_cliente
+                         Select c).FirstOrDefault(), Cliente)
 
-        return cliente
+        Return cliente
 
     End Function
 
-    public Shared Function GetDatosDestinatario(id_envio as integer) As Destinatario
+    Public Shared Function GetDatosDestinatario(id_envio As Integer) As Destinatario
         Dim dbContext As New SiExProEntities
-        Dim destinatario as Destinatario
+        Dim destinatario As Destinatario
 
-        destinatario = CType((from ed in dbContext.D_ENVIOS_DATOS.Where(Function(x) x.id_envio = id_envio)
-            join c In dbContext.C_DESTINATARIOS
-                On c.id_destinatario Equals ed.id_destinatario
-            Select c).FirstOrDefault(), Destinatario)
+        destinatario = CType((From ed In dbContext.D_ENVIOS_DATOS.Where(Function(x) x.id_envio = id_envio)
+                              Join c In dbContext.C_DESTINATARIOS
+                                  On c.id_destinatario Equals ed.id_destinatario
+                              Select c).FirstOrDefault(), Destinatario)
 
         Return destinatario
     End Function
@@ -270,6 +269,34 @@ Public Class DaspackDALC
         Next
 
         Return True
+    End Function
+
+    Public Shared Function FindZipCode(zip_code As String) As Cobertura
+        Dim dbContext As New SiExProEntities
+
+        Return dbContext.D_COBERTURAS.FirstOrDefault(Function(x) x.codigo_postal = zip_code)
+
+    End Function
+
+    Public Shared Function FindGombarState(zone_code As String) As EstadosGombar
+        Dim dbContext As New SiExProEntities
+
+        Return dbContext.C_ESTADOS_GOMBAR.FirstOrDefault(Function(x) x.siglas = zone_code)
+
+    End Function
+
+    Public Shared Function UserZone(zoneId As Integer) As Zonas
+        Dim dbContext As New SiExProEntities
+
+        Return dbContext.C_ZONAS.FirstOrDefault(Function(x) x.id_zona = zoneId)
+
+    End Function
+
+    Public Shared Function GetSender(zoneId As Integer) As Cliente
+        Dim dbContext As New SiExProEntities
+
+        Return dbContext.C_CLIENTES.OrderByDescending(Function(x) x.id_cliente).FirstOrDefault()
+
     End Function
 
 End Class

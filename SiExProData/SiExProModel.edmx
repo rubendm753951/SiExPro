@@ -70,6 +70,25 @@
           <Property Name="codigo_postal" Type="varchar" MaxLength="20" />
           <Property Name="email" Type="varchar" MaxLength="200" />
         </EntityType>
+        <EntityType Name="C_ESTADOS_GOMBAR">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="siglas" Type="nvarchar" MaxLength="10" />
+          <Property Name="destino" Type="nvarchar" MaxLength="50" />
+          <Property Name="zona" Type="int" />
+          <Property Name="tiempo_transito" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="C_ZONAS">
+          <Key>
+            <PropertyRef Name="id_zona" />
+          </Key>
+          <Property Name="id_zona" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="50" />
+          <Property Name="usuario_estafeta" Type="int" />
+        </EntityType>
         <EntityType Name="D_CIUDADES_RUTAS">
           <Key>
             <PropertyRef Name="id_ciudad_ruta" />
@@ -77,6 +96,28 @@
           <Property Name="id_ciudad_ruta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="id_ciudad" Type="int" Nullable="false" />
           <Property Name="id_ruta" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="D_COBERTURA">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="codigo_postal" Type="nvarchar" MaxLength="15" />
+          <Property Name="municipio" Type="nvarchar" MaxLength="90" />
+          <Property Name="estado" Type="nvarchar" MaxLength="90" />
+          <Property Name="siglas_plaza" Type="nvarchar" MaxLength="10" />
+          <Property Name="lunes" Type="bit" Nullable="false" />
+          <Property Name="martes" Type="bit" Nullable="false" />
+          <Property Name="miercoles" Type="bit" Nullable="false" />
+          <Property Name="jueves" Type="bit" Nullable="false" />
+          <Property Name="viernes" Type="bit" Nullable="false" />
+          <Property Name="sabado" Type="bit" Nullable="false" />
+          <Property Name="domingo" Type="bit" Nullable="false" />
+          <Property Name="periodicidad" Type="nvarchar" MaxLength="50" />
+          <Property Name="ocurre" Type="bit" Nullable="false" />
+          <Property Name="reexpedicion" Type="bit" Nullable="false" />
+          <Property Name="garantia_maxima" Type="nvarchar" MaxLength="50" />
+          <Property Name="ciudad" Type="nvarchar" MaxLength="90" />
         </EntityType>
         <EntityType Name="D_ENVIO_COMENTARIOS">
           <Key>
@@ -251,7 +292,10 @@
           <EntitySet Name="C_AGENCIAS" EntityType="Self.C_AGENCIAS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="C_CLIENTES" EntityType="Self.C_CLIENTES" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="C_DESTINATARIOS" EntityType="Self.C_DESTINATARIOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="C_ESTADOS_GOMBAR" EntityType="Self.C_ESTADOS_GOMBAR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="C_ZONAS" EntityType="Self.C_ZONAS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_CIUDADES_RUTAS" EntityType="Self.D_CIUDADES_RUTAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_COBERTURA" EntityType="Self.D_COBERTURA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIO_COMENTARIOS" EntityType="Self.D_ENVIO_COMENTARIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS" EntityType="Self.D_ENVIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS_DATOS" EntityType="Self.D_ENVIOS_DATOS" Schema="dbo" store:Type="Tables" />
@@ -446,6 +490,9 @@
           <EntitySet Name="D_ESTAFETA_FRECUENCIA_COTIZADOR" EntityType="MasupackModel.EstafetaFrecuenciaCotizador" />
           <EntitySet Name="D_ESTAFETA_TIPO_SERVICIO" EntityType="MasupackModel.EstafetaTipoServicio" />
           <EntitySet Name="D_ESTAFETA_LABEL" EntityType="MasupackModel.EstafetaLabel" />
+          <EntitySet Name="C_ESTADOS_GOMBAR" EntityType="MasupackModel.EstadosGombar" />
+          <EntitySet Name="C_ZONAS" EntityType="MasupackModel.Zonas" />
+          <EntitySet Name="D_COBERTURAS" EntityType="MasupackModel.Cobertura" />
         </EntityContainer>
         <EntityType Name="TarifaAgencia">
           <Key>
@@ -567,6 +614,47 @@
           <Property Name="labelPDF" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="trackId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="fecha" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="EstadosGombar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="siglas" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="destino" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="zona" Type="Int32" />
+          <Property Name="tiempo_transito" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Zonas">
+          <Key>
+            <PropertyRef Name="id_zona" />
+          </Key>
+          <Property Name="id_zona" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="usuario_estafeta" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Cobertura">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="codigo_postal" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="municipio" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
+          <Property Name="estado" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
+          <Property Name="siglas_plaza" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="lunes" Type="Boolean" Nullable="false" />
+          <Property Name="martes" Type="Boolean" Nullable="false" />
+          <Property Name="miercoles" Type="Boolean" Nullable="false" />
+          <Property Name="jueves" Type="Boolean" Nullable="false" />
+          <Property Name="viernes" Type="Boolean" Nullable="false" />
+          <Property Name="sabado" Type="Boolean" Nullable="false" />
+          <Property Name="domingo" Type="Boolean" Nullable="false" />
+          <Property Name="periodicidad" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ocurre" Type="Boolean" Nullable="false" />
+          <Property Name="reexpedicion" Type="Boolean" Nullable="false" />
+          <Property Name="garantia_maxima" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ciudad" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -784,6 +872,50 @@
                 <ScalarProperty Name="trackId" ColumnName="trackId" />
                 <ScalarProperty Name="labelPDF" ColumnName="labelPDF" />
                 <ScalarProperty Name="id_envio" ColumnName="id_envio" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_ESTADOS_GOMBAR">
+            <EntityTypeMapping TypeName="MasupackModel.EstadosGombar">
+              <MappingFragment StoreEntitySet="C_ESTADOS_GOMBAR">
+                <ScalarProperty Name="tiempo_transito" ColumnName="tiempo_transito" />
+                <ScalarProperty Name="zona" ColumnName="zona" />
+                <ScalarProperty Name="destino" ColumnName="destino" />
+                <ScalarProperty Name="siglas" ColumnName="siglas" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_ZONAS">
+            <EntityTypeMapping TypeName="MasupackModel.Zonas">
+              <MappingFragment StoreEntitySet="C_ZONAS">
+                <ScalarProperty Name="usuario_estafeta" ColumnName="usuario_estafeta" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_zona" ColumnName="id_zona" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_COBERTURAS">
+            <EntityTypeMapping TypeName="MasupackModel.Cobertura">
+              <MappingFragment StoreEntitySet="D_COBERTURA">
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="garantia_maxima" ColumnName="garantia_maxima" />
+                <ScalarProperty Name="reexpedicion" ColumnName="reexpedicion" />
+                <ScalarProperty Name="ocurre" ColumnName="ocurre" />
+                <ScalarProperty Name="periodicidad" ColumnName="periodicidad" />
+                <ScalarProperty Name="domingo" ColumnName="domingo" />
+                <ScalarProperty Name="sabado" ColumnName="sabado" />
+                <ScalarProperty Name="viernes" ColumnName="viernes" />
+                <ScalarProperty Name="jueves" ColumnName="jueves" />
+                <ScalarProperty Name="miercoles" ColumnName="miercoles" />
+                <ScalarProperty Name="martes" ColumnName="martes" />
+                <ScalarProperty Name="lunes" ColumnName="lunes" />
+                <ScalarProperty Name="siglas_plaza" ColumnName="siglas_plaza" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="municipio" ColumnName="municipio" />
+                <ScalarProperty Name="codigo_postal" ColumnName="codigo_postal" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
