@@ -71,5 +71,6 @@ Partial Public Class Order
 
     Public Overridable Property OrderItems As ICollection(Of OrderItem) = New HashSet(Of OrderItem)
     Public Overridable Property OrderNotes As ICollection(Of OrderNote) = New HashSet(Of OrderNote)
+    Public Overridable Property Shipments As ICollection(Of Shipment) = New HashSet(Of Shipment)
 
 End Class

@@ -4,13 +4,20 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="320528e175e74c008c90abeb3484e40c" Name="Diagram1" ZoomLevel="72">
+      <Diagram DiagramId="320528e175e74c008c90abeb3484e40c" Name="Diagram1" ZoomLevel="57">
         <EntityTypeShape EntityType="GombarECommerceModel.Order" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="GombarECommerceModel.OrderItem" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
         <EntityTypeShape EntityType="GombarECommerceModel.OrderNote" Width="1.5" PointX="3" PointY="9.375" IsExpanded="true" />
         <AssociationConnector Association="GombarECommerceModel.FK_OrderItem_OrderId_Order_Id" ManuallyRouted="false" />
         <AssociationConnector Association="GombarECommerceModel.FK_OrderNote_OrderId_Order_Id" ManuallyRouted="false" />
         <EntityTypeShape EntityType="GombarECommerceModel.OrdersVW" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="GombarECommerceModel.Shipment" Width="1.5" PointX="3" PointY="13.25" />
+        <EntityTypeShape EntityType="GombarECommerceModel.ShipmentItem" Width="1.5" PointX="5.25" PointY="13.75" />
+        <AssociationConnector Association="GombarECommerceModel.FK_Shipment_OrderId_Order_Id" />
+        <AssociationConnector Association="GombarECommerceModel.FK_ShipmentItem_ShipmentId_Shipment_Id" />
+        <EntityTypeShape EntityType="GombarECommerceModel.ActivityLog" Width="1.5" PointX="7.625" PointY="7" />
+        <EntityTypeShape EntityType="GombarECommerceModel.ActivityLogType" Width="1.5" PointX="5.375" PointY="7.375" />
+        <AssociationConnector Association="GombarECommerceModel.FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -28,6 +28,7 @@ Partial Public Class Agencias
     Public Property id_recibo As Integer
     Public Property factor As Decimal
     Public Property esquema_por_factor As Boolean
+    Public Property costo_adicional As Decimal
 
     Public Overridable Property D_TARIFAS_AGENCIA As ICollection(Of TarifaAgencia) = New HashSet(Of TarifaAgencia)
 

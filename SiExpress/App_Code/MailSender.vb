@@ -28,7 +28,7 @@ Public Class MailSender
             smtpClient.Send(message)
         Catch ex As Exception
             Dim errorLog = New ErrorLog
-            errorLog.Log("MailSender_SendMail", ex, ex.Source, "0")
+            errorLog.LogError("MailSender_SendMail", ex, ex.Source, "0")
         End Try
 
         Return result
@@ -66,7 +66,7 @@ Public Class MailSender
             Next
         Catch ex As Exception
             Dim errorLog = New ErrorLog
-            errorLog.Log("MailSender_ComposeMail", ex, ex.Source, "0")
+            errorLog.LogError("MailSender_ComposeMail", ex, ex.Source, "0")
             Return message
         End Try
 

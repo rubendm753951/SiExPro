@@ -159,6 +159,12 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivityLog.vb">
+      <DependentUpon>SiExProECommerceModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ActivityLogType.vb">
+      <DependentUpon>SiExProECommerceModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -184,6 +190,12 @@
       <DependentUpon>SiExProECommerceModel.tt</DependentUpon>
     </Compile>
     <Compile Include="OrdersVW.vb">
+      <DependentUpon>SiExProECommerceModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Shipment.vb">
+      <DependentUpon>SiExProECommerceModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ShipmentItem.vb">
       <DependentUpon>SiExProECommerceModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SiExProECommerceModel.Context.vb">

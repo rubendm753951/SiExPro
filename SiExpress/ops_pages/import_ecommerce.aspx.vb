@@ -12,6 +12,10 @@ Partial Class ops_pages_import_ecommerce
 
     End Sub
 
+    Protected Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
+        GridView1.DataBind()
+    End Sub
+
     Protected Sub btnImportar_Click(sender As Object, e As EventArgs) Handles btnImportar.Click
         Dim estafetaWrapper As New EstafetaWrapper()
         Dim Mensaje As String
@@ -103,7 +107,7 @@ Partial Class ops_pages_import_ecommerce
                             requestEnvio.ancho = 5
                             requestEnvio.alto = 5
                             requestEnvio.peso = 5
-                            requestEnvio.referencia = dsRow(1)
+                            requestEnvio.referencia = dsRow(1) 'Order ID
                             requestEnvio.contenido = ""
                             requestEnvio.dimension_peso = Session("dimension_peso")
                             requestEnvio.contenedores = 1
@@ -124,9 +128,15 @@ Partial Class ops_pages_import_ecommerce
                             Dim ins_seguimiento As New seguimiento_envios
                             ins_seguimiento.insertar_seguimiento(id_envio, Me.AppRelativeVirtualPath, "", usuarioId)
 
+                            ECommerceDALC.UpdateOrderStatus(dsRow(1), ECommerceOrderStatusEnum.Processing)
+
                             shipments.Add(id_envio)
+                            row.Cells(15).Text = "Orden Importada"
+                            checkRow.Checked = False
+                            checkRow.Visible = False
                         Catch ex As Exception
                             'TODO Mostrar mensaje que se importo el envio
+                            dsRow(15) = "Ocurrio un error en la importacion"
                         End Try
 
                     Catch ex As Exception

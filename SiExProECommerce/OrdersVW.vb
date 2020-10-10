@@ -27,5 +27,6 @@ Partial Public Class OrdersVW
     Public Property Cantidad As Integer
     Public Property Total As Decimal
     Public Property Total_Impuestos As Decimal
+    Public Property Ciudad As String
 
 End Class

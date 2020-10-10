@@ -129,6 +129,13 @@ Public Class DaspackDALC
         Return envio
     End Function
 
+    Public Shared Function GetDatosEnvioByReferenciaFedex(ByVal trackId As String) As Envio
+        Dim dbContext As New SiExProEntities
+        Dim envio As Envio = dbContext.D_ENVIOS.FirstOrDefault(Function(x) x.Referencia_FedEx = trackId)
+
+        Return envio
+    End Function
+
     Public Shared Function GetDatosCliente(id_envio As Integer) As Cliente
         Dim dbContext As New SiExProEntities
         Dim cliente As Cliente
@@ -171,8 +178,9 @@ Public Class DaspackDALC
 
         Dim envio As Envio = dbContext.D_ENVIOS.FirstOrDefault(Function(x) x.id_envio = id_envio)
 
-        'envio.Referencia_FedEx = respuesta.globalResult.resultDescription
-        'dbContext.SaveChanges()
+        envio.Referencia_FedEx = respuesta.labelResultList(0).resultDescription
+        envio.id_status = 300
+        dbContext.SaveChanges()
 
         Dim estafetaLabel As EstafetaLabel = dbContext.D_ESTAFETA_LABEL.FirstOrDefault(Function(x) x.id_envio = id_envio)
         Dim existeLabel As Boolean = True
@@ -193,7 +201,7 @@ Public Class DaspackDALC
             dbContext.D_ESTAFETA_LABEL.Add(estafetaLabel)
         End If
 
-        dbContext.SaveChanges()
+        Return dbContext.SaveChanges() > 0
 
     End Function
 
@@ -271,6 +279,11 @@ Public Class DaspackDALC
         Return True
     End Function
 
+    Public Shared Function GetServicioSelecionado(id_envio As Integer) As EstafetaTipoServicio
+        Dim dbContext As New SiExProEntities
+        Return dbContext.D_ESTAFETA_TIPO_SERVICIO.FirstOrDefault(Function(x) x.id_envio = id_envio And x.Selecccionado = True)
+    End Function
+
     Public Shared Function FindZipCode(zip_code As String) As Cobertura
         Dim dbContext As New SiExProEntities
 
@@ -296,6 +309,13 @@ Public Class DaspackDALC
         Dim dbContext As New SiExProEntities
 
         Return dbContext.C_CLIENTES.OrderByDescending(Function(x) x.id_cliente).FirstOrDefault()
+
+    End Function
+
+    Public Shared Function GetGombarSender(clienteId As Integer) As Cliente
+        Dim dbContext As New SiExProEntities
+
+        Return dbContext.C_CLIENTES.FirstOrDefault(Function(x) x.id_cliente = clienteId)
 
     End Function
 

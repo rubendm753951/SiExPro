@@ -5,6 +5,28 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="GombarECommerceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ActivityLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Comment" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IpAddress" Type="nvarchar" MaxLength="200" />
+          <Property Name="EntityName" Type="nvarchar" MaxLength="400" />
+          <Property Name="ActivityLogTypeId" Type="int" Nullable="false" />
+          <Property Name="CustomerId" Type="int" Nullable="false" />
+          <Property Name="EntityId" Type="int" />
+          <Property Name="CreatedOnUtc" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ActivityLogType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SystemKeyword" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Enabled" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Order">
           <Key>
             <PropertyRef Name="Id" />
@@ -103,6 +125,29 @@
           <Property Name="DisplayToCustomer" Type="bit" Nullable="false" />
           <Property Name="CreatedOnUtc" Type="datetime2" Precision="7" Nullable="false" />
         </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="TrackingNumber" Type="nvarchar(max)" />
+          <Property Name="TotalWeight" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="ShippedDateUtc" Type="datetime2" Precision="7" />
+          <Property Name="DeliveryDateUtc" Type="datetime2" Precision="7" />
+          <Property Name="AdminComment" Type="nvarchar(max)" />
+          <Property Name="CreatedOnUtc" Type="datetime2" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ShipmentItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShipmentId" Type="int" Nullable="false" />
+          <Property Name="OrderItemId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="WarehouseId" Type="int" Nullable="false" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Orders_VW">
@@ -131,7 +176,22 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
           <Property Name="Cantidad" Type="int" Nullable="false" />
           <Property Name="Total" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="Total_Impuestos" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="Ciudad" Type="nvarchar(max)" />
         </EntityType>
+        <Association Name="FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id">
+          <End Role="ActivityLogType" Type="Self.ActivityLogType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ActivityLog" Type="Self.ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActivityLogType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActivityLog">
+              <PropertyRef Name="ActivityLogTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_OrderItem_OrderId_Order_Id">
           <End Role="Order" Type="Self.Order" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -160,10 +220,42 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Shipment_OrderId_Order_Id">
+          <End Role="Order" Type="Self.Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShipmentItem_ShipmentId_Shipment_Id">
+          <End Role="Shipment" Type="Self.Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ShipmentItem" Type="Self.ShipmentItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ShipmentItem">
+              <PropertyRef Name="ShipmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="GombarECommerceModelStoreContainer">
+          <EntitySet Name="ActivityLog" EntityType="Self.ActivityLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActivityLogType" EntityType="Self.ActivityLogType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItem" EntityType="Self.OrderItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderNote" EntityType="Self.OrderNote" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Shipment" EntityType="Self.Shipment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShipmentItem" EntityType="Self.ShipmentItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders_VW" EntityType="Self.Orders_VW" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Orders_VW].[Items] AS [Items], 
@@ -181,9 +273,14 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
     [Orders_VW].[Correo] AS [Correo], 
     [Orders_VW].[Cantidad] AS [Cantidad], 
     [Orders_VW].[Total] AS [Total], 
-    [Orders_VW].[Total_Impuestos] AS [Total_Impuestos]
+    [Orders_VW].[Total_Impuestos] AS [Total_Impuestos], 
+    [Orders_VW].[Ciudad] AS [Ciudad]
     FROM [dbo].[Orders_VW] AS [Orders_VW]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id" Association="Self.FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id">
+            <End Role="ActivityLogType" EntitySet="ActivityLogType" />
+            <End Role="ActivityLog" EntitySet="ActivityLog" />
+          </AssociationSet>
           <AssociationSet Name="FK_OrderItem_OrderId_Order_Id" Association="Self.FK_OrderItem_OrderId_Order_Id">
             <End Role="Order" EntitySet="Order" />
             <End Role="OrderItem" EntitySet="OrderItem" />
@@ -191,6 +288,14 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
           <AssociationSet Name="FK_OrderNote_OrderId_Order_Id" Association="Self.FK_OrderNote_OrderId_Order_Id">
             <End Role="Order" EntitySet="Order" />
             <End Role="OrderNote" EntitySet="OrderNote" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Shipment_OrderId_Order_Id" Association="Self.FK_Shipment_OrderId_Order_Id">
+            <End Role="Order" EntitySet="Order" />
+            <End Role="Shipment" EntitySet="Shipment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShipmentItem_ShipmentId_Shipment_Id" Association="Self.FK_ShipmentItem_ShipmentId_Shipment_Id">
+            <End Role="Shipment" EntitySet="Shipment" />
+            <End Role="ShipmentItem" EntitySet="ShipmentItem" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -260,6 +365,7 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
           <Property Name="RedeemedRewardPointsEntryId" Type="Int32" />
           <NavigationProperty Name="OrderItems" Relationship="Self.FK_OrderItem_OrderId_Order_Id" FromRole="Order" ToRole="OrderItem" />
           <NavigationProperty Name="OrderNotes" Relationship="Self.FK_OrderNote_OrderId_Order_Id" FromRole="Order" ToRole="OrderNote" />
+          <NavigationProperty Name="Shipments" Relationship="GombarECommerceModel.FK_Shipment_OrderId_Order_Id" FromRole="Order" ToRole="Shipment" />
         </EntityType>
         <EntityType Name="OrderItem">
           <Key>
@@ -340,6 +446,22 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
             <End Role="OrderNote" EntitySet="OrderNotes" />
           </AssociationSet>
           <EntitySet Name="Orders_VW" EntityType="GombarECommerceModel.OrdersVW" />
+          <EntitySet Name="Shipments" EntityType="GombarECommerceModel.Shipment" />
+          <EntitySet Name="ShipmentItems" EntityType="GombarECommerceModel.ShipmentItem" />
+          <AssociationSet Name="FK_Shipment_OrderId_Order_Id" Association="GombarECommerceModel.FK_Shipment_OrderId_Order_Id">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="Shipment" EntitySet="Shipments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShipmentItem_ShipmentId_Shipment_Id" Association="GombarECommerceModel.FK_ShipmentItem_ShipmentId_Shipment_Id">
+            <End Role="Shipment" EntitySet="Shipments" />
+            <End Role="ShipmentItem" EntitySet="ShipmentItems" />
+          </AssociationSet>
+          <EntitySet Name="ActivityLogs" EntityType="GombarECommerceModel.ActivityLog" />
+          <EntitySet Name="ActivityLogTypes" EntityType="GombarECommerceModel.ActivityLogType" />
+          <AssociationSet Name="FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id" Association="GombarECommerceModel.FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id">
+            <End Role="ActivityLogType" EntitySet="ActivityLogTypes" />
+            <End Role="ActivityLog" EntitySet="ActivityLogs" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="OrdersVW">
           <Key>
@@ -367,7 +489,100 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
           <Property Name="Cantidad" Type="Int32" Nullable="false" />
           <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
           <Property Name="Total_Impuestos" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="Ciudad" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="Shipment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="TrackingNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TotalWeight" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="ShippedDateUtc" Type="DateTime" Precision="7" />
+          <Property Name="DeliveryDateUtc" Type="DateTime" Precision="7" />
+          <Property Name="AdminComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedOnUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="Order" Relationship="GombarECommerceModel.FK_Shipment_OrderId_Order_Id" FromRole="Shipment" ToRole="Order" />
+          <NavigationProperty Name="ShipmentItems" Relationship="GombarECommerceModel.FK_ShipmentItem_ShipmentId_Shipment_Id" FromRole="Shipment" ToRole="ShipmentItem" />
+        </EntityType>
+        <EntityType Name="ShipmentItem">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="OrderItemId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="WarehouseId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Shipment" Relationship="GombarECommerceModel.FK_ShipmentItem_ShipmentId_Shipment_Id" FromRole="ShipmentItem" ToRole="Shipment" />
+        </EntityType>
+        <Association Name="FK_Shipment_OrderId_Order_Id">
+          <End Type="GombarECommerceModel.Order" Role="Order" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GombarECommerceModel.Shipment" Role="Shipment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Order">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Shipment">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShipmentItem_ShipmentId_Shipment_Id">
+          <End Type="GombarECommerceModel.Shipment" Role="Shipment" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GombarECommerceModel.ShipmentItem" Role="ShipmentItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Shipment">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ShipmentItem">
+              <PropertyRef Name="ShipmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ActivityLog">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IpAddress" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="EntityName" Type="String" MaxLength="400" FixedLength="false" Unicode="true" />
+          <Property Name="ActivityLogTypeId" Type="Int32" Nullable="false" />
+          <Property Name="CustomerId" Type="Int32" Nullable="false" />
+          <Property Name="EntityId" Type="Int32" />
+          <Property Name="CreatedOnUtc" Type="DateTime" Nullable="false" Precision="7" />
+          <NavigationProperty Name="ActivityLogType" Relationship="GombarECommerceModel.FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id" FromRole="ActivityLog" ToRole="ActivityLogType" />
+        </EntityType>
+        <EntityType Name="ActivityLogType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SystemKeyword" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Enabled" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="ActivityLogs" Relationship="GombarECommerceModel.FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id" FromRole="ActivityLogType" ToRole="ActivityLog" />
+        </EntityType>
+        <Association Name="FK_ActivityLog_ActivityLogTypeId_ActivityLogType_Id">
+          <End Type="GombarECommerceModel.ActivityLogType" Role="ActivityLogType" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="GombarECommerceModel.ActivityLog" Role="ActivityLog" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActivityLogType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ActivityLog">
+              <PropertyRef Name="ActivityLogTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -478,6 +693,7 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
           <EntitySetMapping Name="Orders_VW">
             <EntityTypeMapping TypeName="GombarECommerceModel.OrdersVW">
               <MappingFragment StoreEntitySet="Orders_VW">
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
                 <ScalarProperty Name="Total_Impuestos" ColumnName="Total_Impuestos" />
                 <ScalarProperty Name="Total" ColumnName="Total" />
                 <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
@@ -494,6 +710,55 @@ warning 6002: The table/view 'GombarECommerce.dbo.Orders_VW' does not have a pri
                 <ScalarProperty Name="Customer_id" ColumnName="Customer_id" />
                 <ScalarProperty Name="Oderder_ID" ColumnName="Oderder_ID" />
                 <ScalarProperty Name="Items" ColumnName="Items" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Shipments">
+            <EntityTypeMapping TypeName="GombarECommerceModel.Shipment">
+              <MappingFragment StoreEntitySet="Shipment">
+                <ScalarProperty Name="CreatedOnUtc" ColumnName="CreatedOnUtc" />
+                <ScalarProperty Name="AdminComment" ColumnName="AdminComment" />
+                <ScalarProperty Name="DeliveryDateUtc" ColumnName="DeliveryDateUtc" />
+                <ScalarProperty Name="ShippedDateUtc" ColumnName="ShippedDateUtc" />
+                <ScalarProperty Name="TotalWeight" ColumnName="TotalWeight" />
+                <ScalarProperty Name="TrackingNumber" ColumnName="TrackingNumber" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShipmentItems">
+            <EntityTypeMapping TypeName="GombarECommerceModel.ShipmentItem">
+              <MappingFragment StoreEntitySet="ShipmentItem">
+                <ScalarProperty Name="WarehouseId" ColumnName="WarehouseId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="OrderItemId" ColumnName="OrderItemId" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActivityLogs">
+            <EntityTypeMapping TypeName="GombarECommerceModel.ActivityLog">
+              <MappingFragment StoreEntitySet="ActivityLog">
+                <ScalarProperty Name="CreatedOnUtc" ColumnName="CreatedOnUtc" />
+                <ScalarProperty Name="EntityId" ColumnName="EntityId" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="ActivityLogTypeId" ColumnName="ActivityLogTypeId" />
+                <ScalarProperty Name="EntityName" ColumnName="EntityName" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ActivityLogTypes">
+            <EntityTypeMapping TypeName="GombarECommerceModel.ActivityLogType">
+              <MappingFragment StoreEntitySet="ActivityLogType">
+                <ScalarProperty Name="Enabled" ColumnName="Enabled" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="SystemKeyword" ColumnName="SystemKeyword" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

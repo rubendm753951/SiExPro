@@ -26,6 +26,7 @@
           <Property Name="id_recibo" Type="int" Nullable="false" />
           <Property Name="factor" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="esquema_por_factor" Type="bit" Nullable="false" />
+          <Property Name="costo_adicional" Type="decimal" Precision="18" Scale="4" Nullable="false" />
         </EntityType>
         <EntityType Name="C_CLIENTES">
           <Key>
@@ -346,6 +347,7 @@
           <Property Name="factor" Type="Decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="esquema_por_factor" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="D_TARIFAS_AGENCIA" Relationship="MasupackModel.C_AGENCIAS_D_TARIFAS_AGENCIA_fk" FromRole="Agencias" ToRole="D_TARIFAS_AGENCIA" />
+          <Property Name="costo_adicional" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
         </EntityType>
         <EntityType Name="Cliente">
           <Key>
@@ -665,6 +667,7 @@
           <EntitySetMapping Name="C_AGENCIAS">
             <EntityTypeMapping TypeName="MasupackModel.Agencias">
               <MappingFragment StoreEntitySet="C_AGENCIAS">
+                <ScalarProperty Name="costo_adicional" ColumnName="costo_adicional" />
                 <ScalarProperty Name="id_agencia" ColumnName="id_agencia" />
                 <ScalarProperty Name="id_corporativo" ColumnName="id_corporativo" />
                 <ScalarProperty Name="id_pais" ColumnName="id_pais" />

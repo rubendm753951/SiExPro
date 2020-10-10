@@ -29,7 +29,7 @@
                                             <td style="width: 97px; text-align: left;">Agente</td>
                                             <td colspan="2">                                                
                                                 <td>
-                                                    <asp:Button class="btn btn-outline btn-success btn-sm" ID="btnSearch" runat="server" Text="Buscar" Width="97px" />
+                                                    <asp:Button class="btn btn-outline btn-success btn-sm" ID="btnSearch" runat="server" Text="Refrescar" Width="97px" />
                                                 </td>
                                         </div>
                                     </tr>
@@ -89,6 +89,9 @@
                                                             <ItemStyle Height="1px" Width="50px" HorizontalAlign="Left" Wrap="True" />
                                                         </asp:BoundField>
                                                         <asp:BoundField DataField="CP" HeaderText="CP" SortExpression="CP" >                                                       
+                                                            <ItemStyle Height="1px" Width="50px" HorizontalAlign="Left" Wrap="True" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="mensaje" HeaderText="Mensaje" SortExpression="mensaje" >
                                                             <ItemStyle Height="1px" Width="50px" HorizontalAlign="Left" Wrap="True" />
                                                         </asp:BoundField>
                                                     </Columns>

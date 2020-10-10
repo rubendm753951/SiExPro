@@ -3,6 +3,7 @@ Imports System.Web.Services
 Imports System.Data.OleDb
 Imports System.Data.Entity
 Imports SiExProData
+Imports System.Security.Cryptography
 
 Partial Class Punto_Venta
     Inherits BasePage
@@ -17,17 +18,7 @@ Partial Class Punto_Venta
             _idModulo = modulo.IdModulo
         End If
 
-        If IsPostBack Then
-            If selAddBook.SelectedValue > 0 Then
-                Inserta.Visible = False
-                btnSave.Visible = True
-            Else
-                Inserta.Visible = True
-                btnSave.Visible = False
-            End If
-        Else
-            btnSave.Visible = False
-
+        If Not IsPostBack Then
             If (DaspackDALC.GetModuloPrivilegio(_idModulo, usuarioId, TipoPrivilegio.Escribe) = True) Then
                 lblIdEnvio.Visible = True
                 txtIdEnvio.Visible = True
@@ -40,61 +31,8 @@ Partial Class Punto_Venta
 
         '****************************************************************
 
-        If Not IsPostBack Then
-            DropDownCiudades.Visible = False
-            DropDownCiudades2.Visible = False
-        End If
-
     End Sub
 
-    Protected Sub GridView1_SelectedIndexChanged1(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridView1.SelectedIndexChanged
-        Try
-            If Not (GridView1.SelectedIndex = 0 And GridView1.PageIndex = 0) Then
-                'PopupControlExtender.GetProxyForCurrentPopup(Me.Page).Commit(GridView1.SelectedValue)
-                Dim row As GridViewRow = GridView1.SelectedRow
-                'MsgBox(row.Cells(2).Text + " " + row.Cells(3).Text)
-                txtNombre.Text = row.Cells(2).Text
-                TxtApellidos.Text = row.Cells(3).Text
-                txtEmpresa.Text = row.Cells(4).Text
-                txtCalle.Text = row.Cells(5).Text
-                'TxtNoExt.Text = row.Cells(5).Text
-                'TxtNoInt.Text = row.Cells(6).Text
-                txtEdo.SelectedValue = row.Cells(7).Text
-                If DropDownPais.SelectedValue = 52 Then
-                    DropDownCiudades.DataBind()
-                    DropDownCiudades.SelectedIndex = DropDownCiudades.Items.IndexOf(DropDownCiudades.Items.FindByText(row.Cells(6).Text.ToUpper().Trim))
-                Else
-                    txtCiudad.Text = row.Cells(6).Text
-                End If
-
-                'txtMpio.Text = row.Cells(9).Text
-                txtTelefono.Text = row.Cells(8).Text
-                txtEmail.Text = row.Cells(9).Text
-                TxtCP.Text = row.Cells(10).Text
-
-                Session("id_cliente") = row.Cells(1).Text
-                TextBox1.Text = ""
-                GridView1.DataBind()
-                'DropDownPais.DataBind()
-                'Panel2.Enabled = False
-            Else
-                Panel2.Enabled = True
-                txtNombre.Focus()
-                TextBox1.Text = ""
-                GridView1.DataBind()
-                Session("id_cliente") = 0
-            End If
-        Catch ex As Exception
-            'MsgBox("Ocurrió un error, por favor revise los datos ---> " + ex.Message.ToString)
-            'Button3.Visible = True
-            Label2.Text = "Ocurrió un error, por favor revise los datos -->" + ex.Message.ToString
-            ModalPopupExtender3.Show()
-        End Try
-    End Sub
-
-    Protected Sub GridView1_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles GridView1.PageIndexChanging
-        Me.ModalPopupExtender1.Show()
-    End Sub
     Protected Sub GridView2_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles GridView2.PageIndexChanging
         Me.ModalPopupExtender2.Show()
     End Sub
@@ -131,7 +69,7 @@ Partial Class Punto_Venta
                 Do While reader.GetInt32(0) <> DropDownProduct.SelectedValue
                     reader.Read()
                 Loop
-                TxtTarifa.Text = Format(reader.GetValue(6), "$#,##0.00;($#,##0.00);$0.00")
+                TxtTarifa.value = Format(reader.GetValue(6), "$#,##0.00;($#,##0.00);$0.00")
                 Session("dimension_peso") = reader.GetString(12)
                 lblPeso.Text = "Peso (" & Session("dimension_peso") & ")"
             End If
@@ -143,13 +81,184 @@ Partial Class Punto_Venta
             ModalPopupExtender3.Show()
         End Try
     End Sub
-    Protected Sub Button1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button1.Click
-        'If Panel2.Enabled = False Then
-        '    Panel2.Enabled = True
-        'End If
-        GridView1.DataBind()
-        ModalPopupExtender1.Show()
-        'Button6_Click(sender, e)
+    Protected Sub btnCheckOut_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCheckOut.Click
+        Try
+            Dim Mensaje As String = "" 'para devolver resultado de validación de mensajes
+            Dim Datos_Dest As New ObjDestinatario
+            Dim datos_envio As New ObjEnvio
+
+            Dim Crear_Envio As New Insertar_Envios
+
+            'Insetar nuevo destinataro
+            Dim id_destinatario As Integer
+            Datos_Dest.id_pais = DropDownPais2.SelectedValue
+            Datos_Dest.nombre = TxtNombre2.Text
+            Datos_Dest.apellidos = txtApellidos2.Text
+            Datos_Dest.empresa = txtEmpresa2.Text
+            Datos_Dest.calle = txtCalle2.Text
+            Datos_Dest.noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
+            Datos_Dest.nointerior = Nothing
+            Datos_Dest.direccion2 = Nothing
+            Datos_Dest.colonia = TxtCol2.Text
+            Datos_Dest.ciudad = txtCiudad2.Text
+            Datos_Dest.municipio = TxtMpio2.Text
+            Datos_Dest.estadoprovincia = txtEdo2.Text
+            Datos_Dest.telefono = txtTelefono2.Text
+            Datos_Dest.email = txtEmail2.Text
+            If Not IsNothing(TxtCP2.Text) And Len(TxtCP2.Text) = 5 Then
+                Datos_Dest.codigo_postal = TxtCP2.Text
+            Else
+                Datos_Dest.codigo_postal = Crear_Envio.valida_cp_mx(Datos_Dest.ciudad, txtEdo2.SelectedItem.Text)
+            End If
+
+            Mensaje = Crear_Envio.valida_datos_dest(Datos_Dest)
+            If Mensaje = "OK" Then
+                id_destinatario = Crear_Envio.crea_destinatario(Datos_Dest)
+                Session("id_destinatario") = id_destinatario
+            Else
+                Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
+                ModalPopupExtender3.Show()
+                Exit Sub
+            End If
+
+            Dim cajas_count As Integer = 0
+            Dim envios(CInt(TxtCajas.Text) - 1) As Integer
+
+            If Not guia_por_caja.Checked Then
+                ReDim envios(0)
+            End If
+            Dim db As New SiExProEntities
+
+            Do While cajas_count < envios.Length()
+
+                'Insertar el Envío
+                Dim id_envio As Integer
+                datos_envio.id_agente = DropDownAgentes.Text 'it's an argument calling the method
+                datos_envio.precio = TxtTarifa.value
+                datos_envio.valor_seguro = TxtSeguro.Text
+                datos_envio.id_tarifa_agencia = DropDownProduct.SelectedValue
+
+                If TxtPromo.Text <> "" And IsNumeric(TxtPromo.Text) Then
+                    datos_envio.id_codigo_promocion = TxtPromo.Text
+                Else
+                    datos_envio.id_codigo_promocion = Nothing
+                End If
+
+                If TxtAduana.Text <> "" And IsNumeric(TxtAduana.Text) Then
+                    datos_envio.valor_aduana = TxtAduana.Text
+                Else
+                    datos_envio.valor_aduana = Nothing
+                End If
+
+                datos_envio.total_envio = datos_envio.precio + datos_envio.valor_seguro
+                datos_envio.fecha = DateTime.Now.ToString
+                datos_envio.instrucciones_entrega = TxtInstEntrega.Text
+                datos_envio.observaciones = Nothing   'future reference 
+                datos_envio.id_usuario = Session("id_usuario")
+                datos_envio.id_ruta = 0
+                datos_envio.id_destinatario = id_destinatario
+                datos_envio.id_cliente = 0
+                datos_envio.largo = txtLargo.Text
+                datos_envio.ancho = txtAncho.Text
+                datos_envio.alto = txtAlto.Text
+                datos_envio.peso = txtPeso.Text
+                datos_envio.referencia = TxtRef.Text
+                datos_envio.contenido = DropDownContenidos.Text
+                datos_envio.dimension_peso = Session("dimension_peso")
+                datos_envio.contenedores = TxtCajas.Text
+
+                'PreRegistor del Envío
+                Mensaje = Crear_Envio.valida_preregistro(datos_envio)
+                If Mensaje = "OK" Or Mensaje = "El envío ya está entregado" Then
+
+                Else
+                    Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
+                    ModalPopupExtender3.Show()
+                    Mensaje = ""
+                    Exit Sub
+                End If
+
+                envios(cajas_count) = id_envio
+                cajas_count = cajas_count + 1
+            Loop
+
+            Dim id_agencia As Integer = datos_envio.id_agente
+
+            Dim agente = db.C_AGENCIAS.FirstOrDefault(Function(x) x.id_agencia = id_agencia)
+            Dim costoInterno = datos_envio.total_envio
+
+            If agente.factor > 0 Then
+                costoInterno = costoInterno * agente.factor + agente.costo_adicional
+            End If
+
+            Dim estafetaWrapper As New EstafetaWrapper()
+            Dim envioExportar As New FrecuenciaCotizadorExport()
+            With envioExportar
+                .CPDestinatario = Datos_Dest.codigo_postal
+                .CPRemitente = ""
+                .IdEnvio = 0
+                .EsPaquete = True
+                .Alto = txtAlto.Text
+                .Largo = txtLargo.Text
+                .Ancho = txtAncho.Text
+                .Peso = txtPeso.Text
+            End With
+            Dim clienteId As Integer = 0
+
+            Dim respuestaFrecuenciaCotizador As FrecuenciaCotizadorRespuesta = estafetaWrapper.FrecuenciaCotizadorSingle(envioExportar, clienteId)
+
+            If respuestaFrecuenciaCotizador.Respuesta.Length > 0 Then
+                If respuestaFrecuenciaCotizador.Respuesta(0).MensajeError <> "" Then
+                    Label2.Text = respuestaFrecuenciaCotizador.Respuesta(0).MensajeError
+                    ModalPopupExtender3.Show()
+                    Mensaje = ""
+                    Exit Sub
+                Else
+                    Dim terrestre = 0
+                    Dim diaSig = 0
+
+                    rbCosto.Text = "Gombar: " & FormatCurrency(costoInterno.ToString(), 2)
+                    rbCosto.Checked = True
+
+                    Dim sGUID As String
+                    sGUID = System.Guid.NewGuid.ToString()
+                    estafetaTipoServicio.Value = sGUID
+                    Session(sGUID) = respuestaFrecuenciaCotizador
+
+                    For Each tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio In respuestaFrecuenciaCotizador.Respuesta(0).TipoServicio
+                        If tipoServicio.DescripcionServicio = "Terrestre" Then
+                            terrestre = tipoServicio.CostoTotal * agente.factor + agente.costo_adicional
+                            estafetaTerrestre.Value = terrestre
+                            rbTerrestre.Text = "Terrestre: " & FormatCurrency(terrestre.ToString(), 2)
+                        End If
+                        If tipoServicio.DescripcionServicio = "Dia Sig." Then
+                            diaSig = tipoServicio.CostoTotal * agente.factor + agente.costo_adicional
+                            estafetaDiaSig.Value = diaSig
+                            rbDiaSiguiente.Text = "Dia Siguiente: $" & FormatCurrency(diaSig.ToString(), 2)
+                        End If
+                    Next
+
+                    If terrestre = 0 Then
+                        rbTerrestre.Visible = False
+                    End If
+
+                    If diaSig = 0 Then
+                        rbDiaSiguiente.Visible = False
+                    End If
+                End If
+            Else
+                Label2.Text = "Ocurrió un error al cotizar su envio"
+                ModalPopupExtender3.Show()
+                Mensaje = ""
+                Exit Sub
+            End If
+
+            ModalPopupExtender7.Show()
+        Catch ex As Exception
+            Label2.Text = "Ocurrió un error, por favor revise los datos -->" + ex.Message.ToString
+            ModalPopupExtender3.Show()
+        End Try
+
     End Sub
 
     Protected Sub Button2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button2.Click
@@ -173,12 +282,8 @@ Partial Class Punto_Venta
                 'TxtNoInt2.Text = row.Cells(6).Text
 
                 txtEdo2.SelectedValue = row.Cells(7).Text
-                If DropDownPais2.SelectedValue = 52 Then
-                    DropDownCiudades2.DataBind()
-                    DropDownCiudades2.SelectedIndex = DropDownCiudades2.Items.IndexOf(DropDownCiudades2.Items.FindByText(row.Cells(6).Text.ToUpper.Trim))
-                Else
-                    txtCiudad2.Text = row.Cells(6).Text
-                End If
+                txtCiudad2.Text = row.Cells(6).Text
+
                 'txtMpio2.Text = row.Cells(9).Text
                 txtTelefono2.Text = row.Cells(8).Text
                 txtEmail2.Text = row.Cells(9).Text
@@ -234,43 +339,6 @@ Partial Class Punto_Venta
             End If
 
             Dim Crear_Envio As New Insertar_Envios
-            'Insetar nuevo cliente
-            Dim id_cliente As Integer
-            datos_cliente.id_pais = DropDownPais.SelectedValue
-            datos_cliente.nombre = txtNombre.Text
-            datos_cliente.apellidos = TxtApellidos.Text
-            datos_cliente.empresa = txtEmpresa.Text
-            datos_cliente.calle = txtCalle.Text
-            datos_cliente.noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
-            datos_cliente.nointerior = Nothing
-            datos_cliente.direccion2 = Nothing
-            datos_cliente.colonia = TxtCol.Text
-            If datos_cliente.id_pais = 52 Then
-                If DropDownCiudades.SelectedItem.Value > 0 Then
-                    datos_cliente.ciudad = DropDownCiudades.SelectedItem.Text
-                Else
-                    datos_cliente.ciudad = ""
-                End If
-            Else
-                datos_cliente.ciudad = txtCiudad.Text
-            End If
-
-            datos_cliente.municipio = TxtMpio.Text
-            datos_cliente.estadoprovincia = txtEdo.Text
-            datos_cliente.telefono = txtTelefono.Text
-            datos_cliente.codigo_postal = TxtCP.Text
-            datos_cliente.email = txtEmail.Text
-
-
-            Mensaje = Crear_Envio.valida_datos_cliente(datos_cliente)
-            If Mensaje = "OK" Then
-                id_cliente = Crear_Envio.crea_cliente(datos_cliente)
-                Session("id_cliente") = id_cliente
-            Else
-                Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
-                ModalPopupExtender3.Show()
-                Exit Sub
-            End If
 
             'Insetar nuevo destinataro
             Dim id_destinatario As Integer
@@ -283,16 +351,7 @@ Partial Class Punto_Venta
             Datos_Dest.nointerior = Nothing
             Datos_Dest.direccion2 = Nothing
             Datos_Dest.colonia = TxtCol2.Text
-            If Datos_Dest.id_pais = 52 Then
-                If DropDownCiudades2.SelectedItem.Value > 0 Then
-                    Datos_Dest.ciudad = DropDownCiudades2.SelectedItem.Text
-                Else
-                    Datos_Dest.ciudad = ""
-                End If
-
-            Else
-                Datos_Dest.ciudad = txtCiudad2.Text
-            End If
+            Datos_Dest.ciudad = txtCiudad2.Text
 
             Datos_Dest.municipio = TxtMpio2.Text
             Datos_Dest.estadoprovincia = txtEdo2.Text
@@ -321,13 +380,68 @@ Partial Class Punto_Venta
                 ReDim envios(0)
             End If
 
+            Dim estafetaWrapper As New EstafetaWrapper()
+            Dim respuestaFrecuenciaCotizador = CType(Session(estafetaTipoServicio.Value), FrecuenciaCotizadorRespuesta)
+            Dim sessionTipoServico = respuestaFrecuenciaCotizador.Respuesta(0).TipoServicio
+            Dim tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio = New Estafeta.Frecuenciacotizador.TipoServicio()
+            Dim envioEstafeta As Boolean = False
+            Dim cuentaServicio As EstafetaCuentaServicio
+            Dim id_cliente As Integer = 0
 
             Do While cajas_count < envios.Length()
 
+                Dim valor_envio = TxtTarifa.Value
+
+                Dim cliente As Cliente = Nothing
+
+                If rbTerrestre.Checked Then
+                    valor_envio = estafetaTerrestre.Value
+                    tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = "Terrestre")
+                    envioEstafeta = True
+                    datos_envio.observaciones = "Terrestre"
+                    cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Terrestre")
+                    id_cliente = cuentaServicio.Cliente.id_cliente
+                    cliente = cuentaServicio.Cliente
+                End If
+
+                If rbDiaSiguiente.Checked Then
+                    valor_envio = estafetaTerrestre.Value
+                    tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = "Dia Sig.")
+                    datos_envio.observaciones = "Dia Sig."
+                    envioEstafeta = True
+                    cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
+                    id_cliente = cuentaServicio.Cliente.id_cliente
+                    cliente = cuentaServicio.Cliente
+                End If
+
+                If cliente IsNot Nothing And (rbTerrestre.Checked Or rbDiaSiguiente.Checked) Then
+                    datos_cliente.id_pais = cliente.id_pais
+                    datos_cliente.nombre = cliente.nombre
+                    datos_cliente.apellidos = cliente.apellidos
+                    datos_cliente.empresa = cliente.empresa
+                    datos_cliente.calle = cliente.calle
+                    datos_cliente.noexterior = cliente.noexterior
+                    datos_cliente.nointerior = cliente.nointerior
+                    datos_cliente.direccion2 = cliente.direccion2
+                    datos_cliente.colonia = cliente.colonia
+                    datos_cliente.ciudad = cliente.ciudad
+                    datos_cliente.ciudad = cliente.ciudad
+                    datos_cliente.municipio = cliente.municipio
+                    datos_cliente.estadoprovincia = cliente.estadoprovincia
+                    datos_cliente.telefono = cliente.telefono
+                    datos_cliente.email = cliente.email
+                    datos_cliente.codigo_postal = cliente.codigo_postal
+                End If
+
+                If rbCosto.Checked Then
+                    id_cliente = ConfigurationManager.AppSettings("Estafeta.Cuenta4.ClienteId")
+                End If
+
                 'Insertar el Envío
                 Dim id_envio As Integer
+
                 datos_envio.id_agente = DropDownAgentes.Text 'it's an argument calling the method
-                datos_envio.precio = TxtTarifa.Text
+                datos_envio.precio = valor_envio
                 datos_envio.valor_seguro = TxtSeguro.Text
                 datos_envio.id_tarifa_agencia = DropDownProduct.SelectedValue
 
@@ -346,21 +460,8 @@ Partial Class Punto_Venta
                 datos_envio.total_envio = datos_envio.precio + datos_envio.valor_seguro
                 datos_envio.fecha = DateTime.Now.ToString
                 datos_envio.instrucciones_entrega = TxtInstEntrega.Text
-                datos_envio.observaciones = Nothing   'future reference 
                 datos_envio.id_usuario = Session("id_usuario")
-
-                Dim idRuta As Integer = 0
-                If Datos_Dest.id_pais = 52 Then
-                    Dim db As New SiExProEntities
-                    Dim ciudadRuta As CiudadesRutas = db.D_CIUDADES_RUTAS.FirstOrDefault(Function(x) x.id_ciudad = DropDownCiudades2.SelectedValue)
-
-                    If ciudadRuta IsNot Nothing Then
-                        idRuta = ciudadRuta.id_ruta
-                    End If
-
-                End If
-
-                datos_envio.id_ruta = idRuta
+                datos_envio.id_ruta = 0
                 datos_envio.id_destinatario = id_destinatario
                 datos_envio.id_cliente = id_cliente
                 datos_envio.largo = txtLargo.Text
@@ -375,12 +476,7 @@ Partial Class Punto_Venta
                 'PreRegistor del Envío
                 Mensaje = Crear_Envio.valida_preregistro(datos_envio)
                 If Mensaje = "OK" Or Mensaje = "El envío ya está entregado" Then
-                    If txtIdEnvioPrechequeado.Text = "" Then
-                        id_envio = Crear_Envio.PreRegistro_Envios(DropDownAgentes.Text, datos_envio, id_envio_imp)
-                    Else
-                        datos_envio.id_envio = txtIdEnvioPrechequeado.Text
-                        id_envio = Crear_Envio.Update_PreRegistro_Envios(DropDownAgentes.Text, datos_envio, id_envio_imp)
-                    End If
+                    id_envio = Crear_Envio.PreRegistro_Envios(DropDownAgentes.Text, datos_envio, id_envio_imp)
                 Else
                     Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
                     ModalPopupExtender3.Show()
@@ -394,22 +490,31 @@ Partial Class Punto_Venta
 
                 Guia.DataBind()
 
-                If txtIdEnvioPrechequeado.Text = "" Then
-                    'Insertar SobreCargos
-                    Crear_Envio.inserta_SobreCargos(id_envio)
+                'Insertar SobreCargos
+                Crear_Envio.inserta_SobreCargos(id_envio)
 
-                    'Inserta seguimiento
-                    Dim ins_seguimiento As New seguimiento_envios
-                    ins_seguimiento.insertar_seguimiento(id_envio, Me.AppRelativeVirtualPath.ToString, "", Session("id_usuario"))
-
-                End If
+                'Inserta seguimiento
+                Dim ins_seguimiento As New seguimiento_envios
+                ins_seguimiento.insertar_seguimiento(id_envio, Me.AppRelativeVirtualPath.ToString, "", Session("id_usuario"))
 
                 envios(cajas_count) = id_envio
+                datos_envio.id_envio = id_envio
                 cajas_count = cajas_count + 1
                 Label1.Text = "Útimo envío-> " & id_envio.ToString & " fue creado con exito"
+
+                If envioEstafeta = True Then
+                    Dim respuestaLabel As String = estafetaWrapper.Label(datos_envio, datos_cliente, Datos_Dest, tipoServicio, respuestaFrecuenciaCotizador.Respuesta)
+
+                    If respuestaLabel = "Envio Exportado" Then
+                        Dim sjscript2 As String = "<script language=""javascript"">" &
+                        " window.open('../Reports/EstafetaLabel.aspx?id_envio=" & id_envio.ToString & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
+                        "</script>"
+                        ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+                    End If
+                End If
             Loop
 
-            If genera_guia Then ' Si los datos vienen por importacion no requiren guia
+            If envioEstafeta = False And genera_guia Then ' Si los datos vienen por importacion no requiren guia
                 Dim sjscript2 As String = "<script language=""javascript"">" &
                         " window.open('guia_mult.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
                         "</script>"
@@ -417,18 +522,6 @@ Partial Class Punto_Venta
             End If
 
             Dim Ctrl As Control
-            For Each Ctrl In Panel2.Controls
-                If (Ctrl.GetType() Is GetType(TextBox)) And CBFijaOrigen.Checked = False Then
-                    Dim txt As TextBox = CType(Ctrl, TextBox)
-                    txt.Text = ""
-                End If
-                If (Ctrl.GetType() Is GetType(DropDownList)) And CBFijaOrigen.Checked = False Then
-                    Dim cbobx As DropDownList = CType(Ctrl, DropDownList)
-                    If cbobx.ID <> "DropDownPais" Then
-                        cbobx.SelectedIndex = -1
-                    End If
-                End If
-            Next
             For Each Ctrl In Panel3.Controls
                 If (Ctrl.GetType() Is GetType(TextBox)) Then
                     Dim txt As TextBox = CType(Ctrl, TextBox)
@@ -511,7 +604,7 @@ Partial Class Punto_Venta
                 End If
 
                 With envio
-                    TxtTarifa.Text = .precio
+                    TxtTarifa.value = .precio
                     TxtSeguro.Text = .valor_seguro
                     TxtPromo.Text = .id_codigo_promocion
                     TxtAduana.Text = .valor_aduana
@@ -526,52 +619,11 @@ Partial Class Punto_Venta
                     TxtCajas.Text = .contenedores
                 End With
 
-                Dim cliente As Cliente = DaspackDALC.GetDatosCliente(envio.id_envio)
-                If cliente IsNot Nothing Then
-                    With cliente
-                        DropDownPais.SelectedValue = .id_pais
-                        If DropDownPais.SelectedValue = 52 Then
-                            txtCiudad.Visible = False
-                            DropDownCiudades.Visible = True
-                        Else
-                            txtCiudad.Visible = True
-                            DropDownCiudades.Visible = False
-                        End If
-
-                        txtEdo.DataBind()
-                        txtNombre.Text = .nombre
-                        TxtApellidos.Text = .apellidos
-                        txtEmpresa.Text = .empresa
-                        txtCalle.Text = .calle
-                        TxtCol.Text = .colonia
-                        txtEdo.SelectedValue = .estadoprovincia
-
-                        If DropDownPais.SelectedValue = 52 Then
-                            DropDownCiudades.DataBind()
-                            DropDownCiudades.SelectedIndex = DropDownCiudades.Items.IndexOf(DropDownCiudades.Items.FindByText(.ciudad.ToUpper().Trim()))
-                        Else
-                            txtCiudad.Text = .ciudad
-                        End If
-
-                        TxtMpio.Text = .municipio
-
-                        txtTelefono.Text = .telefono
-                        TxtCP.Text = .codigo_postal
-                        txtEmail.Text = .email
-                    End With
-                End If
-
                 Dim destinatario As Destinatario = DaspackDALC.GetDatosDestinatario(envio.id_envio)
                 If destinatario IsNot Nothing Then
                     With destinatario
                         DropDownPais2.SelectedValue = .id_pais
-                        If DropDownPais2.SelectedValue = 52 Then
-                            txtCiudad2.Visible = False
-                            DropDownCiudades2.Visible = True
-                        Else
-                            txtCiudad2.Visible = True
-                            DropDownCiudades2.Visible = False
-                        End If
+                        txtCiudad2.Visible = True
                         txtEdo2.DataBind()
                         TxtNombre2.Text = .nombre
                         txtApellidos2.Text = .apellidos
@@ -579,15 +631,7 @@ Partial Class Punto_Venta
                         txtCalle2.Text = .calle
                         TxtCol2.Text = .colonia
                         txtEdo2.SelectedValue = .estadoprovincia
-                        DropDownCiudades2.DataBind()
-
-                        If DropDownPais2.SelectedValue = 52 Then
-                            DropDownCiudades2.DataBind()
-                            DropDownCiudades2.SelectedIndex = DropDownCiudades2.Items.IndexOf(DropDownCiudades2.Items.FindByText(.ciudad.ToUpper().Trim()))
-                        Else
-                            txtCiudad2.Text = .ciudad
-                        End If
-
+                        txtCiudad2.Text = .ciudad
                         TxtMpio2.Text = .municipio
 
                         txtTelefono2.Text = .telefono
@@ -602,7 +646,7 @@ Partial Class Punto_Venta
         Catch ex As Exception
             Label2.Text = "Ocurrió un error, por favor revise los datos -->" + mensaje
             Dim errorLog = New ErrorLog
-            errorLog.Log(HttpContext.Current.Request.Url.AbsoluteUri + " - " + Me.GetType().Name + " - " + System.Reflection.MethodBase.GetCurrentMethod().Name, ex, ex.Source, id_usuario.ToString())
+            errorLog.LogError(HttpContext.Current.Request.Url.AbsoluteUri + " - " + Me.GetType().Name + " - " + System.Reflection.MethodBase.GetCurrentMethod().Name, ex, ex.Source, id_usuario.ToString())
         End Try
 
     End Sub
@@ -746,24 +790,9 @@ Partial Class Punto_Venta
             Dim reader As Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
             If reader.HasRows Then
                 reader.Read()
-                DropDownPais.SelectedValue = reader.GetInt32(1)
+
                 DropDownPais2.SelectedValue = reader.GetInt32(1) ' For masupack
-
-                If DropDownPais.SelectedValue = 52 Then
-                    txtCiudad.Visible = False
-                    DropDownCiudades.Visible = True
-                Else
-                    txtCiudad.Visible = True
-                    DropDownCiudades.Visible = False
-                End If
-
-                If DropDownPais2.SelectedValue = 52 Then
-                    txtCiudad2.Visible = False
-                    DropDownCiudades2.Visible = True
-                Else
-                    txtCiudad2.Visible = True
-                    DropDownCiudades2.Visible = False
-                End If
+                txtCiudad2.Visible = True
             End If
             reader.Close()
 
@@ -784,7 +813,7 @@ Partial Class Punto_Venta
             End If
             reader2.Close()
             connection.Close()
-            TxtTarifa.Text = 0
+            TxtTarifa.value = 0
 
             Dim idAgente As Integer = 0
             Integer.TryParse(DropDownAgentes.SelectedValue, idAgente)
@@ -848,7 +877,7 @@ Partial Class Punto_Venta
             If records = 1 Then
                 txtCalle2.Text = datos_devueltos.addrStreetline_r
                 'txtCalle2.BackColor = Drawing.Color.Aqua
-                txtCiudad.Text = datos_devueltos.addrCity_r
+                'txtCiudad.Text = datos_devueltos.addrCity_r
                 txtEdo2.Text = datos_devueltos.addrState_r
                 TxtCP2.Text = datos_devueltos.addrZipCode_r
                 txtMessage.Text = datos_devueltos.addr_changes_r
@@ -868,61 +897,10 @@ Partial Class Punto_Venta
 
     Protected Sub CBFijaOrigen_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles CBFijaOrigen.CheckedChanged
         If CBFijaOrigen.Checked = True Then
-            Panel2.Enabled = False
             Panel4.Enabled = False
-            BtnCargaRepositorio.Enabled = True
         Else
-            Panel2.Enabled = True
             Panel4.Enabled = True
-            BtnCargaRepositorio.Enabled = False
         End If
-    End Sub
-
-    Protected Sub BtnCargaRepositorio_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles BtnCargaRepositorio.Click
-        Try
-            Dim MyConnection As ConnectionStringSettings
-            MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
-            Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
-            connection.ConnectionString = MyConnection.ConnectionString
-
-            Dim cmd As Data.IDbCommand = connection.CreateCommand()
-            cmd.CommandType = Data.CommandType.StoredProcedure
-            cmd.CommandText = "dbo.sp_select_tmp_importar"
-
-            Dim parm1 As Data.Common.DbParameter = cmd.CreateParameter()
-            parm1.ParameterName = "@id_usuario"
-            parm1.Value = Session("id_usuario")
-            cmd.Parameters.Add(parm1)
-
-            connection.Open()
-            Dim mensaje As String = ""
-            Dim borrar As New Insertar_Envios
-            Dim mensaje_borrar As String = ""
-            Dim reader As Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
-            If reader.HasRows Then
-                While reader.Read()
-                    TxtCajas.Text = 1
-                    TxtSeguro.Text = reader.GetValue(10)
-                    TxtInstEntrega.Text = reader.GetString(3)
-                    TxtNombre2.Text = reader.GetString(4)
-                    TxtCol2.Text = reader.GetString(5)
-                    TxtMpio2.Text = reader.GetString(11)
-                    txtApellidos2.Text = ""
-                    TxtRef.Text = reader.GetString(1)
-                    txtCalle2.Text = reader.GetString(8)
-                    txtCiudad2.Text = reader.GetString(9)
-                    txtEdo2.SelectedValue = reader.GetString(7)
-                    txtTelefono2.Text = reader.GetString(6)
-                    Inserta_Click(sender, Nothing, reader.GetString(2), False)
-                    mensaje = mensaje + reader.GetString(2) + " " & TxtRef.Text & " En proceso de importacion" & vbCrLf
-                    borrar.borrar_tmp(reader.GetValue(0), mensaje_borrar)
-                End While
-            End If
-            connection.Close()
-            txtMessage.Text = mensaje
-        Catch ex As Exception
-            txtMessage.Text = "Error, -->" + "Envío " & TxtRef.Text & ex.Message.ToString
-        End Try
     End Sub
 
     <WebMethod()>
@@ -1337,153 +1315,6 @@ Partial Class Punto_Venta
         End Try
     End Function
 
-    Protected Sub selAddBook_SelectedIndexChanged(sender As Object, e As EventArgs) Handles selAddBook.SelectedIndexChanged
-        If selAddBook.SelectedValue > 0 Then
-            Inserta.Visible = False
-            btnSave.Visible = True
-        Else
-            Inserta.Visible = True
-            btnSave.Visible = False
-        End If
-    End Sub
-
-    Protected Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        If selAddBook.SelectedValue > 0 Then
-            Inserta.Visible = False
-            btnSave.Visible = True
-        Else
-            Inserta.Visible = True
-            btnSave.Visible = False
-        End If
-    End Sub
-
-    Protected Sub btnAddBook_Click(sender As Object, e As EventArgs) Handles btnAddBook.Click
-        If selAddBook.SelectedValue > 0 Then
-            Inserta.Visible = False
-            btnSave.Visible = True
-        Else
-            Inserta.Visible = True
-            btnSave.Visible = False
-        End If
-    End Sub
-
-    Protected Sub btnEnvioPrechequeado_Click(sender As Object, e As EventArgs) Handles btnEnvioPrechequeado.Click
-        Dim id_usuario As Integer = Session("id_usuario")
-        Dim mensaje As String = ""
-        Try
-            Dim idEnvio As Integer
-            If Integer.TryParse(txtIdEnvioPrechequeado.Text, idEnvio) Then
-                Dim envio As Envio = DaspackDALC.GetDatosEnvio(idEnvio)
-                If envio IsNot Nothing Then
-                    Dim tarifaAgencia As TarifaAgencia = DaspackDALC.GetTarifaAgencia(envio.id_tarifa_agencia)
-                    If tarifaAgencia IsNot Nothing Then
-                        DropDownAgentes.SelectedValue = tarifaAgencia.id_agencia
-                        DropDownProduct.DataBind()
-                        DropDownProduct.SelectedValue = tarifaAgencia.id_tarifa_agencia
-                        DropDownAgentes_SelectedIndexChanged(DropDownAgentes, EventArgs.Empty)
-                    End If
-
-                    With envio
-                        TxtTarifa.Text = .precio
-                        TxtSeguro.Text = .valor_seguro
-                        TxtPromo.Text = .id_codigo_promocion
-                        TxtAduana.Text = .valor_aduana
-                        TxtInstEntrega.Text = .instrucciones_entrega
-
-                        txtLargo.Text = .largo
-                        txtAncho.Text = .ancho
-                        txtAlto.Text = .alto
-                        txtPeso.Text = .peso
-                        TxtRef.Text = .Referencia1
-                        DropDownContenidos.SelectedValue = .id_contenido
-                        TxtCajas.Text = .contenedores
-                    End With
-
-                    Dim cliente As Cliente = DaspackDALC.GetDatosCliente(envio.id_envio)
-                    If cliente IsNot Nothing Then
-                        With cliente
-                            DropDownPais.SelectedValue = .id_pais
-                            If DropDownPais.SelectedValue = 52 Then
-                                txtCiudad.Visible = False
-                                DropDownCiudades.Visible = True
-                            Else
-                                txtCiudad.Visible = True
-                                DropDownCiudades.Visible = False
-                            End If
-
-                            txtEdo.DataBind()
-                            txtNombre.Text = .nombre
-                            TxtApellidos.Text = .apellidos
-                            txtEmpresa.Text = .empresa
-                            txtCalle.Text = .calle
-                            TxtCol.Text = .colonia
-                            txtEdo.SelectedValue = .estadoprovincia
-
-                            If DropDownPais.SelectedValue = 52 Then
-                                DropDownCiudades.DataBind()
-                                DropDownCiudades.SelectedIndex = DropDownCiudades.Items.IndexOf(DropDownCiudades.Items.FindByText(.ciudad.ToUpper().Trim()))
-                            Else
-                                txtCiudad.Text = .ciudad
-                            End If
-
-                            TxtMpio.Text = .municipio
-
-                            txtTelefono.Text = .telefono
-                            TxtCP.Text = .codigo_postal
-                            txtEmail.Text = .email
-                        End With
-                    End If
-
-                    Dim destinatario As Destinatario = DaspackDALC.GetDatosDestinatario(envio.id_envio)
-                    If destinatario IsNot Nothing Then
-                        With destinatario
-                            DropDownPais2.SelectedValue = .id_pais
-                            If DropDownPais2.SelectedValue = 52 Then
-                                txtCiudad2.Visible = False
-                                DropDownCiudades2.Visible = True
-                            Else
-                                txtCiudad2.Visible = True
-                                DropDownCiudades2.Visible = False
-                            End If
-                            txtEdo2.DataBind()
-                            TxtNombre2.Text = .nombre
-                            txtApellidos2.Text = .apellidos
-                            txtEmpresa2.Text = .empresa
-                            txtCalle2.Text = .calle
-                            TxtCol2.Text = .colonia
-                            txtEdo2.SelectedValue = .estadoprovincia
-                            DropDownCiudades2.DataBind()
-
-                            If DropDownPais2.SelectedValue = 52 Then
-                                DropDownCiudades2.DataBind()
-                                DropDownCiudades2.SelectedIndex = DropDownCiudades2.Items.IndexOf(DropDownCiudades2.Items.FindByText(.ciudad.ToUpper().Trim()))
-                            Else
-                                txtCiudad2.Text = .ciudad
-                            End If
-
-                            TxtMpio2.Text = .municipio
-
-                            txtTelefono2.Text = .telefono
-                            txtEmail2.Text = .email
-                            TxtCP2.Text = .codigo_postal
-                        End With
-                    End If
-                Else
-                    mensaje = "El usuario no tiene envios creados."
-                End If
-            Else
-                mensaje = "El envio debe ser numerico."
-                Label2.Text = "Ocurrió un error --> " + mensaje
-                ModalPopupExtender3.Show()
-            End If
-
-        Catch ex As Exception
-            Label2.Text = "Ocurrió un error, por favor revise los datos -->" + mensaje
-            Dim errorLog = New ErrorLog
-            errorLog.Log(HttpContext.Current.Request.Url.AbsoluteUri + " - " + Me.GetType().Name + " - " + System.Reflection.MethodBase.GetCurrentMethod().Name, ex, ex.Source, id_usuario.ToString())
-        End Try
-
-    End Sub
 End Class
 
 

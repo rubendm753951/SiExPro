@@ -23,7 +23,7 @@ Public Class ErrorLog
         OnCreated()
     End Sub
 
-    Public Sub Log(ByVal modulo As String, ByVal ex As Exception, ByVal source As String, ByVal usuario As String)
+    Public Sub LogError(ByVal modulo As String, ByVal ex As Exception, ByVal source As String, ByVal usuario As String)
         If ex.InnerException IsNot Nothing Then
             If ex.InnerException.InnerException IsNot Nothing Then
                 ErrorLog(modulo, ex.InnerException.InnerException.Message, source, usuario, ex.StackTrace)

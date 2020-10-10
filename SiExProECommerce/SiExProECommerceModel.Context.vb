@@ -26,5 +26,9 @@ Partial Public Class GombarECommerceEntities
     Public Overridable Property OrderItems() As DbSet(Of OrderItem)
     Public Overridable Property OrderNotes() As DbSet(Of OrderNote)
     Public Overridable Property Orders_VW() As DbSet(Of OrdersVW)
+    Public Overridable Property Shipments() As DbSet(Of Shipment)
+    Public Overridable Property ShipmentItems() As DbSet(Of ShipmentItem)
+    Public Overridable Property ActivityLogs() As DbSet(Of ActivityLog)
+    Public Overridable Property ActivityLogTypes() As DbSet(Of ActivityLogType)
 
 End Class
