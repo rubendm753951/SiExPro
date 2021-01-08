@@ -38,6 +38,7 @@ Partial Public Class SiExProEntities
     Public Overridable Property C_ESTADOS_GOMBAR() As DbSet(Of EstadosGombar)
     Public Overridable Property C_ZONAS() As DbSet(Of Zonas)
     Public Overridable Property D_COBERTURAS() As DbSet(Of Cobertura)
+    Public Overridable Property D_ESTAFETA_REQUEST_RESPONSE() As DbSet(Of EstafetaRequestResponse)
 
     Public Overridable Function sp_Select_envios_comentarios_pendientes(id_oficina As Nullable(Of Integer)) As ObjectResult(Of SelectEnviosComentariosPendientesResult)
         Dim id_oficinaParameter As ObjectParameter = If(id_oficina.HasValue, New ObjectParameter("id_oficina", id_oficina), New ObjectParameter("id_oficina", GetType(Integer)))

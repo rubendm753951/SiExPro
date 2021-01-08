@@ -1,4 +1,5 @@
 ﻿
+Imports System.Data
 Imports seguridad
 Partial Class admin_tarifas
     Inherits BasePage
@@ -55,6 +56,31 @@ Partial Class admin_tarifas
     Protected Sub GridView1_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs)
 
     End Sub
+
+    Private Function ConvertSortDirectionToSql(ByVal sortDirection As SortDirection) As String
+        Dim newSortDirection As String = String.Empty
+
+        Select Case sortDirection
+            Case SortDirection.Ascending
+                newSortDirection = "ASC"
+            Case SortDirection.Descending
+                newSortDirection = "DESC"
+        End Select
+
+        Return newSortDirection
+    End Function
+
+    Protected Sub gridView_Sorting(ByVal sender As Object, ByVal e As GridViewSortEventArgs)
+        Dim dataTable As DataTable = TryCast(GridView1.DataSource, DataTable)
+
+        If dataTable IsNot Nothing Then
+            Dim dataView As DataView = New DataView(dataTable)
+            dataView.Sort = e.SortExpression & " " & ConvertSortDirectionToSql(e.SortDirection)
+            GridView1.DataSource = dataView
+            GridView1.DataBind()
+        End If
+    End Sub
+
 
 End Class
 

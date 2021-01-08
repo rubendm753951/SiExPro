@@ -10,9 +10,7 @@ Partial Class Reports_EstafetaLabel
             If Integer.TryParse(Request.QueryString(0), id_envio) Then
                 Dim estafetaLabel = DaspackDALC.EstafetaLabel(id_envio)
                 If estafetaLabel IsNot Nothing Then
-                    Dim image As New Image
                     Dim base64String As String = Convert.ToBase64String(estafetaLabel.labelPDF, 0, estafetaLabel.labelPDF.Length)
-
 
                     If base64String = "" Then
                         Response.Write("Etiqueta no disponible.")

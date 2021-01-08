@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports SiExProData
 
 Partial Class ops_pages_rastreo
     Inherits BasePageNoLogin
@@ -56,6 +57,16 @@ Partial Class ops_pages_rastreo
         Dim row As GridViewRow = GridView1.SelectedRow
         Session("id_envio") = row.Cells(1).Text
         GridView2.DataBind()
+
+
+        Dim envio As Envio = DaspackDALC.GetDatosEnvio(row.Cells(1).Text)
+        If envio IsNot Nothing Then
+            Dim trackingId As String = envio.Referencia_FedEx.Trim()
+            Dim estafetaWrapper As New EstafetaWrapper()
+            Dim estafetaTracking = estafetaWrapper.Tracking(trackingId)
+            GridView3.DataSource = estafetaTracking
+            GridView3.DataBind()
+        End If
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load

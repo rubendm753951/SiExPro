@@ -27,6 +27,7 @@
           <Property Name="factor" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="esquema_por_factor" Type="bit" Nullable="false" />
           <Property Name="costo_adicional" Type="decimal" Precision="18" Scale="4" Nullable="false" />
+          <Property Name="guia_estafeta" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="C_CLIENTES">
           <Key>
@@ -208,6 +209,17 @@
           <Property Name="trackId" Type="nvarchar" MaxLength="150" />
           <Property Name="fecha" Type="datetime" />
         </EntityType>
+        <EntityType Name="D_ESTAFETA_REQUEST_RESPONSE">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="metodo" Type="nvarchar" MaxLength="100" />
+          <Property Name="request" Type="varchar(max)" />
+          <Property Name="response" Type="varchar(max)" />
+          <Property Name="fecha" Type="datetime" />
+          <Property Name="cuenta" Type="int" />
+        </EntityType>
         <EntityType Name="D_ESTAFETA_TIPO_SERVICIO">
           <Key>
             <PropertyRef Name="id" />
@@ -302,6 +314,7 @@
           <EntitySet Name="D_ENVIOS_DATOS" EntityType="Self.D_ENVIOS_DATOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_FRECUENCIA_COTIZADOR" EntityType="Self.D_ESTAFETA_FRECUENCIA_COTIZADOR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_LABEL" EntityType="Self.D_ESTAFETA_LABEL" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_ESTAFETA_REQUEST_RESPONSE" EntityType="Self.D_ESTAFETA_REQUEST_RESPONSE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_TIPO_SERVICIO" EntityType="Self.D_ESTAFETA_TIPO_SERVICIO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_TARIFAS_AGENCIA" EntityType="Self.D_TARIFAS_AGENCIA" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="C_AGENCIAS_D_TARIFAS_AGENCIA_fk" Association="Self.C_AGENCIAS_D_TARIFAS_AGENCIA_fk">
@@ -348,6 +361,7 @@
           <Property Name="esquema_por_factor" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="D_TARIFAS_AGENCIA" Relationship="MasupackModel.C_AGENCIAS_D_TARIFAS_AGENCIA_fk" FromRole="Agencias" ToRole="D_TARIFAS_AGENCIA" />
           <Property Name="costo_adicional" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="guia_estafeta" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Cliente">
           <Key>
@@ -495,6 +509,7 @@
           <EntitySet Name="C_ESTADOS_GOMBAR" EntityType="MasupackModel.EstadosGombar" />
           <EntitySet Name="C_ZONAS" EntityType="MasupackModel.Zonas" />
           <EntitySet Name="D_COBERTURAS" EntityType="MasupackModel.Cobertura" />
+          <EntitySet Name="D_ESTAFETA_REQUEST_RESPONSE" EntityType="MasupackModel.EstafetaRequestResponse" />
         </EntityContainer>
         <EntityType Name="TarifaAgencia">
           <Key>
@@ -658,6 +673,17 @@
           <Property Name="garantia_maxima" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ciudad" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="EstafetaRequestResponse">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="metodo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="request" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="response" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+          <Property Name="cuenta" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -667,6 +693,7 @@
           <EntitySetMapping Name="C_AGENCIAS">
             <EntityTypeMapping TypeName="MasupackModel.Agencias">
               <MappingFragment StoreEntitySet="C_AGENCIAS">
+                <ScalarProperty Name="guia_estafeta" ColumnName="guia_estafeta" />
                 <ScalarProperty Name="costo_adicional" ColumnName="costo_adicional" />
                 <ScalarProperty Name="id_agencia" ColumnName="id_agencia" />
                 <ScalarProperty Name="id_corporativo" ColumnName="id_corporativo" />
@@ -919,6 +946,18 @@
                 <ScalarProperty Name="estado" ColumnName="estado" />
                 <ScalarProperty Name="municipio" ColumnName="municipio" />
                 <ScalarProperty Name="codigo_postal" ColumnName="codigo_postal" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_ESTAFETA_REQUEST_RESPONSE">
+            <EntityTypeMapping TypeName="MasupackModel.EstafetaRequestResponse">
+              <MappingFragment StoreEntitySet="D_ESTAFETA_REQUEST_RESPONSE">
+                <ScalarProperty Name="cuenta" ColumnName="cuenta" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="response" ColumnName="response" />
+                <ScalarProperty Name="request" ColumnName="request" />
+                <ScalarProperty Name="metodo" ColumnName="metodo" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -76,20 +76,22 @@
                                                 </asp:CheckBoxList><br />
                                                 <asp:CheckBox ID="Chk_requiere_asignacion" runat="server" Font-Bold="True" Font-Names="Arial" Font-Size="10pt" Text="El agente requiere guias preasignadas" /></td>
                                             <td valign="top">
-                                                <asp:Label CssClass="form-control" ID="Label8" runat="server" Width="49px" Text="Factor" Font-Size="Small" Height="27px"></asp:Label>
+                                                <asp:Label CssClass="form-control" ID="Label8" runat="server" Width="129px" Text="Factor" Font-Size="Small" Height="27px"></asp:Label>
+                                                <asp:Label CssClass="form-control" ID="Label7" runat="server" Width="129px" Text="Costo Adicional" Font-Size="Small" Height="27px"></asp:Label>
                                             </td>
                                             <td valign="top">
-                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtFactor" runat="server" Width="75px" Font-Size="Small">1.00</asp:TextBox><br />
-                                                <asp:CheckBox ID="chkFactorAgent" runat="server" Font-Bold="True" Font-Names="Arial" Width="220px" Font-Size="10pt" Text="Agente con esquema de Factor" />
+                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtFactor" runat="server" Width="75px" Font-Size="Small">1.00</asp:TextBox>
+                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtCostoAdicional" runat="server" Width="75px" Font-Size="Small">0.00</asp:TextBox><br />
+                                                <asp:CheckBox ID="chkFactorAgent" runat="server" Font-Bold="True" Font-Names="Arial" Width="220px" Font-Size="10pt" Visible="false" Text="Agente con esquema de Factor" />
                                             </td>
                                             <td style="width: 114px; height: 38px" valign="top">
                                                 <asp:Label CssClass="form-control" ID="Label4" runat="server" Width="249px" Text="Factor para modiicar tarifas generales" Font-Size="Small" Height="27px"></asp:Label>
                                                 <asp:Label CssClass="form-control" ID="Label5" runat="server" Width="249px" Text="Comisiones por Envío (moneda)" Font-Size="Small" Height="27px"></asp:Label>
                                                 <asp:Label CssClass="form-control" ID="Label6" runat="server" Width="249px" Text="Comisiones (%)" Font-Size="Small" Height="27px"></asp:Label></td>
                                             <td style="width: 23px; height: 38px" valign="top">
-                                                <asp:TextBox CssClass="form-control" Height="24px" ID="TextBox1" runat="server" Width="75px" Font-Size="Small">1.00</asp:TextBox><br />
-                                                <asp:TextBox CssClass="form-control" Height="24px" ID="TextBox2" runat="server" Width="74px" Font-Size="Small">0.00</asp:TextBox><br />
-                                                <asp:TextBox CssClass="form-control" Height="24px" ID="TextBox3" runat="server" Width="73px" Font-Size="Small">0.00</asp:TextBox></td>
+                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TextBox1" runat="server" Width="75px" Font-Size="Small">1.00</asp:TextBox>
+                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TextBox2" runat="server" Width="74px" Font-Size="Small">0.00</asp:TextBox>
+                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TextBox3" runat="server" Width="73px" Font-Size="Small">0.00</asp:TextBox></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -180,7 +182,10 @@
                                             <asp:BoundField DataField="factor" HeaderText="Factor" SortExpression="Factor">
                                                 <ItemStyle Wrap="False"></ItemStyle>
                                             </asp:BoundField>
-                                            <asp:CheckBoxField DataField="esquema_por_factor" HeaderText="Esquema_por_factor" SortExpression="esquema_por_factor" />
+                                            <asp:BoundField DataField="costo_adicional" HeaderText="Costo Adicional" SortExpression="Costo Adicional">
+                                                <ItemStyle Wrap="False"></ItemStyle>
+                                            </asp:BoundField>
+                                            <asp:CheckBoxField DataField="guia_estafeta" HeaderText="Guia Estafeta" SortExpression="guia_estafeta" />
                                         </Columns>
                                         <PagerStyle CssClass="pagination-ys"></PagerStyle>
                                     </asp:GridView>
@@ -209,7 +214,8 @@
                         <asp:Parameter Name="requiere_asignacion" Type="Boolean" />
                         <asp:Parameter Name="id_recibo" Type="Int32" />
                         <asp:Parameter Name="factor" Type="Decimal" />
-                        <asp:Parameter Name="esquema_por_factor" Type="Boolean" />
+                        <asp:Parameter Name="costo_adicional" Type="Decimal" />
+                        <asp:Parameter Name="guia_estafeta" Type="Boolean" />
                     </UpdateParameters>
                     <SelectParameters>
                         <asp:ControlParameter ControlID="DropDownCorp" Name="id_corporativo" PropertyName="SelectedValue" Type="Int32" />

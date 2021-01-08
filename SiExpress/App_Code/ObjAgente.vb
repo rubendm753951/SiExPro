@@ -4,7 +4,7 @@ Public Class ObjAgente
     Private _provincia As String, _ciudad As String, _fecha_alta As DateTime, _fecha_termino As DateTime, _id_moneda As Integer
     Private _limite_de_credito As Decimal, _NIT As String, _telefono As String, _requiere_asignacion As Boolean, _id_tarifa_tipo As Integer
     Private _id_comision_tipo As Integer, _factor_tarifa As Decimal, _comision_moneda As Decimal, _comision_porcent As Decimal
-    Private _factor As Decimal, _esquema_por_factor as Boolean
+    Private _factor As Decimal, _esquema_por_factor As Boolean, _costo_adicional As Decimal, _guia_estafeta As Boolean
 
     Public Property id_agente() As Integer
         Get
@@ -175,7 +175,7 @@ Public Class ObjAgente
             _esquema_por_factor = value
         End Set
     End Property
-    
+
     Public Property Factor() As Decimal
         Get
             Return _factor
@@ -184,7 +184,25 @@ Public Class ObjAgente
             _factor = value
         End Set
     End Property
-    
+
+    Public Property CostoAdicional() As Decimal
+        Get
+            Return _costo_adicional
+        End Get
+        Set
+            _costo_adicional = Value
+        End Set
+    End Property
+
+    Public Property guia_estafeta() As Boolean
+        Get
+            Return _guia_estafeta
+        End Get
+        Set(ByVal value As Boolean)
+            _guia_estafeta = value
+        End Set
+    End Property
+
 End Class
 
 

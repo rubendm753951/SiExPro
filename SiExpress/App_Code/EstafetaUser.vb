@@ -6,4 +6,5 @@ Public Class EstafetaUser
     Public Property Password() As String
     Public Property CustomerNumber() As String
     Public Property AccountId() As Integer
+    Public Property Zone() As Integer
 End Class

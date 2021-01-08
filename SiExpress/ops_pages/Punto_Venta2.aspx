@@ -12,7 +12,7 @@
 
     
     
-    <div id="page-wrapper">
+    <div id="page-wrapper" style =" width: 700px; margin-right: 15px ">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
@@ -38,35 +38,15 @@
                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="Button3" runat="server" Text="Aceptar" />
                             </asp:Panel>
 
-                            <div style="position: absolute; top: 265px; left: 851px; width: 165px; height: 48px; bottom: 58px;">
-                                <table style="width: 100%;">
-                                    <tr>
-                                        <td style="height: 20px; text-align: left; width: 182px;">
-                                            <asp:CheckBox ID="CBFijaOrigen" runat="server" Text="Fijar datos de origen"
-                                                Visible="True" AutoPostBack="True" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td style="text-align: left; width: 182px;">
-                                            <asp:CheckBox ID="CBFijaDimens"
-                                                runat="server" Text="Fijar dimensiones" Visible="False" /></td>
-                                    </tr>
-                                </table>
-                            </div>
-
-
                             <div style="position: absolute; top: 145px; left: 31px; height: 175px;">
-                                <asp:Panel ID="Panel4" runat="server" Height="173px" Width="981px">
-                                    <table style="width: 979px; text-align: center" bgcolor="">
+                                <asp:Panel ID="Panel4" runat="server" Height="173px" Width="600px">
+                                    <table style="width: 600px; text-align: center" bgcolor="">
                                         <tbody>
                                             <tr>
                                                 <td style="width: 164px; height: 21px"><span style="font-size: 9pt">Agente
                                                 </span></td>
                                                 <td style="font-size: 9pt; height: 21px; text-align: left" colspan="2">
-                                                    <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownAgentes" runat="server" Width="367px" Font-Bold="False" DataSourceID="SqlDSAgentes" OnSelectedIndexChanged="DropDownAgentes_SelectedIndexChanged" DataValueField="id_agencia" DataTextField="agente" AutoPostBack="True"></asp:DropDownList></td>
-                                                <td style="width: 140px; height: 12px">
-                                                    <asp:Label ID="lblIdEnvio" runat="server" Font-Size="Medium" Style="font-size: 9pt" Text="Envio:"></asp:Label></td>
-                                                <td style="width: 145px; height: 12px">
-                                                    <asp:TextBox CssClass="form-control" Height="27px" ID="txtIdEnvio" runat="server" Width="75px">0</asp:TextBox></td>
+                                                    <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownAgentes" runat="server" Width="367px" Font-Bold="False" DataSourceID="SqlDSAgentes" OnSelectedIndexChanged="DropDownAgentes_SelectedIndexChanged" DataValueField="id_agencia" DataTextField="agente" AutoPostBack="True"></asp:DropDownList></td>                                                
                                                 
                                             </tr>
                                             <tr>
@@ -85,11 +65,15 @@
                                                 <td style="width: 177px; height: 12px">&nbsp;</td>
                                                 <td style="width: 177px; height: 12px">&nbsp;</td>
                                             </tr>
+                                        </tbody>
+                                    </table>
+                                    <table style="width: 600px; text-align: center" bgcolor="">
+                                        <tbody>
                                             <tr>                                                                                         
                                                 <td style="width: 110px; height: 12px; text-align:left">Guía por caja<asp:CheckBox ID="guia_por_caja" runat="server" Text=" " /></td>                                                
-                                                <td style="width: 110px; height: 12px; text-align:left">Valor COD</td>                                                
-                                                <td style="width: 150px; height: 12px;">Envios Asignados</td>
-                                                <td style="width: 177px; height: 12px">&nbsp;</td>
+                                                <td style="width: 110px; height: 12px; text-align:left">Valor COD</td>    
+                                                <td style="width: 120px; height: 12px; text-align:left">Tarifa por Seguro</td>
+                                                <td style="width: 120px; height: 12px; text-align:left">Envios Asignados</td>                                                
                                             </tr>
                                             <tr>
                                                 <td style="width: 110px; height: 17px">
@@ -98,22 +82,25 @@
                                                 <td style="width: 110px; height: 17px; text-align:center">
                                                     <asp:TextBox CssClass="form-control" Height="27px" ID="TxtSeguro" runat="server" Width="100px">0</asp:TextBox>
                                                 </td>
+                                                <td style="width: 205px; height: 17px; text-align: left">
+                                                    <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownList1" runat="server" Width="160px"
+                                                        DataSourceID="Tarifas_Seguro" DataValueField="Valor"
+                                                        DataTextField="Descripcion" Enabled="False">
+                                                    </asp:DropDownList></td>
                                                 <td style="width: 150px; height: 17px;">
                                                     <asp:TextBox CssClass="form-control" Height="27px"  Width="140px" ID="EnviosAsignados" runat="server"></asp:TextBox>
                                                 </td>
-                                                <td style="width: 177px; height: 12px">&nbsp;</td>
                                             </tr>
                                             
                                             <asp:TextBox CssClass="form-control" Height="27px" ID="TxtPromo" runat="server" Width="1px" Visible="False">0</asp:TextBox>
                                             <asp:TextBox CssClass="form-control" Height="27px" ID="TxtAduana" runat="server" Width="1px" Visible="False">0</asp:TextBox>
                                         </tbody>
                                     </table>
-                                    <table style="width: 808px; text-align: center">
+                                    <table style="width: 600px; text-align: center">
                                         <tbody>
                                             <tr>
-                                                <td style="width: 132px; height: 5px;">
-                                                    <span style="font-size: 10pt; text-align: left;">Referencia</span></td>
-                                                <td style="width: 205px; height: 5px;"><span style="font-size: 10pt">Tarifa por Seguro</span></td>
+                                                <td style="width: 132px; height: 5px; text-align:left">
+                                                    <span style="font-size: 10pt; text-align: left;">Referencia</span></td>                                                
                                                 <td style="width: 90px; height: 5px;"><span style="font-size: 9pt">Ancho (cms)</span></td>
                                                 <td style="width: 90px; height: 5px;"><span style="font-size: 9pt">Largo (cms)</span></td>
                                                 <td style="width: 90px; height: 5px;"><span style="font-size: 9pt">Alto (cms)</span></td>
@@ -125,12 +112,7 @@
                                             <tr>
                                                 <td style="width: 132px; height: 17px; text-align: left">
                                                     <asp:TextBox CssClass="form-control" Height="27px" ID="TxtRef" runat="server" Width="93px"></asp:TextBox>
-                                                </td>
-                                                <td style="width: 205px; height: 17px; text-align: left">
-                                                    <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownList1" runat="server" Width="160px"
-                                                        DataSourceID="Tarifas_Seguro" DataValueField="Valor"
-                                                        DataTextField="Descripcion" Enabled="False">
-                                                    </asp:DropDownList></td>
+                                                </td>                                                
                                                 <td style="width: 30px; height: 17px">
                                                     <asp:TextBox CssClass="form-control" Height="27px" ID="txtLargo" runat="server" Width="96px">0</asp:TextBox></td>
                                                 <td style="width: 90px; height: 17px">
@@ -149,7 +131,7 @@
                                     </table>
                                 </asp:Panel>                                
                                 <br/>                                
-                                <table style="width: 875px; margin-top:30px">
+                                <table style="width: 600px; margin-top:30px; margin-right: 10px">
                                     <tr style="margin-top:10px">                                        
                                         <td style="width: 87px; height: 9px; padding-top:10px">
                                             <strong><span style="font-size: 10pt">Destinatario :</span></strong></td>
@@ -164,7 +146,7 @@
                                                 TargetControlID="Button7" PopupControlID="Destinatario" BackgroundCssClass="modalBackground">
                                             </asp:ModalPopupExtender>
                                             <asp:Panel ID="Destinatario" runat="server" HorizontalAlign="Center"
-                                                ScrollBars="both" Width="800px">
+                                                ScrollBars="both" Width="600px">
                                                 <asp:GridView class="table table-striped table-bordered table-hover" ID="GridView2" runat="server" Font-Size="8pt" Height="150px"
                                                     DataSourceID="Destinatarios" AutoGenerateColumns="False" AllowPaging="True"
                                                     Width="600px" BackColor="White" CssClass="grids" HorizontalAlign="Center">
@@ -341,6 +323,7 @@
                                                 <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" />
                                                 <br />
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAceptar" OnClick="Inserta_Click" runat="server" Text="Guardar Envío" Width="118px"></asp:Button>
+                                                <asp:Button CssClass="btn btn-outline btn-success btn-sm" Style="margin-left: 10px" ID="btnCancelar"  runat="server" Text="Cancelar" Width="118px"></asp:Button>
                                             </asp:Panel>
                                             
                                         </td>

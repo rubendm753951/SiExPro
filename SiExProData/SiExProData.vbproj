@@ -107,6 +107,9 @@
     <Compile Include="EstafetaLabel.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EstafetaRequestResponse.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EstafetaTipoServicio.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>

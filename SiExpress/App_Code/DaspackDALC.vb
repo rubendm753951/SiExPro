@@ -279,6 +279,23 @@ Public Class DaspackDALC
         Return True
     End Function
 
+    Public Shared Function LogEstafetaRequestResponse(metodo As String, request As String, response As String, cuenta As Integer) As Boolean
+        Dim dbContext As New SiExProEntities
+        Dim requestResponse As New EstafetaRequestResponse()
+
+        With requestResponse
+            .metodo = metodo
+            .request = request
+            .response = response
+            .fecha = DateTime.Now
+            .cuenta = cuenta
+        End With
+
+        dbContext.D_ESTAFETA_REQUEST_RESPONSE.Add(requestResponse)
+
+        Return dbContext.SaveChanges()
+    End Function
+
     Public Shared Function GetServicioSelecionado(id_envio As Integer) As EstafetaTipoServicio
         Dim dbContext As New SiExProEntities
         Return dbContext.D_ESTAFETA_TIPO_SERVICIO.FirstOrDefault(Function(x) x.id_envio = id_envio And x.Selecccionado = True)

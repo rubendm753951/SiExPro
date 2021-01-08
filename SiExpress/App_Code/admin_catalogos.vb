@@ -88,6 +88,11 @@ Public Class admin_catalogos
         parm15.Value = agente.EsquemaPorFactor
         cmd.Parameters.Add(parm15)
 
+        Dim parm16 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm16.ParameterName = "@costo_adicional"
+        parm16.Value = agente.CostoAdicional
+        cmd.Parameters.Add(parm16)
+
         Dim parm13 As Data.Common.DbParameter = cmd.CreateParameter()
         parm13.ParameterName = "@id_agencia"
         parm13.Size = 20

@@ -258,6 +258,18 @@ Public Class DaspackDataContext
             Return Nothing
         End Try
     End Function
+
+    <FunctionAttribute(Name:="dbo.sp_Select_Datos_Envio_Mult_estafeta")>
+    Public Function ImagenesEnviosEstafeta(<Parameter(Name:="@id_envio1", DbType:="int")> ByVal id_envio1 As Integer,
+                                    <Parameter(Name:="@id_envio2", DbType:="int")> ByVal id_envio2 As Integer,
+                                    <Parameter(Name:="@id_agente", DbType:="int")> ByVal id_agente As Integer) As ISingleResult(Of ImagenesEnviosEstafeta)
+        Try
+            Dim result As IExecuteResult = Me.ExecuteMethodCall(Me, CType(MethodInfo.GetCurrentMethod, MethodInfo), id_envio1, id_envio2, id_agente)
+            Return CType(result.ReturnValue, ISingleResult(Of ImagenesEnviosEstafeta))
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
 End Class
 
 Partial Public Class Usuario
@@ -539,6 +551,11 @@ End Class
 Partial Public Class templateFields
     Public Property id_columna_archivo As Integer
     Public Property id_campo_obligatorio As Integer
+End Class
+
+Partial Public Class ImagenesEnviosEstafeta
+    Public Property id_envio As Integer
+    Public Property labelPDF As Byte()
 End Class
 
 Partial Public Class addressBook

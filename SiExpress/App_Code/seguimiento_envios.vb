@@ -232,6 +232,58 @@ Public Class seguimiento_envios
         End Try
 
     End Function
+    Public Function costo_estafeta(ByVal peso As Decimal, cuenta As Integer, zona As Integer, id_agencia As Integer) As EstafetaPrecio
+
+        Try
+            Dim MyConnection As ConnectionStringSettings
+            MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
+            Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
+            connection.ConnectionString = MyConnection.ConnectionString
+
+            Dim cmd As Data.IDbCommand = connection.CreateCommand()
+            cmd.CommandType = Data.CommandType.StoredProcedure
+            cmd.CommandText = "dbo.sp_select_precio_estafeta"
+
+            Dim parm1 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm1.ParameterName = "@peso"
+            parm1.Value = peso
+            cmd.Parameters.Add(parm1)
+
+            Dim parm2 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm2.ParameterName = "@cuenta"
+            parm2.Value = cuenta
+            cmd.Parameters.Add(parm2)
+
+            Dim parm3 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm3.ParameterName = "@zona"
+            parm3.Value = zona
+            cmd.Parameters.Add(parm3)
+
+            Dim parm4 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm4.ParameterName = "@id_agencia"
+            parm4.Value = id_agencia
+            cmd.Parameters.Add(parm4)
+
+            connection.Open()
+
+            Dim reader As Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
+            Dim estafetaPrecios As New EstafetaPrecio()
+
+            If reader.HasRows Then
+                reader.Read()
+
+                estafetaPrecios.Terrestre = reader.GetValue(0)
+                estafetaPrecios.DiaSiguiente = reader.GetValue(1)
+                estafetaPrecios.Gombar = reader.GetValue(2)
+            End If
+            connection.Close()
+
+            Return estafetaPrecios
+        Catch ex As Exception
+            Return Nothing
+        End Try
+
+    End Function
     Sub valida_flujo(ByVal id_envio As Integer, ByVal modulo As String, ByRef mensaje As String, ByRef permitido As Boolean)
 
         Dim MyConnection As ConnectionStringSettings

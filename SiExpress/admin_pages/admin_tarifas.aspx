@@ -49,6 +49,7 @@
                                             <asp:GridView class="table table-striped table-bordered table-hover" ID="GridView1" runat="server" Width="403px"
                                                 DataSourceID="Agente_Tarifas" HorizontalAlign="Center"
                                                 AutoGenerateColumns="False" AllowPaging="True"
+                                                AllowSorting="True" OnSorting="gridView_Sorting"
                                                 OnSelectedIndexChanged="GridView1_SelectedIndexChanged" Font-Size="Small"
                                                 DataKeyNames="id_tarifa_agencia,id_agencia,id_tarifa">
                                                 <Columns>

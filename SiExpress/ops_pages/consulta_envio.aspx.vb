@@ -67,7 +67,7 @@ Partial Class ops_pages_consulta_envio
             'datos1 = datos1 & "Dirección del Agente: " & reader.GetString(5) & vbCrLf
             'datos1 = datos1 & "Código de Agente: " & reader.GetInt32(1).ToString & vbCrLf
             'datos1 = datos1 & "Límite de Crédito del Agente: " & Format(reader.GetValue(8), "#.##").ToString & vbCrLf
-            tracking_number = reader.GetString(42)
+            tracking_number = reader.GetString(42).Trim()
             txtIdAgente.Text = reader.GetInt32(1).ToString
 
             datos2 = "Envío Número: " & reader.GetInt32(0) & vbCrLf
@@ -119,21 +119,16 @@ Partial Class ops_pages_consulta_envio
         End If
         connection.Close()
 
-        'get tracking from FedEX
-        Dim Tracking As New FedEx_TrackService
-        Dim TrackData As Data.DataSet = New Data.DataSet("TrackData")
-        Dim stream As MemoryStream = New MemoryStream()
 
-        stream = Tracking.Track_FedEx(tracking_number)
-        stream.Position = 0
-        TrackData.ReadXml(stream)
-        stream.Close()
+        Dim estafetaWrapper As New EstafetaWrapper()
+        Dim estafetaTracking = estafetaWrapper.Tracking(tracking_number)
 
-        If Not TrackData Is Nothing Then
+        If estafetaTracking IsNot Nothing Then
             'GridView2.DataSourceID = Nothing
-            GridView2.DataSource = TrackData
+            GridView2.DataSource = estafetaTracking
             GridView2.DataBind()
         End If
+
         TextBox1.Focus()
     End Sub
     Protected Sub Button2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button2.Click

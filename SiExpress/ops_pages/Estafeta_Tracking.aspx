@@ -10,7 +10,7 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-lg-12">
-                                <table>
+                                <table style="width: 532px; left: 6px;">
                                     <tr>
                                         <td colspan="3" style="height: 52px; text-align: center;">
                                             <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">

@@ -30,6 +30,7 @@ Partial Class admin_agentes
         agente.telefono = TxtBoxTel.Text
         agente.requiere_asignacion = Chk_requiere_asignacion.Checked
         agente.Factor = txtFactor.Text
+        agente.CostoAdicional = IIf(txtCostoAdicional.Text = "", 0, txtCostoAdicional.Text)
         agente.EsquemaPorFactor = chkFactorAgent.Checked
 
         'Llamar método para insertar el agente

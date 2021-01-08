@@ -92,6 +92,27 @@
                 <SelectedRowStyle BackColor="#339966" Font-Bold="True" ForeColor="White" />
                 <HeaderStyle BackColor="#336666" Font-Bold="True" ForeColor="White" />
             </asp:GridView>
+            <asp:GridView class="table table-striped table-bordered table-hover"  ID="GridView3" runat="server" AllowPaging="True" 
+                AutoGenerateColumns="False" BackColor="White" BorderColor="#336666" 
+                BorderStyle="Double" BorderWidth="3px" CellPadding="4"                  GridLines="Horizontal" Height="122px" 
+                HorizontalAlign="Left" style="font-size: small" Width="608px">
+                <RowStyle BackColor="White" ForeColor="#333333" />
+                <Columns>                                                        
+                    <asp:BoundField DataField="EventTime" HeaderText="Fecha" SortExpression="EventTime" >
+                        <ItemStyle Height="1px" Width="180px" HorizontalAlign="Left" Wrap="True" />
+                    </asp:BoundField>
+                    <asp:BoundField DataField="EventDescription" HeaderText="Descripcion" SortExpression="EventDescription" >
+                        <ItemStyle Height="1px" Width="180px" HorizontalAlign="Left" Wrap="True" />
+                    </asp:BoundField>
+                    <asp:BoundField DataField="EventPlace" HeaderText="Lugar" SortExpression="EventPlace" >
+                        <ItemStyle Height="1px" Width="180px" HorizontalAlign="Left" Wrap="True" />
+                    </asp:BoundField>
+                    <asp:BoundField DataField="EventException" HeaderText="Mensaje" SortExpression="EventException" >
+                        <ItemStyle Height="1px" Width="50px" HorizontalAlign="Left" Wrap="True" />
+                    </asp:BoundField>                                                                                                               
+                </Columns>
+                <PagerStyle CssClass="pagination-ys"></PagerStyle>
+            </asp:GridView>        
       </tr>
     </table>
         <asp:SqlDataSource ID="SummaryTracking" runat="server" 

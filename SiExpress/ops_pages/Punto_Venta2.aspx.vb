@@ -17,18 +17,6 @@ Partial Class Punto_Venta
         If modulo IsNot Nothing Then
             _idModulo = modulo.IdModulo
         End If
-
-        If Not IsPostBack Then
-            If (DaspackDALC.GetModuloPrivilegio(_idModulo, usuarioId, TipoPrivilegio.Escribe) = True) Then
-                lblIdEnvio.Visible = True
-                txtIdEnvio.Visible = True
-                txtIdEnvio.Text = "0"
-            Else
-                lblIdEnvio.Visible = False
-                txtIdEnvio.Visible = False
-            End If
-        End If
-
         '****************************************************************
 
     End Sub
@@ -185,11 +173,12 @@ Partial Class Punto_Venta
             Dim id_agencia As Integer = datos_envio.id_agente
 
             Dim agente = db.C_AGENCIAS.FirstOrDefault(Function(x) x.id_agencia = id_agencia)
-            Dim costoInterno = datos_envio.total_envio
+            'Dim costoInterno = datos_envio.precio
 
-            If agente.factor > 0 Then
-                costoInterno = costoInterno * agente.factor + agente.costo_adicional
-            End If
+            'If agente.factor > 0 Then
+            '    'costoInterno = costoInterno * agente.factor + agente.costo_adicional
+            '    costoInterno = costoInterno
+            'End If
 
             Dim estafetaWrapper As New EstafetaWrapper()
             Dim envioExportar As New FrecuenciaCotizadorExport()
@@ -214,10 +203,11 @@ Partial Class Punto_Venta
                     Mensaje = ""
                     Exit Sub
                 Else
-                    Dim terrestre = 0
-                    Dim diaSig = 0
+                    Dim seguimiento As New seguimiento_envios
+                    Dim cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault()
+                    Dim estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
 
-                    rbCosto.Text = "Gombar: " & FormatCurrency(costoInterno.ToString(), 2)
+                    rbCosto.Text = "Gombar: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
                     rbCosto.Checked = True
 
                     Dim sGUID As String
@@ -227,23 +217,28 @@ Partial Class Punto_Venta
 
                     For Each tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio In respuestaFrecuenciaCotizador.Respuesta(0).TipoServicio
                         If tipoServicio.DescripcionServicio = "Terrestre" Then
-                            terrestre = tipoServicio.CostoTotal * agente.factor + agente.costo_adicional
-                            estafetaTerrestre.Value = terrestre
-                            rbTerrestre.Text = "Terrestre: " & FormatCurrency(terrestre.ToString(), 2)
+                            cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Terrestre")
+                            estafetaTerrestre.Value = estafetaPrecios.Terrestre
+                            rbTerrestre.Text = "Terrestre: " & FormatCurrency(estafetaPrecios.Terrestre.ToString(), 2)
                         End If
                         If tipoServicio.DescripcionServicio = "Dia Sig." Then
-                            diaSig = tipoServicio.CostoTotal * agente.factor + agente.costo_adicional
-                            estafetaDiaSig.Value = diaSig
-                            rbDiaSiguiente.Text = "Dia Siguiente: $" & FormatCurrency(diaSig.ToString(), 2)
+
+                            cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
+                            estafetaDiaSig.Value = estafetaPrecios.DiaSiguiente
+                            rbDiaSiguiente.Text = "Dia Siguiente: $" & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
                         End If
                     Next
 
-                    If terrestre = 0 Then
+                    If estafetaTerrestre.Value = "" Then
                         rbTerrestre.Visible = False
+                    Else
+                        rbTerrestre.Visible = True
                     End If
 
-                    If diaSig = 0 Then
+                    If estafetaDiaSig.Value = "" Then
                         rbDiaSiguiente.Visible = False
+                    Else
+                        rbDiaSiguiente.Visible = True
                     End If
                 End If
             Else
@@ -314,30 +309,6 @@ Partial Class Punto_Venta
             Dim datos_cliente As New ObjCliente
             Dim Datos_Dest As New ObjDestinatario
             Dim datos_envio As New ObjEnvio
-
-            If txtIdEnvio.Visible Then
-                If txtIdEnvio.Text <> "0" Then
-                    If IsNumeric(txtIdEnvio.Text) Then
-                        id_envio_imp = CType(txtIdEnvio.Text, Integer)
-
-                        datos_envio.id_envio = id_envio_imp
-
-                        Dim seguimiento As New seguimiento_envios
-                        seguimiento.consulta_envio(datos_envio, datos_cliente, Datos_Dest)
-
-                        If datos_envio.id_tarifa_agencia IsNot Nothing And datos_envio.id_tarifa_agencia > 0 Then
-                            Label2.Text = "El numero de envio ya se encuentra asignado."
-                            ModalPopupExtender3.Show()
-                            Exit Sub
-                        End If
-                    Else
-                        Label2.Text = "Ocurrió un error, el numero de envio debe ser numerico. "
-                        ModalPopupExtender3.Show()
-                        Exit Sub
-                    End If
-                End If
-            End If
-
             Dim Crear_Envio As New Insertar_Envios
 
             'Insetar nuevo destinataro
@@ -387,29 +358,35 @@ Partial Class Punto_Venta
             Dim envioEstafeta As Boolean = False
             Dim cuentaServicio As EstafetaCuentaServicio
             Dim id_cliente As Integer = 0
+            Dim db As New SiExProEntities
+            Dim agente = db.C_AGENCIAS.FirstOrDefault(Function(x) x.id_agencia = DropDownAgentes.Text)
 
             Do While cajas_count < envios.Length()
-
-                Dim valor_envio = TxtTarifa.Value
-
                 Dim cliente As Cliente = Nothing
+                Dim seguimiento As New seguimiento_envios
+                cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault()
+                Dim estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
+                Dim valor_envio = estafetaPrecios.Gombar
+                Dim total_envio As Decimal = estafetaPrecios.Gombar
 
                 If rbTerrestre.Checked Then
-                    valor_envio = estafetaTerrestre.Value
                     tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = "Terrestre")
+                    valor_envio = tipoServicio.CostoTotal
                     envioEstafeta = True
                     datos_envio.observaciones = "Terrestre"
                     cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Terrestre")
+                    total_envio = estafetaPrecios.Terrestre
                     id_cliente = cuentaServicio.Cliente.id_cliente
                     cliente = cuentaServicio.Cliente
                 End If
 
                 If rbDiaSiguiente.Checked Then
-                    valor_envio = estafetaTerrestre.Value
                     tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = "Dia Sig.")
+                    valor_envio = tipoServicio.CostoTotal
                     datos_envio.observaciones = "Dia Sig."
                     envioEstafeta = True
                     cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
+                    total_envio = estafetaPrecios.DiaSiguiente
                     id_cliente = cuentaServicio.Cliente.id_cliente
                     cliente = cuentaServicio.Cliente
                 End If
@@ -457,7 +434,7 @@ Partial Class Punto_Venta
                     datos_envio.valor_aduana = Nothing
                 End If
 
-                datos_envio.total_envio = datos_envio.precio + datos_envio.valor_seguro
+                datos_envio.total_envio = total_envio + datos_envio.valor_seguro
                 datos_envio.fecha = DateTime.Now.ToString
                 datos_envio.instrucciones_entrega = TxtInstEntrega.Text
                 datos_envio.id_usuario = Session("id_usuario")
@@ -503,23 +480,26 @@ Partial Class Punto_Venta
                 Label1.Text = "Útimo envío-> " & id_envio.ToString & " fue creado con exito"
 
                 If envioEstafeta = True Then
-                    Dim respuestaLabel As String = estafetaWrapper.Label(datos_envio, datos_cliente, Datos_Dest, tipoServicio, respuestaFrecuenciaCotizador.Respuesta)
+                    Dim respuestaLabel As String = estafetaWrapper.Label(datos_envio, datos_cliente, Datos_Dest, tipoServicio, respuestaFrecuenciaCotizador.Respuesta, cuentaServicio.Cuenta)
 
-                    If respuestaLabel = "Envio Exportado" Then
+                    If agente.guia_estafeta = True And respuestaLabel = "Envio Exportado" Then
                         Dim sjscript2 As String = "<script language=""javascript"">" &
                         " window.open('../Reports/EstafetaLabel.aspx?id_envio=" & id_envio.ToString & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
                         "</script>"
                         ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+                    Else
+                        Dim sjscript2 As String = "<script language=""javascript"">" &
+                        " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
+                        "</script>"
+                        ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
                     End If
+                Else
+                    Dim sjscript2 As String = "<script language=""javascript"">" &
+                        " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
+                        "</script>"
+                    ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
                 End If
             Loop
-
-            If envioEstafeta = False And genera_guia Then ' Si los datos vienen por importacion no requiren guia
-                Dim sjscript2 As String = "<script language=""javascript"">" &
-                        " window.open('guia_mult.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
-                        "</script>"
-                ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
-            End If
 
             Dim Ctrl As Control
             For Each Ctrl In Panel3.Controls
@@ -529,15 +509,15 @@ Partial Class Punto_Venta
                 End If
             Next
             For Each Ctrl In Panel4.Controls
-                If (Ctrl.GetType() Is GetType(TextBox)) And CBFijaOrigen.Checked = False Then
+                If (Ctrl.GetType() Is GetType(TextBox)) Then
                     Dim txt As TextBox = CType(Ctrl, TextBox)
-                    If txt.ID = "txtLargo" Or txt.ID = "txtAncho" Or txt.ID = "txtAlto" Or txt.ID = "txtPeso" Or txt.ID = "txtIdEnvio" Then
+                    If txt.ID = "txtLargo" Or txt.ID = "txtAncho" Or txt.ID = "txtAlto" Or txt.ID = "txtPeso" Then
                         txt.Text = 0
                     ElseIf txt.ID <> "TxtTarifa" Then
                         txt.Text = ""
                     End If
                 End If
-                If (Ctrl.GetType() Is GetType(DropDownList)) And CBFijaOrigen.Checked = False Then
+                If (Ctrl.GetType() Is GetType(DropDownList)) Then
                     Dim cbobx As DropDownList = CType(Ctrl, DropDownList)
                     'MsgBox(cbobx.ID.ToString)
                     If cbobx.ID <> "DropDownAgentes" And cbobx.ID <> "DropDownProduct" Then
@@ -546,17 +526,15 @@ Partial Class Punto_Venta
                     End If
                 End If
             Next
-            If CBFijaOrigen.Checked = False Then
-                Session("id_cliente") = 0
-                id_cliente = 0
-            End If
+
+            Session("id_cliente") = 0
+            id_cliente = 0
             Session("id_destinatario") = 0
             id_destinatario = 0
 
             TxtCajas.Text = "1"
             TxtSeguro.Text = "0"
             txtPeso.Text = "1"
-            TxtSeguro.Text = "60"
             guia_por_caja.Checked = False
 
 
@@ -893,14 +871,6 @@ Partial Class Punto_Venta
             Label2.Text = "Ocurrió un error, por favor revise los datos -->" + ex.Message.ToString
             ModalPopupExtender3.Show()
         End Try
-    End Sub
-
-    Protected Sub CBFijaOrigen_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles CBFijaOrigen.CheckedChanged
-        If CBFijaOrigen.Checked = True Then
-            Panel4.Enabled = False
-        Else
-            Panel4.Enabled = True
-        End If
     End Sub
 
     <WebMethod()>
