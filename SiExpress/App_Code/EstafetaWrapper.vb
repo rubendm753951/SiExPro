@@ -42,9 +42,8 @@ Public Class EstafetaWrapper
                 .Zone = cuenta
             End With
 
-
-            clienteId = ConfigurationManager.AppSettings("Estafeta.Cuenta" & estafetaUser.AccountId.ToString() & ".ClienteId")
-            cliente = DaspackDALC.GetGombarSender(clienteId)
+            cliente = DaspackDALC.GetGombarSender(estafetaUser.AccountId)
+            clienteId = cliente.id_cliente
             cpOrigen = New String() {cliente.codigo_postal}
             Dim tmpEstafetaUser = GetEstafetaUser("FC", envioExportar.CPDestinatario, tipoEnvio.Peso, DIA_SIGUIENTE, 0)
 
@@ -87,8 +86,9 @@ Public Class EstafetaWrapper
             End If
         Else
             estafetaUser = GetEstafetaUser("FC", envioExportar.CPDestinatario, tipoEnvio.Peso, DIA_SIGUIENTE, 0)
-            clienteId = ConfigurationManager.AppSettings("Estafeta.Cuenta" & estafetaUser.AccountId.ToString() & ".ClienteId")
-            cliente = DaspackDALC.GetGombarSender(clienteId)
+            'clienteId = ConfigurationManager.AppSettings("Estafeta.Cuenta" & estafetaUser.AccountId.ToString() & ".ClienteId")
+            cliente = DaspackDALC.GetGombarSender(estafetaUser.AccountId)
+            clienteId = cliente.id_cliente
             cpOrigen = New String() {cliente.codigo_postal}
 
             cuentaServicio = New EstafetaCuentaServicio()
@@ -122,8 +122,9 @@ Public Class EstafetaWrapper
             End If
 
             estafetaUser = GetEstafetaUser("FC", envioExportar.CPDestinatario, tipoEnvio.Peso, TERRESTRE, 0)
-            clienteId = ConfigurationManager.AppSettings("Estafeta.Cuenta" & estafetaUser.AccountId.ToString() & ".ClienteId")
-            cliente = DaspackDALC.GetGombarSender(clienteId)
+            'clienteId = ConfigurationManager.AppSettings("Estafeta.Cuenta" & estafetaUser.AccountId.ToString() & ".ClienteId")
+            cliente = DaspackDALC.GetGombarSender(estafetaUser.AccountId)
+            clienteId = cliente.id_cliente
             cpOrigen = New String() {cliente.codigo_postal}
 
             cuentaServicio = New EstafetaCuentaServicio()
@@ -223,7 +224,7 @@ Public Class EstafetaWrapper
             .originZipCodeForRouting = envio("cp_dest")
             .serviceTypeId = "70"
             .officeNum = "130"
-            .returnDocument = True
+            .returnDocument = False
             .serviceTypeIdDocRet = "50"
             .effectiveDate = "20200604"
             .contentDescription = "Descripcion del contenido del paquete"
@@ -249,8 +250,9 @@ Public Class EstafetaWrapper
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(estafetaLabelRequest)
             Dim jsonResonse = serializer.Serialize(response)
+            Dim imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
 
-            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId)
+            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, imagenBase64)
         End If
 
         If response.globalResult.resultCode = 0 Then
@@ -314,7 +316,7 @@ Public Class EstafetaWrapper
             .originZipCodeForRouting = destinatario.codigo_postal
             .serviceTypeId = "70"
             .officeNum = "130"
-            .returnDocument = True
+            .returnDocument = False
             .serviceTypeIdDocRet = "50"
             .effectiveDate = "20200604"
             .contentDescription = "Descripcion del contenido del paquete"
@@ -342,8 +344,9 @@ Public Class EstafetaWrapper
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(estafetaLabelRequest)
             Dim jsonResonse = serializer.Serialize(response)
+            Dim imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
 
-            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId)
+            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, imagenBase64)
         End If
 
         If response.globalResult.resultCode = 0 Then
@@ -391,7 +394,7 @@ Public Class EstafetaWrapper
         With searchConfiguration
             .includeDimensions = True
             .includeWaybillReplaceData = True
-            .includeReturnDocumentData = True
+            .includeReturnDocumentData = False
             .includeMultipleServiceData = False
             .includeInternationalData = False
             .includeSignature = False

@@ -15,6 +15,7 @@
           <siteMapNode url="admin_pages/admin_operacion_vehiculos.aspx" title="Operación Vehiculos"  description="Operación de Vehiculos" />
           <siteMapNode url="admin_pages/admin_adeudo_empresa.aspx" title="Adeudos"  description="Adeudos Empresa" />
           <siteMapNode url="admin_pages/admin_tarifas_estafeta.aspx" title="Tarifas Estafeta"  description="Tarifas Estafeta" />
+          <siteMapNode url="admin_pages/admin_clientes.aspx" title="Clientes"  description="Clientes" />
         </siteMapNode>
 
         <siteMapNode url="ops_pages/operacion.aspx" title="Modulo Operativo"  description="Operación">

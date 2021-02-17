@@ -17,5 +17,6 @@ Partial Public Class EstafetaRequestResponse
     Public Property response As String
     Public Property fecha As Nullable(Of Date)
     Public Property cuenta As Nullable(Of Integer)
+    Public Property imagenBase64 As String
 
 End Class

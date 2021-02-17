@@ -318,7 +318,7 @@
 
                                             <asp:Panel ID="checkoutPanel" runat="server" Height="110px" Width="400px"
                                                 Style="text-align: left; background-color: white">
-                                                <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" Gombar" Style="margin-left: 15px"  runat="server" /><br />
+                                                <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DraftLogistic:" Style="margin-left: 15px"  runat="server" /><br />
                                                 <asp:RadioButton ID="rbTerrestre" GroupName="myg" Text=" Terrestre:"  Style="margin-left: 15px" runat="server" /><br />
                                                 <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" />
                                                 <br />

@@ -279,7 +279,7 @@ Public Class DaspackDALC
         Return True
     End Function
 
-    Public Shared Function LogEstafetaRequestResponse(metodo As String, request As String, response As String, cuenta As Integer) As Boolean
+    Public Shared Function LogEstafetaRequestResponse(metodo As String, request As String, response As String, cuenta As Integer, Optional imagenBase64 As String = "") As Boolean
         Dim dbContext As New SiExProEntities
         Dim requestResponse As New EstafetaRequestResponse()
 
@@ -289,6 +289,7 @@ Public Class DaspackDALC
             .response = response
             .fecha = DateTime.Now
             .cuenta = cuenta
+            .imagenBase64 = imagenBase64
         End With
 
         dbContext.D_ESTAFETA_REQUEST_RESPONSE.Add(requestResponse)
@@ -332,7 +333,7 @@ Public Class DaspackDALC
     Public Shared Function GetGombarSender(clienteId As Integer) As Cliente
         Dim dbContext As New SiExProEntities
 
-        Return dbContext.C_CLIENTES.FirstOrDefault(Function(x) x.id_cliente = clienteId)
+        Return dbContext.C_CLIENTES.FirstOrDefault(Function(x) x.NIT = clienteId)
 
     End Function
 

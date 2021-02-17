@@ -207,7 +207,7 @@ Partial Class Punto_Venta
                     Dim cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault()
                     Dim estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
 
-                    rbCosto.Text = "Gombar: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
+                    rbCosto.Text = "DraftLogistic: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
                     rbCosto.Checked = True
 
                     Dim sGUID As String
@@ -225,7 +225,7 @@ Partial Class Punto_Venta
 
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
                             estafetaDiaSig.Value = estafetaPrecios.DiaSiguiente
-                            rbDiaSiguiente.Text = "Dia Siguiente: $" & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
+                            rbDiaSiguiente.Text = "Dia Siguiente: " & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
                         End If
                     Next
 
@@ -411,7 +411,8 @@ Partial Class Punto_Venta
                 End If
 
                 If rbCosto.Checked Then
-                    id_cliente = ConfigurationManager.AppSettings("Estafeta.Cuenta4.ClienteId")
+                    Dim clienteGombar = DaspackDALC.GetGombarSender(4)
+                    id_cliente = clienteGombar.id_cliente
                 End If
 
                 'Insertar el Envío
