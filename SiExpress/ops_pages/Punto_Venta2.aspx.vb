@@ -193,8 +193,15 @@ Partial Class Punto_Venta
                 .Peso = txtPeso.Text
             End With
             Dim clienteId As Integer = 0
+            Dim seguimiento As New seguimiento_envios
+            Dim estafetaTarimas = seguimiento.costo_estafeta_tarimas("44860", Datos_Dest.codigo_postal)
+            Dim cuentaTarimas = 0
 
-            Dim respuestaFrecuenciaCotizador As FrecuenciaCotizadorRespuesta = estafetaWrapper.FrecuenciaCotizadorSingle(envioExportar, clienteId)
+            If estafetaTarimas IsNot Nothing Then
+                cuentaTarimas = estafetaTarimas.Cuenta
+            End If
+
+            Dim respuestaFrecuenciaCotizador As FrecuenciaCotizadorRespuesta = estafetaWrapper.FrecuenciaCotizadorSingle(envioExportar, clienteId, cuentaTarimas)
 
             If respuestaFrecuenciaCotizador.Respuesta.Length > 0 Then
                 If respuestaFrecuenciaCotizador.Respuesta(0).MensajeError <> "" Then
@@ -203,9 +210,12 @@ Partial Class Punto_Venta
                     Mensaje = ""
                     Exit Sub
                 Else
-                    Dim seguimiento As New seguimiento_envios
-                    Dim cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault()
+                    Dim cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.Where(Function(x) x.Servicio <> "LTL").FirstOrDefault()
                     Dim estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
+
+                    If estafetaTarimas IsNot Nothing Then
+                        estafetaPrecios.Ltl = estafetaTarimas.Total
+                    End If
 
                     rbCosto.Text = "DraftLogistic: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
                     rbCosto.Checked = True
@@ -222,10 +232,15 @@ Partial Class Punto_Venta
                             rbTerrestre.Text = "Terrestre: " & FormatCurrency(estafetaPrecios.Terrestre.ToString(), 2)
                         End If
                         If tipoServicio.DescripcionServicio = "Dia Sig." Then
-
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
                             estafetaDiaSig.Value = estafetaPrecios.DiaSiguiente
                             rbDiaSiguiente.Text = "Dia Siguiente: " & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
+                        End If
+
+                        If tipoServicio.DescripcionServicio = "LTL" Then
+                            cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "LTL")
+                            estafetaLtl.Value = estafetaPrecios.Ltl
+                            rbLtl.Text = "Tarimas: " & FormatCurrency(estafetaPrecios.Ltl.ToString(), 2)
                         End If
                     Next
 
@@ -239,6 +254,12 @@ Partial Class Punto_Venta
                         rbDiaSiguiente.Visible = False
                     Else
                         rbDiaSiguiente.Visible = True
+                    End If
+
+                    If estafetaLtl.Value = "" Then
+                        rbLtl.Visible = False
+                    Else
+                        rbLtl.Visible = True
                     End If
                 End If
             Else
@@ -391,7 +412,26 @@ Partial Class Punto_Venta
                     cliente = cuentaServicio.Cliente
                 End If
 
-                If cliente IsNot Nothing And (rbTerrestre.Checked Or rbDiaSiguiente.Checked) Then
+                If rbLtl.Checked Then
+                    Dim estafetaTarimas = seguimiento.costo_estafeta_tarimas("44860", Datos_Dest.codigo_postal)
+                    If estafetaTarimas IsNot Nothing Then
+                        tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = "LTL")
+                        valor_envio = tipoServicio.CostoTotal
+                        datos_envio.observaciones = "LTL"
+                        envioEstafeta = True
+                        cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "LTL")
+                        total_envio = estafetaTarimas.Total
+                        id_cliente = cuentaServicio.Cliente.id_cliente
+                        cliente = cuentaServicio.Cliente
+                    Else
+                        Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
+                        ModalPopupExtender3.Show()
+                        Mensaje = ""
+                        Exit Sub
+                    End If
+                End If
+
+                If cliente IsNot Nothing And (rbTerrestre.Checked Or rbDiaSiguiente.Checked Or rbLtl.Checked) Then
                     datos_cliente.id_pais = cliente.id_pais
                     datos_cliente.nombre = cliente.nombre
                     datos_cliente.apellidos = cliente.apellidos

@@ -282,8 +282,53 @@ Public Class seguimiento_envios
         Catch ex As Exception
             Return Nothing
         End Try
-
     End Function
+
+    Public Function costo_estafeta_tarimas(ByVal cp_origen As String, cp_destino As String) As EstafetaTarimas
+
+        Try
+            Dim MyConnection As ConnectionStringSettings
+            MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
+            Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
+            connection.ConnectionString = MyConnection.ConnectionString
+
+            Dim cmd As Data.IDbCommand = connection.CreateCommand()
+            cmd.CommandType = Data.CommandType.StoredProcedure
+            cmd.CommandText = "dbo.sp_select_precio_tarimas"
+
+            Dim parm1 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm1.ParameterName = "@cp_origen"
+            parm1.Value = cp_origen
+            cmd.Parameters.Add(parm1)
+
+            Dim parm2 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm2.ParameterName = "@cp_destino"
+            parm2.Value = cp_destino
+            cmd.Parameters.Add(parm2)
+
+            connection.Open()
+
+            Dim reader As Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
+            Dim estafetaPrecios As New EstafetaTarimas()
+
+            If reader.HasRows Then
+                reader.Read()
+
+                estafetaPrecios.Id = reader.GetValue(0)
+                estafetaPrecios.Km_Rango_De = reader.GetValue(1)
+                estafetaPrecios.Km_Rango_A = reader.GetValue(2)
+                estafetaPrecios.Zona = reader.GetValue(3)
+                estafetaPrecios.Total = reader.GetValue(6)
+                estafetaPrecios.Cuenta = reader.GetValue(7)
+            End If
+            connection.Close()
+
+            Return estafetaPrecios
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
     Sub valida_flujo(ByVal id_envio As Integer, ByVal modulo As String, ByRef mensaje As String, ByRef permitido As Boolean)
 
         Dim MyConnection As ConnectionStringSettings

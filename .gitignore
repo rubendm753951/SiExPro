@@ -4,5 +4,9 @@
 
 /SiExpress/Scripts/uploads
 /SiExpress/Bin
+/SiExpress/.vs
 /SiExProData/bin/Debug
 /SiExProData/obj/Debug
+/SiExProECommerce/obj/Debug
+/SiExProECommerce/bin/Debug
+/SiExpress/packages
