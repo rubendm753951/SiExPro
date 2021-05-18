@@ -8,10 +8,8 @@
     <link rel="stylesheet" type="text/css" media="screen" href="../css/ui.multiselect.css" />
     <link rel="Stylesheet" type="text/css" media="screen" href="../css/jquery.fileupload.css" />
     <link rel="Stylesheet" type="text/css" media="screen" href="../css/jquery.fileupload.ui.css" />
-    <link rel="Stylesheet" type="text/css" media="screen" href="../css/Punto_Venta2.css" />
-
-    
-    
+    <link rel="Stylesheet" type="text/css" media="screen" href="../css/Punto_Venta2.css" />    
+    <link  type="text/css" href="../Skin/CSS/fontawesome.min.css" rel="stylesheet" />
     <div id="page-wrapper" style =" width: 700px; margin-right: 15px ">
         <div class="container-fluid">
             <div class="row">
@@ -235,9 +233,9 @@
                                                     <tr style="font-weight: bold; font-size: 10pt">
                                                         <td style="height: 3px">Nombre</td>
                                                         <td style="height: 3px">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TxtNombre2" runat="server"
+                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TxtNombre2" runat="server" maxlength="30"
                                                                 Width="350px"></asp:TextBox>
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtApellidos2" runat="server" Visible="False" Width="1px"></asp:TextBox>
+                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtApellidos2" runat="server" Visible="False" maxlength="20" Width="1px"></asp:TextBox>
                                                         </td>
                                                     </tr>
                                                     <tr style="font-weight: bold; font-size: 10pt">
@@ -249,17 +247,29 @@
                                                     <tr style="font-weight: bold; font-size: 10pt">
                                                         <td style="width: 9px; height: 20px; text-align: left">Dirección</td>
                                                         <td style="height: 20px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtCalle2" runat="server" Width="350px"></asp:TextBox>
+                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtCalle2" runat="server" maxlength="30" Width="350px"></asp:TextBox>
                                                         </td>
+                                                    </tr>
+                                                     <tr style="font-size: 12pt">
+                                                        <td style="width: 302px; height: 16px; text-align: left">
+                                                            <strong><span style="font-size: 10pt">CP</span></strong>
+                                                        </td>
+                                                        <td style="width: 320px; height: 27px; display:flex">
+                                                            <asp:TextBox OnTextChanged="TxtCP2_TextChanged" runat="server" AutoPostBack="true" CssClass="form-control" Height="27px" ID="TxtCP2" Width="130px"></asp:TextBox>
+                                                            <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnActualizar" runat="server" Text="Actualizar"  Height="27px" Width="98px"></asp:Button>
+                                                            </td>
+                                                        
                                                     </tr>
                                                     <tr style="font-weight: bold; font-size: 10pt">
                                                         <td style="width: 9px; height: 20px; text-align: left">Colonia</td>
                                                         <td style="font-size: 10pt; height: 20px; text-align: left; width: 322px;">
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="TxtCol2" runat="server" Width="350px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
+                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownColonia"  runat="server" Width="350px"  
+                                                                DataValueField="id_asenta_cpcons" DataTextField="d_asenta" AutoPostBack="True"></asp:DropDownList>                                                            
+                                                        </td>                                                        
+                                                    </tr>                                                    
                                                     <tr style="font-weight: bold; font-size: 10pt">
-                                                        <td style="width: 9px; height: 20px; text-align: left">Delegación</td>
+                                                        <td style="width: 9px; height: 20px; text-align: left">Municipio</td>
                                                         <td style="height: 20px; text-align: left">
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="TxtMpio2" runat="server" Width="350px"></asp:TextBox>
                                                         </td>
@@ -278,15 +288,7 @@
                                                         <td style="height: 11px; text-align: left">
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad2" runat="server" Width="350px" Wrap="False"></asp:TextBox>                                                            
                                                         </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">CP</span></strong>
-                                                        </td>
-                                                        <td colspan="2" style="height: 16px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TxtCP2" runat="server" Width="130px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
+                                                    </tr>                                                   
                                                     <tr style="font-size: 12pt">
                                                         <td style="width: 302px; height: 16px; text-align: left">
                                                             <strong><span style="font-size: 10pt">Teléfono</span></strong>
@@ -414,6 +416,14 @@
                                         Type="Int32" />
                                 </SelectParameters>
                             </asp:SqlDataSource>                                                        
+
+                            <asp:SqlDataSource ID="SqlColonias" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
+                                SelectCommand="sp_SelectColonias" SelectCommandType="StoredProcedure">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="TxtCP2" Name="cp" PropertyName="Text" Type="String" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>  
+  
                             <br />
 
                             <asp:Button CssClass="btn btn-outline btn-success btn-sm invisible" ID="Button6" runat="server" Text="Button" Visible="True" />
@@ -626,7 +636,7 @@
   <asp:Content ContentPlaceHolderID="ScriptSection" runat="server">
       
     <script type="text/javascript" src="../Scripts/grid.locale-en.js"></script>        
-    <script type="text/javascript" src="../Scripts/jquery.jqGrid.min.js"></script
+    <script type="text/javascript" src="../Scripts/jquery.jqGrid.min.js"></script>
     <script type="text/javascript" src="../Scripts/jquery.validator.js"></script>    
 
     <script type="text/javascript" src="../Scripts/jquery.ui.widget.js"></script>

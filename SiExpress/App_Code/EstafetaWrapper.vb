@@ -59,7 +59,7 @@ Public Class EstafetaWrapper
                 Dim jsonRequest = serializer.Serialize(estafetaRequest)
                 Dim jsonResonse = serializer.Serialize(respuestaFrecuenciaCotizador)
 
-                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, tmpEstafetaUserTarimas.AccountId)
+                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, tmpEstafetaUserTarimas.AccountId, 1)
             End If
 
             If respuestaFrecuenciaCotizador.Length > 0 Then
@@ -69,7 +69,7 @@ Public Class EstafetaWrapper
             End If
         End If
 
-        If envioExportar.PesoVolumetrico <= 10 Then
+        If envioExportar.PesoVolumetrico <= 5 Then
             estafetaUser = New EstafetaUser()
             Dim cuenta As String = 3
             With estafetaUser
@@ -121,7 +121,7 @@ Public Class EstafetaWrapper
                 Dim jsonRequest = serializer.Serialize(estafetaRequest)
                 Dim jsonResonse = serializer.Serialize(respuestaFrecuenciaCotizador)
 
-                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId)
+                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId, 1)
             End If
 
             If respuestaFrecuenciaCotizador.Length > 0 Then
@@ -155,7 +155,7 @@ Public Class EstafetaWrapper
                 Dim jsonRequest = serializer.Serialize(estafetaRequest)
                 Dim jsonResonse = serializer.Serialize(respuestaFrecuenciaCotizador)
 
-                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId)
+                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId, 1)
             End If
 
             If respuestaFrecuenciaCotizador.Length > 0 Then
@@ -194,7 +194,7 @@ Public Class EstafetaWrapper
                 Dim jsonRequest = serializer.Serialize(estafetaRequest)
                 Dim jsonResonse = serializer.Serialize(respuestaFrecuenciaCotizador)
 
-                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId)
+                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId, 1)
             End If
 
             If respuestaFrecuenciaCotizador.Length > 0 Then
@@ -238,12 +238,22 @@ Public Class EstafetaWrapper
             .zipCode = envio("cp_remit")
         End With
 
+        Dim direccion = envio("calle_dest")
+        If envio("calle_dest").Length > 30 Then
+            direccion = envio("calle_dest").Substring(0, 30)
+        End If
+
+        Dim nombre = envio("nombre_dest")
+        If envio("nombre_dest").Length > 30 Then
+            nombre = envio("nombre_dest").Substring(0, 30)
+        End If
+
         Dim destino As New Estafeta.Label.DestinationInfo()
         With destino
-            .address1 = envio("calle_dest")
+            .address1 = direccion
             .address2 = "N/A"
             .city = envio("ciudad_dest")
-            .contactName = envio("nombre_dest")
+            .contactName = nombre
             .corporateName = IIf(String.IsNullOrEmpty(envio("empresa_dest")), "N/A", Strings.Left(envio("empresa_dest"), 50))
             .customerNumber = "0000000"
             .neighborhood = "N/A"
@@ -253,6 +263,18 @@ Public Class EstafetaWrapper
             .zipCode = envio("cp_dest")
         End With
 
+        Dim serviceTypeId = "70"
+        If tipoServicio.DescripcionServicio = "Dia Sig." Then
+            serviceTypeId = "60"
+        End If
+
+        If tipoServicio.DescripcionServicio = "LTL" Then
+            serviceTypeId = "L0"
+        End If
+
+        Dim today As DateTime = DateTime.Today
+        Dim effectiveDate As DateTime = today.AddDays(5)
+        Dim effectiveDateStr = effectiveDate.ToString("yyyyMMdd")
         Dim descripcionLista As New Estafeta.Label.LabelDescriptionList()
         With descripcionLista
             .originInfo = origen
@@ -265,14 +287,14 @@ Public Class EstafetaWrapper
             'Tipo de envio 1=SOBRE 4=PAQUETE
             .parcelTypeId = 4
             .reference = envio("id_envio")
-            .weight = 1
+            .weight = envio("peso")
             .numberOfLabels = 1
             .originZipCodeForRouting = envio("cp_dest")
-            .serviceTypeId = "70"
-            .officeNum = "130"
+            .serviceTypeId = serviceTypeId
+            .officeNum = ConfigurationManager.AppSettings("Estafeta.OfficeNum")
             .returnDocument = False
             .serviceTypeIdDocRet = "50"
-            .effectiveDate = "20200604"
+            .effectiveDate = effectiveDateStr
             .contentDescription = "Descripcion del contenido del paquete"
         End With
 
@@ -296,17 +318,25 @@ Public Class EstafetaWrapper
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(estafetaLabelRequest)
             Dim jsonResonse = serializer.Serialize(response)
-            Dim imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
+            Dim imagenBase64 = ""
+            If response.labelPDF IsNot Nothing Then
+                imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
+            End If
 
-            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, imagenBase64)
+            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, 1, imagenBase64)
         End If
 
+        DaspackDALC.InsFrecuanciaCotizador(envio("id_envio"), respuestaFrecuenciaCotizador, tipoServicio)
         If response.globalResult.resultCode = 0 Then
             DaspackDALC.InsEstafetaLabel(envio("id_envio"), response)
-            DaspackDALC.InsFrecuanciaCotizador(envio("id_envio"), respuestaFrecuenciaCotizador, tipoServicio)
             Return "Envio Exportado"
         Else
-            Return response.globalResult.resultDescription
+            Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
+
+            Dim cancela As New seguimiento_envios
+            cancela.insertar_seguimiento(envio("id_envio"), "~/admin_pages/modif_cancel.aspx", observaciones, envio("id_usuario"))
+
+            Return observaciones
         End If
 
     End Function
@@ -318,32 +348,65 @@ Public Class EstafetaWrapper
         Dim origen As New Estafeta.Label.OriginInfo()
         With origen
             .address1 = cliente.calle
-            .address2 = "N/A"
+            .address2 = cliente.colonia
             .city = cliente.ciudad
             .contactName = cliente.nombre
             .corporateName = IIf(String.IsNullOrEmpty(cliente.empresa), "N/A", Strings.Left(cliente.empresa, 50))
             .customerNumber = "0000000"
-            .neighborhood = "N/A"
+            .neighborhood = cliente.municipio
             .phoneNumber = cliente.telefono
             .cellPhone = ""
             .state = cliente.estadoprovincia
             .zipCode = cliente.codigo_postal
         End With
 
+        Dim direccion = destinatario.calle
+        If destinatario.calle.Length > 30 Then
+            direccion = destinatario.calle.Substring(0, 30)
+        End If
+
+        Dim nombre = destinatario.nombre
+        If destinatario.nombre.Length > 30 Then
+            nombre = destinatario.nombre.Substring(0, 30)
+        End If
+
+        Dim municipio = destinatario.municipio
+        If destinatario.municipio.Length > 50 Then
+            nombre = destinatario.municipio.Substring(0, 50)
+        End If
+
         Dim destino As New Estafeta.Label.DestinationInfo()
         With destino
-            .address1 = destinatario.calle
-            .address2 = "N/A"
+            .address1 = direccion
+            .address2 = destinatario.colonia
             .city = destinatario.ciudad
-            .contactName = destinatario.nombre
+            .contactName = nombre
             .corporateName = IIf(String.IsNullOrEmpty(destinatario.empresa), "N/A", Strings.Left(destinatario.empresa, 50))
             .customerNumber = "0000000"
-            .neighborhood = "N/A"
+            .neighborhood = destinatario.municipio
             .phoneNumber = destinatario.telefono
             .cellPhone = ""
             .state = destinatario.estadoprovincia
             .zipCode = destinatario.codigo_postal
         End With
+
+
+        Dim serviceTypeId = "70"
+        If tipoServicio.DescripcionServicio = "Dia Sig." Then
+            serviceTypeId = "60"
+        End If
+
+        If tipoServicio.DescripcionServicio = "LTL" Then
+            serviceTypeId = "L0"
+        End If
+
+        Dim pesoVol As Decimal = (envio.alto * envio.ancho * envio.largo) / 5000
+
+        envio.peso = IIf(envio.peso > pesoVol, envio.peso, pesoVol)
+        Dim today As DateTime = DateTime.Today
+        Dim effectiveDate As DateTime = today.AddDays(5)
+        Dim effectiveDateStr = effectiveDate.ToString("yyyyMMdd")
+
 
         Dim descripcionLista As New Estafeta.Label.LabelDescriptionList()
         With descripcionLista
@@ -357,14 +420,14 @@ Public Class EstafetaWrapper
             'Tipo de envio 1=SOBRE 4=PAQUETE
             .parcelTypeId = 4
             .reference = envio.id_envio
-            .weight = 1
+            .weight = Math.Round(envio.peso, 2)
             .numberOfLabels = 1
             .originZipCodeForRouting = destinatario.codigo_postal
-            .serviceTypeId = "70"
-            .officeNum = "130"
+            .serviceTypeId = serviceTypeId
+            .officeNum = ConfigurationManager.AppSettings("Estafeta.OfficeNum")
             .returnDocument = False
             .serviceTypeIdDocRet = "50"
-            .effectiveDate = "20200604"
+            .effectiveDate = effectiveDateStr
             .contentDescription = "Descripcion del contenido del paquete"
         End With
 
@@ -390,17 +453,25 @@ Public Class EstafetaWrapper
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(estafetaLabelRequest)
             Dim jsonResonse = serializer.Serialize(response)
-            Dim imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
+            Dim imagenBase64 = ""
+            If response.labelPDF IsNot Nothing Then
+                imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
+            End If
 
-            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, imagenBase64)
+            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, 1, imagenBase64)
         End If
 
+        DaspackDALC.InsFrecuanciaCotizador(envio.id_envio, respuestaFrecuenciaCotizador, tipoServicio)
         If response.globalResult.resultCode = 0 Then
             DaspackDALC.InsEstafetaLabel(envio.id_envio, response)
-            DaspackDALC.InsFrecuanciaCotizador(envio.id_envio, respuestaFrecuenciaCotizador, tipoServicio)
             Return "Envio Exportado"
         Else
-            Return response.globalResult.resultDescription
+            Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
+
+            Dim cancela As New seguimiento_envios
+            cancela.insertar_seguimiento(envio.id_envio, "~/admin_pages/modif_cancel.aspx", observaciones, envio.id_usuario)
+
+            Return observaciones
         End If
 
     End Function
@@ -463,7 +534,7 @@ Public Class EstafetaWrapper
             Dim jsonRequest = serializer.Serialize(estafetaRequest)
             Dim jsonResonse = serializer.Serialize(queryResult)
 
-            DaspackDALC.LogEstafetaRequestResponse("Tracking", jsonRequest, jsonResonse, estafetaUser.AccountId)
+            DaspackDALC.LogEstafetaRequestResponse("Tracking", jsonRequest, jsonResonse, estafetaUser.AccountId, 1)
         End If
 
         Dim trackHistory = New List(Of EstafetaTrackingStep)

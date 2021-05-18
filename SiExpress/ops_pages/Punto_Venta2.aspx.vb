@@ -17,6 +17,15 @@ Partial Class Punto_Venta
         If modulo IsNot Nothing Then
             _idModulo = modulo.IdModulo
         End If
+
+        If DropDownColonia.Items.Count > 0 Then
+            TxtCol2.Visible = False
+            DropDownColonia.Visible = True
+        Else
+            TxtCol2.Visible = True
+            DropDownColonia.Visible = False
+        End If
+
         '****************************************************************
 
     End Sub
@@ -24,6 +33,42 @@ Partial Class Punto_Venta
     Protected Sub GridView2_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles GridView2.PageIndexChanging
         Me.ModalPopupExtender2.Show()
     End Sub
+
+    Protected Sub TxtCP2_TextChanged(sender As Object, e As EventArgs)
+        Dim cp = DirectCast(sender, TextBox).Text
+        GetColonias(cp)
+    End Sub
+
+    Private Sub btnActualizar_Click(sender As Object, e As EventArgs) Handles btnActualizar.Click
+        If TxtCP2.Text <> "" And TxtCP2.Text.Length >= 5 Then
+            GetColonias(TxtCP2.Text)
+        End If
+    End Sub
+
+    Private Sub DropDownColonia_SelectedIndexChanged(sender As Object, e As EventArgs) Handles DropDownColonia.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub GetColonias(cp As String)
+        Dim sepomexResult = DaspackDALC.GetSearchZipCode(cp)
+        If sepomexResult IsNot Nothing And sepomexResult.Count > 0 Then
+            TxtCol2.Visible = False
+            DropDownColonia.Visible = True
+            DropDownColonia.DataSource = sepomexResult
+            DropDownColonia.DataBind()
+
+            'DropDownPais2.SelectedValue = 52
+            txtCiudad2.Visible = True
+            'txtEdo2.DataBind()
+            txtEdo2.SelectedValue = sepomexResult(0).estado_codigo
+            txtCiudad2.Text = sepomexResult(0).d_ciudad
+            TxtMpio2.Text = sepomexResult(0).D_mnpio
+        Else
+            TxtCol2.Visible = True
+            DropDownColonia.Visible = False
+        End If
+    End Sub
+
     Protected Sub DropDownProduct_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles DropDownProduct.SelectedIndexChanged
         Try
             Dim MyConnection As ConnectionStringSettings
@@ -76,7 +121,13 @@ Partial Class Punto_Venta
             Dim datos_envio As New ObjEnvio
 
             Dim Crear_Envio As New Insertar_Envios
+            Dim coloniaDesc = ""
 
+            If TxtCol2.Visible = False Then
+                coloniaDesc = DropDownColonia.SelectedItem.Text
+            Else
+                coloniaDesc = TxtCol2.Text
+            End If
             'Insetar nuevo destinataro
             Dim id_destinatario As Integer
             Datos_Dest.id_pais = DropDownPais2.SelectedValue
@@ -87,7 +138,7 @@ Partial Class Punto_Venta
             Datos_Dest.noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
             Datos_Dest.nointerior = Nothing
             Datos_Dest.direccion2 = Nothing
-            Datos_Dest.colonia = TxtCol2.Text
+            Datos_Dest.colonia = coloniaDesc
             Datos_Dest.ciudad = txtCiudad2.Text
             Datos_Dest.municipio = TxtMpio2.Text
             Datos_Dest.estadoprovincia = txtEdo2.Text
@@ -225,24 +276,45 @@ Partial Class Punto_Venta
                     estafetaTipoServicio.Value = sGUID
                     Session(sGUID) = respuestaFrecuenciaCotizador
 
+                    Dim datosCliente As Cliente = Nothing
+
                     For Each tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio In respuestaFrecuenciaCotizador.Respuesta(0).TipoServicio
                         If tipoServicio.DescripcionServicio = "Terrestre" Then
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Terrestre")
                             estafetaTerrestre.Value = estafetaPrecios.Terrestre
                             rbTerrestre.Text = "Terrestre: " & FormatCurrency(estafetaPrecios.Terrestre.ToString(), 2)
+                            If datosCliente Is Nothing Then
+                                datosCliente = cuentaServicio.Cliente
+                            End If
                         End If
                         If tipoServicio.DescripcionServicio = "Dia Sig." Then
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
                             estafetaDiaSig.Value = estafetaPrecios.DiaSiguiente
                             rbDiaSiguiente.Text = "Dia Siguiente: " & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
+                            If datosCliente Is Nothing Then
+                                datosCliente = cuentaServicio.Cliente
+                            End If
                         End If
 
                         If tipoServicio.DescripcionServicio = "LTL" Then
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "LTL")
                             estafetaLtl.Value = estafetaPrecios.Ltl
                             rbLtl.Text = "Tarimas: " & FormatCurrency(estafetaPrecios.Ltl.ToString(), 2)
+                            If datosCliente Is Nothing Then
+                                datosCliente = cuentaServicio.Cliente
+                            End If
                         End If
                     Next
+
+                    'Dim fedexRate As New FedEx_RateRequest()
+                    'Dim fedexCliente As New ObjCliente()
+
+                    'fedexCliente.direccion = datosCliente.calle
+                    'fedexCliente.ciudad = datosCliente.ciudad
+                    'fedexCliente.estadoprovincia = datosCliente.estadoprovincia
+                    'fedexCliente.codigo_postal = datosCliente.codigo_postal
+                    'fedexCliente.codigo_pais = "MX"
+                    'Dim fedexResul = fedexRate.Main(datos_envio, fedexCliente, Datos_Dest)
 
                     If estafetaTerrestre.Value = "" Then
                         rbTerrestre.Visible = False
@@ -332,6 +404,13 @@ Partial Class Punto_Venta
             Dim datos_envio As New ObjEnvio
             Dim Crear_Envio As New Insertar_Envios
 
+            Dim coloniaDesc = ""
+
+            If TxtCol2.Visible = False Then
+                coloniaDesc = DropDownColonia.SelectedItem.Text
+            Else
+                coloniaDesc = TxtCol2.Text
+            End If
             'Insetar nuevo destinataro
             Dim id_destinatario As Integer
             Datos_Dest.id_pais = DropDownPais2.SelectedValue
@@ -342,7 +421,7 @@ Partial Class Punto_Venta
             Datos_Dest.noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
             Datos_Dest.nointerior = Nothing
             Datos_Dest.direccion2 = Nothing
-            Datos_Dest.colonia = TxtCol2.Text
+            Datos_Dest.colonia = coloniaDesc
             Datos_Dest.ciudad = txtCiudad2.Text
 
             Datos_Dest.municipio = TxtMpio2.Text
@@ -529,10 +608,16 @@ Partial Class Punto_Venta
                         "</script>"
                         ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
                     Else
-                        Dim sjscript2 As String = "<script language=""javascript"">" &
+                        If agente.guia_estafeta = True Then
+                            Label2.Text = "Ocurrió un error, por favor revise los datos ---> Error al crear etiqueta"
+                            ModalPopupExtender3.Show()
+                        Else
+
+                            Dim sjscript2 As String = "<script language=""javascript"">" &
                         " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
                         "</script>"
-                        ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+                            ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+                        End If
                     End If
                 Else
                     Dim sjscript2 As String = "<script language=""javascript"">" &
@@ -640,6 +725,9 @@ Partial Class Punto_Venta
 
                 Dim destinatario As Destinatario = DaspackDALC.GetDatosDestinatario(envio.id_envio)
                 If destinatario IsNot Nothing Then
+                    TxtCol2.Visible = True
+                    DropDownColonia.Visible = False
+
                     With destinatario
                         DropDownPais2.SelectedValue = .id_pais
                         txtCiudad2.Visible = True
@@ -652,7 +740,6 @@ Partial Class Punto_Venta
                         txtEdo2.SelectedValue = .estadoprovincia
                         txtCiudad2.Text = .ciudad
                         TxtMpio2.Text = .municipio
-
                         txtTelefono2.Text = .telefono
                         txtEmail2.Text = .email
                         TxtCP2.Text = .codigo_postal
@@ -1325,6 +1412,7 @@ Partial Class Punto_Venta
             response = Nothing
         End Try
     End Function
+
 
 End Class
 

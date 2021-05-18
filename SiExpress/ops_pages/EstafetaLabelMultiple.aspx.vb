@@ -17,7 +17,7 @@ Partial Class Reports_EstafetaLabelMultiple
 
         Try
 
-            Dim result As IEnumerable(Of ImagenesEnviosEstafeta) = db.ImagenesEnviosEstafeta(1040478549, 1040478564, 55)
+            Dim result As IEnumerable(Of ImagenesEnviosEstafeta) = db.ImagenesEnviosEstafeta(id_envio1, id_envio2, id_agente)
             If result IsNot Nothing Then
                 arrEnvios = New ArrayList((From i In result Select i).ToArray)
             End If

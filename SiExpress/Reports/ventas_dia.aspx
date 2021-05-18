@@ -32,10 +32,13 @@
         </tr>
         <tr>
             <td style="width: 167px; height: 22px; ">
-                Fecha</td>
+                Fecha de </td>
             <td style="height: 22px; width: 337px; TEXT-ALIGN: left" valign="top">
-                <asp:TextBox CssClass="form-control" Height="27px"   ID="Fecha" runat="server"></asp:TextBox>
+                <asp:TextBox CssClass="form-control" Height="27px" Width="120px" ID="Fecha" runat="server"></asp:TextBox>
+                a
+                <asp:TextBox CssClass="form-control" Height="27px" Width="120px" ID="FechaFin" runat="server"></asp:TextBox>
                 </td>
+            
         </tr>
         <tr>
             <td style="width: 167px; ">
@@ -66,12 +69,16 @@
     <asp:CalendarExtender ID="CalendarExtender1" runat="server" 
         TargetControlID="Fecha" Format="yyyy/MM/dd">
     </asp:CalendarExtender>
+    <asp:CalendarExtender ID="CalendarExtender2" runat="server" 
+        TargetControlID="FechaFin" Format="yyyy/MM/dd">
+    </asp:CalendarExtender>
 
     <asp:ObjectDataSource ID="ObjectDataSource1" runat="server" SelectMethod="GetData"
         TypeName="DataSet3TableAdapters.sp_select_reporte_venta_diaTableAdapter" OldValuesParameterFormatString="original_{0}">
         <SelectParameters>
             <asp:ControlParameter ControlID="IdAgente" DefaultValue="16" Name="id_agente" PropertyName="SelectedValue" Type="Int32" />
-            <asp:ControlParameter ControlID="Fecha" DefaultValue="15-Sep-2010" Name="fecha" PropertyName="Text" Type="DateTime" />
+            <asp:ControlParameter ControlID="Fecha" DefaultValue="15-Apr-2021" Name="fecha" PropertyName="Text" Type="DateTime" />
+            <asp:ControlParameter ControlID="FechaFin" DefaultValue="15-Apr-2021" Name="fecha_fin" PropertyName="Text" Type="DateTime" />
             <asp:ControlParameter ControlID="TextBox1" DefaultValue="1" Name="echange_rate" PropertyName="Text" Type="Decimal" />
         </SelectParameters>
     </asp:ObjectDataSource>

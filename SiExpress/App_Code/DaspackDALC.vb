@@ -279,7 +279,7 @@ Public Class DaspackDALC
         Return True
     End Function
 
-    Public Shared Function LogEstafetaRequestResponse(metodo As String, request As String, response As String, cuenta As Integer, Optional imagenBase64 As String = "") As Boolean
+    Public Shared Function LogEstafetaRequestResponse(metodo As String, request As String, response As String, cuenta As Integer, carrier As Integer, Optional imagenBase64 As String = "") As Boolean
         Dim dbContext As New SiExProEntities
         Dim requestResponse As New EstafetaRequestResponse()
 
@@ -290,6 +290,7 @@ Public Class DaspackDALC
             .fecha = DateTime.Now
             .cuenta = cuenta
             .imagenBase64 = imagenBase64
+            .carrier = carrier
         End With
 
         dbContext.D_ESTAFETA_REQUEST_RESPONSE.Add(requestResponse)
@@ -334,6 +335,18 @@ Public Class DaspackDALC
         Dim dbContext As New SiExProEntities
 
         Return dbContext.C_CLIENTES.FirstOrDefault(Function(x) x.NIT = clienteId)
+
+    End Function
+
+    Public Shared Function GetSearchZipCode(cp As String) As List(Of Sepomex)
+        Dim dbContext As New SiExProEntities
+        Dim result = dbContext.C_SEPOMEX.Where(Function(x) x.d_codigo = cp)
+
+        If result IsNot Nothing Then
+            Return result.OrderBy(Function(x) x.d_asenta).ToList()
+        Else
+            Return Nothing
+        End If
 
     End Function
 
