@@ -318,8 +318,9 @@
                                                 TargetControlID="Button10" PopupControlID="checkoutPanel" BackgroundCssClass="modalBackground">
                                             </asp:ModalPopupExtender>
 
-                                            <asp:Panel ID="checkoutPanel" runat="server" Height="165px" Width="400px"
+                                            <asp:Panel ID="checkoutPanel" runat="server" Height="195px" Width="400px"
                                                 Style="text-align: left; background-color: white">
+                                                <asp:Label ID="lblOcurre" runat="server" Width="452px" Height="27px" Style="margin-left: 15px; margin-top: 15px;color:red; font-weight:bold">Ocurre Forzoso</asp:Label>
                                                 <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DraftLogistic:" Style="margin-left: 15px; margin-top: 15px"  runat="server" /><br />
                                                 <asp:RadioButton ID="rbTerrestre" GroupName="myg" Text=" Terrestre:"  Style="margin-left: 15px" runat="server" /><br />
                                                 <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br />
@@ -331,9 +332,9 @@
                                             
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr>                                        
                                         <td colspan="3" valign="top" style="padding-bottom:10px" >
-                                            <asp:TextBox CssClass="form-control" Height="41px" ID="txtMessage" runat="server" TextMode="MultiLine" Width="422px"></asp:TextBox></td>
+                                            <asp:TextBox CssClass="form-control" Height="41px" ID="TxtObservaciones" runat="server" TextMode="MultiLine" Width="422px"></asp:TextBox></td>
                                     </tr>
                                     <tr>
                                         <td colspan="3" style="height: 20px" valign="top">

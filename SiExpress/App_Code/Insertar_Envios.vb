@@ -563,7 +563,7 @@ Public Class Insertar_Envios
         Return id_envio
 
     End Function
-    Sub Detalle_Envios(ByVal id_envio As Integer, ByVal datos_envio As ObjEnvio)
+    Sub Detalle_Envios(ByVal id_envio As Integer, ByVal datos_envio As ObjEnvio, id_contenido As Integer, observaciones As String)
         Dim MyConnection As ConnectionStringSettings
         MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
         Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
@@ -587,6 +587,16 @@ Public Class Insertar_Envios
         parm3.ParameterName = "@id_destinatario"
         parm3.Value = datos_envio.id_destinatario
         cmd.Parameters.Add(parm3)
+
+        Dim parm4 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm4.ParameterName = "@id_contenido"
+        parm4.Value = id_contenido
+        cmd.Parameters.Add(parm4)
+
+        Dim parm5 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm5.ParameterName = "@observaciones"
+        parm5.Value = observaciones
+        cmd.Parameters.Add(parm5)
 
         connection.Open()
         cmd.ExecuteNonQuery()

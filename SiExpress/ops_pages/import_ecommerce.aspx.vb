@@ -121,7 +121,7 @@ Partial Class ops_pages_import_ecommerce
                             End If
 
                             'Registro de Envíos (Detalles)
-                            Crear_Envio.Detalle_Envios(id_envio, requestEnvio)
+                            Crear_Envio.Detalle_Envios(id_envio, requestEnvio, 0, "")
                             'Insertar SobreCargos
                             Crear_Envio.inserta_SobreCargos(id_envio)
                             'Inserta seguimiento

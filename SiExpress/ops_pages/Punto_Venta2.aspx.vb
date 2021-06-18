@@ -243,7 +243,7 @@ Partial Class Punto_Venta
                 .Ancho = txtAncho.Text
                 .Peso = txtPeso.Text
             End With
-            Dim clienteId As Integer = 0
+            'Dim clienteId As Integer = 0
             Dim seguimiento As New seguimiento_envios
             Dim estafetaTarimas = seguimiento.costo_estafeta_tarimas("44860", Datos_Dest.codigo_postal)
             Dim cuentaTarimas = 0
@@ -252,7 +252,7 @@ Partial Class Punto_Venta
                 cuentaTarimas = estafetaTarimas.Cuenta
             End If
 
-            Dim respuestaFrecuenciaCotizador As FrecuenciaCotizadorRespuesta = estafetaWrapper.FrecuenciaCotizadorSingle(envioExportar, clienteId, cuentaTarimas)
+            Dim respuestaFrecuenciaCotizador As FrecuenciaCotizadorRespuesta = estafetaWrapper.FrecuenciaCotizadorSingle(envioExportar, cuentaTarimas)
 
             If respuestaFrecuenciaCotizador.Respuesta.Length > 0 Then
                 If respuestaFrecuenciaCotizador.Respuesta(0).MensajeError <> "" Then
@@ -264,12 +264,25 @@ Partial Class Punto_Venta
                     Dim cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.Where(Function(x) x.Servicio <> "LTL").FirstOrDefault()
                     Dim estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
 
+                    cuentaServicio.Seleccionada = True
+                    rbCosto.Text = "DraftLogistic: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
+                    rbCosto.Checked = True
+
+                    lblOcurre.Visible = cuentaServicio.Ocurre
+
                     If estafetaTarimas IsNot Nothing Then
                         estafetaPrecios.Ltl = estafetaTarimas.Total
                     End If
 
-                    rbCosto.Text = "DraftLogistic: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
-                    rbCosto.Checked = True
+                    'If estafetaPrecios.Gombar > 0 Then
+                    '    rbCosto.Enabled = True
+                    '    rbCosto.Text = "DraftLogistic: " & FormatCurrency(estafetaPrecios.Gombar.ToString(), 2)
+                    '    rbCosto.Checked = True
+                    'Else
+                    '    rbCosto.Text = "DraftLogistic: Sin Cobertura"
+                    '    rbCosto.Enabled = False
+                    '    rbCosto.Checked = False
+                    'End If
 
                     Dim sGUID As String
                     sGUID = System.Guid.NewGuid.ToString()
@@ -283,6 +296,7 @@ Partial Class Punto_Venta
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Terrestre")
                             estafetaTerrestre.Value = estafetaPrecios.Terrestre
                             rbTerrestre.Text = "Terrestre: " & FormatCurrency(estafetaPrecios.Terrestre.ToString(), 2)
+
                             If datosCliente Is Nothing Then
                                 datosCliente = cuentaServicio.Cliente
                             End If
@@ -291,6 +305,7 @@ Partial Class Punto_Venta
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
                             estafetaDiaSig.Value = estafetaPrecios.DiaSiguiente
                             rbDiaSiguiente.Text = "Dia Siguiente: " & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
+
                             If datosCliente Is Nothing Then
                                 datosCliente = cuentaServicio.Cliente
                             End If
@@ -300,6 +315,7 @@ Partial Class Punto_Venta
                             cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "LTL")
                             estafetaLtl.Value = estafetaPrecios.Ltl
                             rbLtl.Text = "Tarimas: " & FormatCurrency(estafetaPrecios.Ltl.ToString(), 2)
+
                             If datosCliente Is Nothing Then
                                 datosCliente = cuentaServicio.Cliente
                             End If
@@ -464,7 +480,7 @@ Partial Class Punto_Venta
             Do While cajas_count < envios.Length()
                 Dim cliente As Cliente = Nothing
                 Dim seguimiento As New seguimiento_envios
-                cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault()
+                cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.Where(Function(x) x.Seleccionada = True).FirstOrDefault()
                 Dim estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
                 Dim valor_envio = estafetaPrecios.Gombar
                 Dim total_envio As Decimal = estafetaPrecios.Gombar
@@ -475,6 +491,7 @@ Partial Class Punto_Venta
                     envioEstafeta = True
                     datos_envio.observaciones = "Terrestre"
                     cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Terrestre")
+                    estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
                     total_envio = estafetaPrecios.Terrestre
                     id_cliente = cuentaServicio.Cliente.id_cliente
                     cliente = cuentaServicio.Cliente
@@ -486,6 +503,7 @@ Partial Class Punto_Venta
                     datos_envio.observaciones = "Dia Sig."
                     envioEstafeta = True
                     cuentaServicio = respuestaFrecuenciaCotizador.CuentaServicios.FirstOrDefault(Function(x) x.Servicio = "Dia Sig.")
+                    estafetaPrecios = seguimiento.costo_estafeta(cuentaServicio.PesoVolumetrico, cuentaServicio.Cuenta, cuentaServicio.Zona, agente.id_agencia)
                     total_envio = estafetaPrecios.DiaSiguiente
                     id_cliente = cuentaServicio.Cliente.id_cliente
                     cliente = cuentaServicio.Cliente
@@ -582,7 +600,7 @@ Partial Class Punto_Venta
                 End If
 
                 'Registro de Envíos (Detalles)
-                Crear_Envio.Detalle_Envios(id_envio, datos_envio)
+                Crear_Envio.Detalle_Envios(id_envio, datos_envio, 0, TxtObservaciones.Text)
                 TextBox2.Text = id_envio.ToString
 
                 Guia.DataBind()
@@ -843,7 +861,7 @@ Partial Class Punto_Venta
                     End If
 
                     'Registro de Envíos (Detalles)
-                    Crear_Envio.Detalle_Envios(id_envio, requestEnvio)
+                    Crear_Envio.Detalle_Envios(id_envio, requestEnvio, 0, "")
                     'Insertar SobreCargos
                     Crear_Envio.inserta_SobreCargos(id_envio)
                     'Inserta seguimiento
@@ -986,12 +1004,10 @@ Partial Class Punto_Venta
                 'txtCiudad.Text = datos_devueltos.addrCity_r
                 txtEdo2.Text = datos_devueltos.addrState_r
                 TxtCP2.Text = datos_devueltos.addrZipCode_r
-                txtMessage.Text = datos_devueltos.addr_changes_r
-                If datos_devueltos.addr_country_code_r <> DropDownPais2.SelectedItem.ToString Then
-                    txtMessage.Text = "La dirección encontada corresponde al código de país " & datos_devueltos.addr_country_code_r
-                End If
-            Else
-                txtMessage.Text = valida_addr.get_notis(identity)
+                'txtMessage.Text = datos_devueltos.addr_changes_r
+                'If datos_devueltos.addr_country_code_r <> DropDownPais2.SelectedItem.ToString Then
+                '    txtMessage.Text = "La dirección encontada corresponde al código de país " & datos_devueltos.addr_country_code_r
+                'End If
             End If
         Catch ex As Exception
             'MsgBox("Ocurrió un error, por favor revise los datos ---> " + ex.Message.ToString)

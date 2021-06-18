@@ -193,7 +193,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="id_contenido" Type="int" />
           <Property Name="id_status" Type="int" Nullable="false" />
           <Property Name="valor_aduana" Type="money" />
-          <Property Name="Referencia_FedEx" Type="nvarchar" MaxLength="50" />
+          <Property Name="Referencia_FedEx" Type="nvarchar" MaxLength="350" />
           <Property Name="Referencia_USPS" Type="nchar" MaxLength="50" />
           <Property Name="id_subproducto" Type="int" />
           <Property Name="contenedores" Type="nvarchar" MaxLength="100" />
@@ -490,7 +490,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="id_contenido" Type="Int32" />
           <Property Name="id_status" Type="Int32" Nullable="false" />
           <Property Name="valor_aduana" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="Referencia_FedEx" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Referencia_FedEx" Type="String" MaxLength="350" FixedLength="false" Unicode="true" />
           <Property Name="Referencia_USPS" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
           <Property Name="id_subproducto" Type="Int32" />
           <Property Name="contenedores" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
