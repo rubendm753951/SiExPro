@@ -294,7 +294,7 @@ Public Class EstafetaWrapper
 
         DaspackDALC.InsFrecuanciaCotizador(envio("id_envio"), respuestaFrecuenciaCotizador, tipoServicio)
         If response.globalResult.resultCode = 0 Then
-            DaspackDALC.InsEstafetaLabel(envio("id_envio"), response)
+            'DaspackDALC.InsEstafetaLabel(envio("id_envio"), response)
             Return "Envio Exportado"
         Else
             Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
@@ -307,7 +307,7 @@ Public Class EstafetaWrapper
 
     End Function
 
-    Public Function Label(envio As ObjEnvio, cliente As ObjCliente, destinatario As ObjDestinatario, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta(), cuenta As Integer) As String
+    Public Function Label(envio As ObjEnvio, cliente As ObjCliente, destinatario As ObjDestinatario, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta(), cuenta As Integer, envios() As Integer) As String
         Dim estafetaService As New Estafeta.Label.EstafetaLabelService()
         Dim estafetaUser = GetEstafetaUser("Label", destinatario.codigo_postal, Nothing, cuenta)
 
@@ -392,7 +392,7 @@ Public Class EstafetaWrapper
             .parcelTypeId = 4
             .reference = envio.id_envio
             .weight = Math.Round(envio.peso, 2)
-            .numberOfLabels = 3
+            .numberOfLabels = envios.Length
             .originZipCodeForRouting = destinatario.codigo_postal
             .serviceTypeId = serviceTypeId
             .officeNum = ConfigurationManager.AppSettings("Estafeta.OfficeNum")
@@ -432,18 +432,35 @@ Public Class EstafetaWrapper
             DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, 1, imagenBase64)
         End If
 
-        DaspackDALC.InsFrecuanciaCotizador(envio.id_envio, respuestaFrecuenciaCotizador, tipoServicio)
-        If response.globalResult.resultCode = 0 Then
-            DaspackDALC.InsEstafetaLabel(envio.id_envio, response)
-            Return "Envio Exportado"
-        Else
-            Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
+        Dim referenciasFedex() As String = response.labelResultList(0).resultDescription.Split("|")
+        Dim message As String = ""
+        Dim identificador = System.Guid.NewGuid
 
-            Dim cancela As New seguimiento_envios
-            cancela.insertar_seguimiento(envio.id_envio, "~/admin_pages/modif_cancel.aspx", observaciones, envio.id_usuario)
+        For index = 0 To envios.Length - 1
+            DaspackDALC.InsFrecuanciaCotizador(envios(index), respuestaFrecuenciaCotizador, tipoServicio)
+            If response.globalResult.resultCode = 0 Then
+                Dim referenciaFedex As String = ""
 
-            Return observaciones
-        End If
+                If envios.Length = referenciasFedex.Length Then
+                    referenciaFedex = referenciasFedex(index)
+                Else
+                    referenciaFedex = response.labelResultList(0).resultDescription
+                End If
+
+                DaspackDALC.InsEstafetaLabel(envios(index), response.labelPDF, referenciaFedex, response.globalResult.resultDescription, identificador)
+
+                message = "Envio Exportado"
+            Else
+                Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
+
+                Dim cancela As New seguimiento_envios
+                cancela.insertar_seguimiento(envios(index), "~/admin_pages/modif_cancel.aspx", observaciones, envio.id_usuario)
+
+                message = observaciones
+            End If
+        Next
+
+        Return message
 
     End Function
 

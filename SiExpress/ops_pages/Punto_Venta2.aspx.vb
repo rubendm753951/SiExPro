@@ -472,7 +472,7 @@ Partial Class Punto_Venta
             Dim sessionTipoServico = respuestaFrecuenciaCotizador.Respuesta(0).TipoServicio
             Dim tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio = New Estafeta.Frecuenciacotizador.TipoServicio()
             Dim envioEstafeta As Boolean = False
-            Dim cuentaServicio As EstafetaCuentaServicio
+            Dim cuentaServicio As New EstafetaCuentaServicio
             Dim id_cliente As Integer = 0
             Dim db As New SiExProEntities
             Dim agente = db.C_AGENCIAS.FirstOrDefault(Function(x) x.id_agencia = DropDownAgentes.Text)
@@ -616,34 +616,34 @@ Partial Class Punto_Venta
                 datos_envio.id_envio = id_envio
                 cajas_count = cajas_count + 1
                 Label1.Text = "Útimo envío-> " & id_envio.ToString & " fue creado con exito"
+            Loop
 
-                If envioEstafeta = True Then
-                    Dim respuestaLabel As String = estafetaWrapper.Label(datos_envio, datos_cliente, Datos_Dest, tipoServicio, respuestaFrecuenciaCotizador.Respuesta, cuentaServicio.Cuenta)
+            If envioEstafeta = True Then
+                Dim respuestaLabel As String = estafetaWrapper.Label(datos_envio, datos_cliente, Datos_Dest, tipoServicio, respuestaFrecuenciaCotizador.Respuesta, cuentaServicio.Cuenta, envios)
 
-                    If agente.guia_estafeta = True And respuestaLabel = "Envio Exportado" Then
-                        Dim sjscript2 As String = "<script language=""javascript"">" &
-                        " window.open('../Reports/EstafetaLabel.aspx?id_envio=" & id_envio.ToString & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
-                        "</script>"
-                        ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
-                    Else
-                        If agente.guia_estafeta = True Then
-                            Label2.Text = "Ocurrió un error, por favor revise los datos ---> Error al crear etiqueta"
-                            ModalPopupExtender3.Show()
-                        Else
-
-                            Dim sjscript2 As String = "<script language=""javascript"">" &
-                        " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
-                        "</script>"
-                            ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
-                        End If
-                    End If
-                Else
+                If agente.guia_estafeta = True And respuestaLabel = "Envio Exportado" Then
                     Dim sjscript2 As String = "<script language=""javascript"">" &
-                        " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
+                        " window.open('../Reports/EstafetaLabel.aspx?id_envio=" & envios(cajas_count - 1).ToString & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
                         "</script>"
                     ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+                Else
+                    If agente.guia_estafeta = True Then
+                        Label2.Text = "Ocurrió un error, por favor revise los datos ---> Error al crear etiqueta"
+                        ModalPopupExtender3.Show()
+                    Else
+
+                        Dim sjscript2 As String = "<script language=""javascript"">" &
+                        " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
+                        "</script>"
+                        ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+                    End If
                 End If
-            Loop
+            Else
+                Dim sjscript2 As String = "<script language=""javascript"">" &
+                        " window.open('guia_individual.aspx?id_envio1=" & envios(0).ToString & "&id_envio2=" & envios(cajas_count - 1).ToString & "&id_agente=" & datos_envio.id_agente & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
+                        "</script>"
+                ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
+            End If
 
             Dim Ctrl As Control
             For Each Ctrl In Panel3.Controls

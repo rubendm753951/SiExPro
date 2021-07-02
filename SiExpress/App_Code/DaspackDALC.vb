@@ -173,12 +173,12 @@ Public Class DaspackDALC
         Return dbContext.D_ESTAFETA_LABEL.FirstOrDefault(Function(x) x.id_envio = id_envio)
     End Function
 
-    Public Shared Function InsEstafetaLabel(id_envio As Integer, respuesta As Estafeta.Label.EstafetaLabelResponse) As Boolean
+    Public Shared Function InsEstafetaLabel(id_envio As Integer, labelPDF As Byte(), referencia As String, resultDescription As String, identificador As Guid) As Boolean
         Dim dbContext As New SiExProEntities
 
         Dim envio As Envio = dbContext.D_ENVIOS.FirstOrDefault(Function(x) x.id_envio = id_envio)
 
-        envio.Referencia_FedEx = respuesta.labelResultList(0).resultDescription
+        envio.Referencia_FedEx = referencia
         envio.id_status = 300
         dbContext.SaveChanges()
 
@@ -193,8 +193,9 @@ Public Class DaspackDALC
         With estafetaLabel
             .id_envio = id_envio
             .fecha = DateTime.Now()
-            .labelPDF = respuesta.labelPDF
-            .trackId = respuesta.globalResult.resultDescription
+            .labelPDF = labelPDF
+            .trackId = referencia
+            .relacion = identificador
         End With
 
         If Not existeLabel Then

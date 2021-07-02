@@ -37,8 +37,6 @@
               <Mapping SourceColumn="PV" DataSetColumn="PV" />
               <Mapping SourceColumn="fecha" DataSetColumn="fecha" />
               <Mapping SourceColumn="tarifa_base" DataSetColumn="tarifa_base" />
-              <Mapping SourceColumn="iva" DataSetColumn="iva" />
-              <Mapping SourceColumn="sobrepeso" DataSetColumn="sobrepeso" />
               <Mapping SourceColumn="Producto" DataSetColumn="Producto" />
               <Mapping SourceColumn="fuel" DataSetColumn="fuel" />
               <Mapping SourceColumn="comm_envio" DataSetColumn="comm_envio" />
@@ -57,6 +55,10 @@
               <Mapping SourceColumn="calle_destino" DataSetColumn="calle_destino" />
               <Mapping SourceColumn="estado_destino" DataSetColumn="estado_destino" />
               <Mapping SourceColumn="cp_destino" DataSetColumn="cp_destino" />
+              <Mapping SourceColumn="Fuel" DataSetColumn="Fuel" />
+              <Mapping SourceColumn="iva" DataSetColumn="iva1" />
+              <Mapping SourceColumn="sobrepeso" DataSetColumn="sobrepeso1" />
+              <Mapping SourceColumn="EstafetaStatus" DataSetColumn="EstafetaStatus" />
             </Mappings>
             <Sources>
               <DbSource ConnectionRef="paqueteriaDB_ConnectionString (Web.config)" DbObjectName="PaqueteriaDB.dbo.sp_select_reporte_venta_dia" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillBy" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="GetDataBy" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillBy">
@@ -280,7 +282,7 @@
               <xs:element name="estafeta_guia" msprop:Generator_ColumnVarNameInTable="columnestafeta_guia" msprop:Generator_ColumnPropNameInRow="estafeta_guia" msprop:Generator_ColumnPropNameInTable="estafeta_guiaColumn" msprop:Generator_UserColumnName="estafeta_guia" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
-                    <xs:maxLength value="50" />
+                    <xs:maxLength value="350" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
@@ -309,6 +311,16 @@
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="20" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Fuel" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="_columnFuel" msprop:Generator_ColumnPropNameInRow="_Fuel" msprop:Generator_ColumnPropNameInTable="_FuelColumn" msprop:Generator_UserColumnName="Fuel" type="xs:int" minOccurs="0" />
+              <xs:element name="iva1" msdata:ReadOnly="true" msdata:Caption="iva" msprop:Generator_ColumnVarNameInTable="columniva1" msprop:Generator_ColumnPropNameInRow="iva1" msprop:Generator_ColumnPropNameInTable="iva1Column" msprop:Generator_UserColumnName="iva1" type="xs:int" minOccurs="0" />
+              <xs:element name="sobrepeso1" msdata:ReadOnly="true" msdata:Caption="sobrepeso" msprop:Generator_ColumnVarNameInTable="columnsobrepeso1" msprop:Generator_ColumnPropNameInRow="sobrepeso1" msprop:Generator_ColumnPropNameInTable="sobrepeso1Column" msprop:Generator_UserColumnName="sobrepeso1" type="xs:int" minOccurs="0" />
+              <xs:element name="EstafetaStatus" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnEstafetaStatus" msprop:Generator_ColumnPropNameInRow="EstafetaStatus" msprop:Generator_ColumnPropNameInTable="EstafetaStatusColumn" msprop:Generator_UserColumnName="EstafetaStatus" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="413" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>

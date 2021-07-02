@@ -16,5 +16,6 @@ Partial Public Class EstafetaLabel
     Public Property labelPDF As Byte()
     Public Property trackId As String
     Public Property fecha As Nullable(Of Date)
+    Public Property relacion As Nullable(Of System.Guid)
 
 End Class
