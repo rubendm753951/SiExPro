@@ -351,4 +351,33 @@ Public Class DaspackDALC
 
     End Function
 
+    Public Shared Function GetMinMaxEnvioMult(idEnvio As Integer) As List(Of EstafetaLabel)
+        Dim dbContext As New SiExProEntities
+        Dim minmax = New List(Of EstafetaLabel)
+        Dim result = dbContext.D_ESTAFETA_LABEL.FirstOrDefault(Function(x) x.id_envio = idEnvio)
+        If result IsNot Nothing Then
+            If result.relacion IsNot Nothing Then
+                Dim resultList = GetRelacionEnvioMult(result.relacion)
+
+                If resultList IsNot Nothing Then
+                    minmax.Add(resultList.FirstOrDefault())
+                    minmax.Add(resultList(resultList.Count - 1))
+                End If
+            End If
+        End If
+
+        Return minmax
+    End Function
+
+    Public Shared Function GetRelacionEnvioMult(guid As System.Guid) As List(Of EstafetaLabel)
+        Dim dbContext As New SiExProEntities
+        Dim result = dbContext.D_ESTAFETA_LABEL.Where(Function(x) x.relacion = guid).OrderBy(Function(x) x.id_envio)
+
+        If result IsNot Nothing Then
+            Return result.OrderBy(Function(x) x.id_envio).ToList()
+        Else
+            Return Nothing
+        End If
+    End Function
+
 End Class

@@ -209,6 +209,8 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="id_contenido" Type="int" />
           <Property Name="observaciones" Type="varchar" MaxLength="200" />
           <Property Name="exportado" Type="bit" />
+          <Property Name="entregado" Type="bit" />
+          <Property Name="fecha_entrega" Type="datetime" />
         </EntityType>
         <EntityType Name="D_ESTAFETA_FRECUENCIA_COTIZADOR">
           <Key>
@@ -510,6 +512,8 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="exportado" Type="Boolean" />
           <NavigationProperty Name="C_CLIENTES" Relationship="Self.C_CLIENTES_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="C_CLIENTES" />
           <NavigationProperty Name="C_DESTINATARIOS" Relationship="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="C_DESTINATARIOS" />
+          <Property Name="entregado" Type="Boolean" />
+          <Property Name="fecha_entrega" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="C_CLIENTES_D_ENVIOS_DATOS_fk">
           <End Role="C_CLIENTES" Type="MasupackModel.Cliente" Multiplicity="1" />
@@ -891,6 +895,8 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="D_ENVIOS_DATOS">
             <EntityTypeMapping TypeName="MasupackModel.EnvioDatos">
               <MappingFragment StoreEntitySet="D_ENVIOS_DATOS">
+                <ScalarProperty Name="fecha_entrega" ColumnName="fecha_entrega" />
+                <ScalarProperty Name="entregado" ColumnName="entregado" />
                 <ScalarProperty Name="id_envio" ColumnName="id_envio" />
                 <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
                 <ScalarProperty Name="id_destinatario" ColumnName="id_destinatario" />

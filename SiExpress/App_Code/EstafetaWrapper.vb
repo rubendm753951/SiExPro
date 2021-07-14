@@ -363,6 +363,10 @@ Public Class EstafetaWrapper
 
 
         Dim serviceTypeId = "70"
+
+        If cuenta = 3 Then
+            serviceTypeId = "78"
+        End If
         If tipoServicio.DescripcionServicio = "Dia Sig." Then
             serviceTypeId = "60"
         End If

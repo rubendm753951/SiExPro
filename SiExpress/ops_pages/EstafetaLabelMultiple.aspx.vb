@@ -23,23 +23,34 @@ Partial Class Reports_EstafetaLabelMultiple
             End If
 
             Dim base64String As String = ""
+            Dim relacion = New List(Of System.Guid)
 
             If arrEnvios.Count > 0 Then
                 Dim count As Integer = 0
                 Dim sb As New StringBuilder()
                 sb.Append("<script type = 'text/javascript'>")
                 For Each imgEnvio As ImagenesEnviosEstafeta In arrEnvios
-                    Dim url As String = "../reports/EstafetaLabel.aspx?id_envio=" + imgEnvio.id_envio.ToString()
 
-                    sb.Append("window.open('")
-                    sb.Append(url)
-                    If count = 0 Then
-                        sb.Append("', '_self');")
-                    Else
-                        sb.Append("', '_blank');")
+                    Dim existeRelacion = relacion.FirstOrDefault(Function(x) x = imgEnvio.relacion)
+
+                    If existeRelacion = Guid.Empty Then
+
+                        If imgEnvio.relacion <> Guid.Empty Then
+                            relacion.Add(imgEnvio.relacion)
+                        End If
+
+                        Dim url As String = "../reports/EstafetaLabel.aspx?id_envio=" + imgEnvio.id_envio.ToString()
+
+                        sb.Append("window.open('")
+                        sb.Append(url)
+                        If count = 0 Then
+                            sb.Append("', '_self');")
+                        Else
+                            sb.Append("', '_blank');")
+                        End If
+
+                        count = count + 1
                     End If
-
-                    count = count + 1
                 Next
                 sb.Append("</script>")
                 ClientScript.RegisterStartupScript(Me.GetType(),

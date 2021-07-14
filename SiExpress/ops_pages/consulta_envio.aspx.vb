@@ -139,12 +139,22 @@ Partial Class ops_pages_consulta_envio
     Protected Sub Button2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button2.Click
         If TextBox1.Text > "" And IsNumeric(TextBox1.Text) Then
 
-            Dim sjscript2 As String = "<script language=""javascript"">" & _
-            " window.open('guia_mult.aspx?id_envio1=" & TextBox1.Text & "&id_envio2=" & TextBox1.Text & "&id_agente=" & txtIdAgente.Text & "','','width=600,height=800, toolbar=1, scrollbars=1')" & _
+            Dim minEnvio = TextBox1.Text
+            Dim maxEnvio = TextBox1.Text
+
+            Dim minMaxEnvio = DaspackDALC.GetMinMaxEnvioMult(TextBox1.Text)
+
+            If minMaxEnvio IsNot Nothing And minMaxEnvio.Count > 0 Then
+                minEnvio = minMaxEnvio(0).id_envio
+                maxEnvio = minMaxEnvio(1).id_envio
+            End If
+
+            Dim sjscript2 As String = "<script language=""javascript"">" &
+            " window.open('guia_mult.aspx?id_envio1=" & minEnvio & "&id_envio2=" & maxEnvio & "&id_agente=" & txtIdAgente.Text & "','','width=600,height=800, toolbar=1, scrollbars=1')" &
             "</script>"
             ScriptManager.RegisterStartupScript(Me, Me.GetType, "key", sjscript2, False)
-        End If
-        Button2.Enabled = False
+            End If
+            Button2.Enabled = False
         CheckBox1.Checked = False
     End Sub
     Protected Sub GridView1_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridView1.SelectedIndexChanged

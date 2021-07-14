@@ -71,7 +71,7 @@
                 </div>
                 <asp:SqlDataSource ID="DSAgentes" runat="server"
                     ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
-                    SelectCommand="sp_Select_Agentes_por_usuarios"
+                    SelectCommand="sp_Select_Agentes_por_usuarios_imp_mul"
                     SelectCommandType="StoredProcedure">
                     <SelectParameters>
                         <asp:SessionParameter Name="id_usuario" SessionField="id_usuario" Type="Int32" />

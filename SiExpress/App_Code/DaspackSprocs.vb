@@ -556,6 +556,7 @@ End Class
 Partial Public Class ImagenesEnviosEstafeta
     Public Property id_envio As Integer
     Public Property labelPDF As Byte()
+    Public Property relacion As Nullable(Of System.Guid)
 End Class
 
 Partial Public Class addressBook

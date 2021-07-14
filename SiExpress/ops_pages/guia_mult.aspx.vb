@@ -37,6 +37,9 @@ Partial Class ops_pages_guia_mult
             reader.Read()
             archivo = reader.GetValue(0)
         End If
+        If String.IsNullOrEmpty(archivo) Then
+            archivo = "label_masupack_mult_2.rdlc"
+        End If
         connection.Close()
 
 

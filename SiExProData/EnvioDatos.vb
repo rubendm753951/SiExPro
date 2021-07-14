@@ -17,6 +17,8 @@ Partial Public Class EnvioDatos
     Public Property id_contenido As Nullable(Of Integer)
     Public Property observaciones As String
     Public Property exportado As Nullable(Of Boolean)
+    Public Property entregado As Nullable(Of Boolean)
+    Public Property fecha_entrega As Nullable(Of Date)
 
     Public Overridable Property C_CLIENTES As Cliente
     Public Overridable Property C_DESTINATARIOS As Destinatario
