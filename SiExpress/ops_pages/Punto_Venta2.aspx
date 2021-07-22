@@ -31,7 +31,7 @@
                             <asp:Panel ID="Internal_error" runat="server" Height="91px" Width="400px"
                                 Style="text-align: left">
                                 <asp:Label ID="Label2" runat="server" Font-Bold="True" Font-Names="Arial"
-                                    Font-Size="12pt" ForeColor="Black" Height="68px" Width="392px"
+                                    Font-Size="12pt" ForeColor="Black" Height="128px" Width="392px"
                                     BackColor="White" BorderStyle="Double"></asp:Label>
                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="Button3" runat="server" Text="Aceptar" />
                             </asp:Panel>

@@ -5,6 +5,11 @@ Public Class EstafetaPrecio
     Public Property DiaSiguiente() As Decimal
     Public Property Ltl() As Decimal
     Public Property Gombar() As Decimal
+    Public Property CuentaLtl() As Integer
+    Public Property Cuenta() As Integer
+    Public Property Zona() As Integer
+    Public Property ZonaLtl() As Integer
+    Public Property Ocurre() As Boolean
 End Class
 
 Public Class EstafetaTarimas

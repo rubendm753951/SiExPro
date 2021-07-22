@@ -7,7 +7,7 @@ Public Class EstafetaWrapper
     Public Const DIA_SIGUIENTE = "Dia Sig."
     Public Const LTL = "LTL"
 
-    Public Function FrecuenciaCotizadorSingle(envioExportar As FrecuenciaCotizadorExport, Optional cuentaTarimas As Integer = 0) As FrecuenciaCotizadorRespuesta
+    Public Function FrecuenciaCotizadorSingle(envioExportar As FrecuenciaCotizadorExport, estafetaPrecios As EstafetaPrecio) As FrecuenciaCotizadorRespuesta
         Dim estafetaService As New Frecuenciacotizador.Service()
         Dim tipoEnvio = New Estafeta.Frecuenciacotizador.TipoEnvio()
         Dim cliente As SiExProData.Cliente
@@ -22,7 +22,6 @@ Public Class EstafetaWrapper
         tipoEnvio.Peso = envioExportar.Peso
 
         Dim pesoVol As Decimal = (envioExportar.Alto * envioExportar.Ancho * envioExportar.Largo) / 5000
-
         envioExportar.PesoVolumetrico = IIf(envioExportar.Peso > pesoVol, envioExportar.Peso, pesoVol)
 
         Dim cpOrigen = New String() {envioExportar.CPRemitente}
@@ -32,11 +31,9 @@ Public Class EstafetaWrapper
         Dim log As String = ConfigurationManager.AppSettings("Estafeta.LogRequestResponse")
         Dim tipoServicios As List(Of Estafeta.Frecuenciacotizador.TipoServicio) = Nothing
 
-        Dim cobertura = GetEstafetaCobertura(envioExportar.CPDestinatario)
 
-
-        If cuentaTarimas > 0 Then
-            Dim tmpEstafetaUserTarimas = GetEstafetaUser("FC", envioExportar.CPDestinatario, cobertura, cuentaTarimas)
+        If estafetaPrecios.CuentaLtl > 0 Then
+            Dim tmpEstafetaUserTarimas = GetEstafetaUser("FC", envioExportar.CPDestinatario, estafetaPrecios.CuentaLtl)
 
             cliente = DaspackDALC.GetGombarSender(tmpEstafetaUserTarimas.AccountId)
             cpOrigen = New String() {cliente.codigo_postal}
@@ -45,10 +42,10 @@ Public Class EstafetaWrapper
             With cuentaServicio
                 .Cliente = cliente
                 .Servicio = LTL
-                .Cuenta = tmpEstafetaUserTarimas.AccountId
-                .Zona = tmpEstafetaUserTarimas.Zone
+                .Cuenta = estafetaPrecios.CuentaLtl
+                .Zona = estafetaPrecios.ZonaLtl
                 .PesoVolumetrico = envioExportar.PesoVolumetrico
-                .Ocurre = tmpEstafetaUserTarimas.Ocurre
+                .Ocurre = estafetaPrecios.Ocurre
             End With
 
             cuentaServicios.Add(cuentaServicio)
@@ -72,11 +69,8 @@ Public Class EstafetaWrapper
             End If
         End If
 
-        If envioExportar.PesoVolumetrico <= 5 Then
-            cobertura.Cuenta = 3
-            estafetaUser = GetEstafetaUser("FC", envioExportar.CPDestinatario, cobertura)
-
-
+        If estafetaPrecios.Cuenta > 0 Then
+            estafetaUser = GetEstafetaUser("FC", envioExportar.CPDestinatario, estafetaPrecios.Cuenta)
             cliente = DaspackDALC.GetGombarSender(estafetaUser.AccountId)
             cpOrigen = New String() {cliente.codigo_postal}
 
@@ -84,10 +78,10 @@ Public Class EstafetaWrapper
             With cuentaServicio
                 .Cliente = cliente
                 .Servicio = DIA_SIGUIENTE
-                .Cuenta = estafetaUser.AccountId
-                .Zona = estafetaUser.Zone
+                .Cuenta = estafetaPrecios.Cuenta
+                .Zona = estafetaPrecios.Zona
                 .PesoVolumetrico = envioExportar.PesoVolumetrico
-                .Ocurre = estafetaUser.Ocurre
+                .Ocurre = estafetaPrecios.Ocurre
             End With
 
             cuentaServicios.Add(cuentaServicio)
@@ -96,57 +90,10 @@ Public Class EstafetaWrapper
             With cuentaServicio
                 .Cliente = cliente
                 .Servicio = TERRESTRE
-                .Cuenta = estafetaUser.AccountId
-                .Zona = estafetaUser.Zone
+                .Cuenta = estafetaPrecios.Cuenta
+                .Zona = estafetaPrecios.Zona
                 .PesoVolumetrico = envioExportar.PesoVolumetrico
-                .Ocurre = estafetaUser.Ocurre
-            End With
-
-            cuentaServicios.Add(cuentaServicio)
-
-            respuestaFrecuenciaCotizador = estafetaService.FrecuenciaCotizador(estafetaUser.UserId, estafetaUser.UserName, estafetaUser.Password, False, True, tipoEnvio, cpOrigen, cpDestino)
-
-            If log = "true" Then
-                Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
-
-                Dim estafetaRequest = New With {Key .idusuario = estafetaUser.UserId.ToString, .usuario = estafetaUser.UserName, .contra = estafetaUser.Password, .esFrecuencia = False, .esLista = True, .tipoEnvio = tipoEnvio, .datosOrigen = cpOrigen, .datosDestino = cpDestino}
-
-                Dim jsonRequest = serializer.Serialize(estafetaRequest)
-                Dim jsonResonse = serializer.Serialize(respuestaFrecuenciaCotizador)
-
-                DaspackDALC.LogEstafetaRequestResponse("FrecuenciaCotizador", jsonRequest, jsonResonse, estafetaUser.AccountId, 1)
-            End If
-
-            If respuestaFrecuenciaCotizador.Length > 0 Then
-                If respuestaFrecuenciaCotizador(0).MensajeError = "" Then
-                    tipoServicios.AddRange(respuestaFrecuenciaCotizador(0).TipoServicio.Select(Function(x) x).ToList())
-                End If
-            End If
-        Else
-            estafetaUser = GetEstafetaUser("FC", envioExportar.CPDestinatario, cobertura)
-            cliente = DaspackDALC.GetGombarSender(estafetaUser.AccountId)
-            cpOrigen = New String() {cliente.codigo_postal}
-
-            cuentaServicio = New EstafetaCuentaServicio()
-            With cuentaServicio
-                .Cliente = cliente
-                .Servicio = DIA_SIGUIENTE
-                .Cuenta = estafetaUser.AccountId
-                .Zona = estafetaUser.Zone
-                .PesoVolumetrico = envioExportar.PesoVolumetrico
-                .Ocurre = estafetaUser.Ocurre
-            End With
-
-            cuentaServicios.Add(cuentaServicio)
-
-            cuentaServicio = New EstafetaCuentaServicio()
-            With cuentaServicio
-                .Cliente = cliente
-                .Servicio = TERRESTRE
-                .Cuenta = estafetaUser.AccountId
-                .Zona = estafetaUser.Zone
-                .PesoVolumetrico = envioExportar.PesoVolumetrico
-                .Ocurre = estafetaUser.Ocurre
+                .Ocurre = estafetaPrecios.Ocurre
             End With
 
             cuentaServicios.Add(cuentaServicio)
@@ -175,7 +122,10 @@ Public Class EstafetaWrapper
             End If
         End If
 
-        respuestaFrecuenciaCotizador(0).TipoServicio = tipoServicios.Select(Function(x) x).ToArray()
+        If tipoServicios.Count > 0 Then
+            respuestaFrecuenciaCotizador(0).TipoServicio = tipoServicios.Select(Function(x) x).ToArray()
+        End If
+
         frecuenciaCotizadorRespuesta.Respuesta = respuestaFrecuenciaCotizador
         frecuenciaCotizadorRespuesta.CuentaServicios = cuentaServicios
 
@@ -183,133 +133,9 @@ Public Class EstafetaWrapper
 
     End Function
 
-    Public Function Label(envio As System.Data.DataRowView, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta()) As String
-        Dim estafetaService As New Estafeta.Label.EstafetaLabelService()
-        Dim envioEncontrado = DaspackDALC.GetDatosEnvio(envio("id_envio").ToString())
-        Dim servicioSeleccionado = DaspackDALC.GetServicioSelecionado(envio("id_envio").ToString())
-        Dim estafetaUser = GetEstafetaUser("Label", envio("cp_dest").ToString().Trim(), Nothing)
-
-        Dim origen As New Estafeta.Label.OriginInfo()
-        With origen
-            .address1 = envio("calle_remit")
-            .address2 = "N/A"
-            .city = envio("ciudad_remit")
-            .contactName = envio("nombre_remit")
-            .corporateName = IIf(String.IsNullOrEmpty(envio("empresa_remit")), "N/A", Strings.Left(envio("empresa_remit"), 50))
-            .customerNumber = "0000000"
-            .neighborhood = "N/A"
-            .phoneNumber = envio("tel_remit")
-            .cellPhone = ""
-            .state = envio("estadoprovincia_remit")
-            .zipCode = envio("cp_remit")
-        End With
-
-        Dim direccion = envio("calle_dest")
-        If envio("calle_dest").Length > 30 Then
-            direccion = envio("calle_dest").Substring(0, 30)
-        End If
-
-        Dim nombre = envio("nombre_dest")
-        If envio("nombre_dest").Length > 30 Then
-            nombre = envio("nombre_dest").Substring(0, 30)
-        End If
-
-        Dim destino As New Estafeta.Label.DestinationInfo()
-        With destino
-            .address1 = direccion
-            .address2 = "N/A"
-            .city = envio("ciudad_dest")
-            .contactName = nombre
-            .corporateName = IIf(String.IsNullOrEmpty(envio("empresa_dest")), "N/A", Strings.Left(envio("empresa_dest"), 50))
-            .customerNumber = "0000000"
-            .neighborhood = "N/A"
-            .phoneNumber = envio("tel_dest")
-            .cellPhone = ""
-            .state = envio("estadoprovincia_dest")
-            .zipCode = envio("cp_dest")
-        End With
-
-        Dim serviceTypeId = "70"
-        If tipoServicio.DescripcionServicio = "Dia Sig." Then
-            serviceTypeId = "60"
-        End If
-
-        If tipoServicio.DescripcionServicio = "LTL" Then
-            serviceTypeId = "L0"
-        End If
-
-        Dim today As DateTime = DateTime.Today
-        Dim effectiveDate As DateTime = today.AddDays(5)
-        Dim effectiveDateStr = effectiveDate.ToString("yyyyMMdd")
-        Dim descripcionLista As New Estafeta.Label.LabelDescriptionList()
-        With descripcionLista
-            .originInfo = origen
-            .destinationInfo = destino
-            .aditionalInfo = "Informacion adicional"
-            .content = "Contenido"
-            .costCenter = "CCtos"
-            .deliveryToEstafetaOffice = False
-            .destinationCountryId = "MX"
-            'Tipo de envio 1=SOBRE 4=PAQUETE
-            .parcelTypeId = 4
-            .reference = envio("id_envio")
-            .weight = envio("peso")
-            .numberOfLabels = 1
-            .originZipCodeForRouting = envio("cp_dest")
-            .serviceTypeId = serviceTypeId
-            .officeNum = ConfigurationManager.AppSettings("Estafeta.OfficeNum")
-            .returnDocument = False
-            .serviceTypeIdDocRet = "50"
-            .effectiveDate = effectiveDateStr
-            .contentDescription = "Descripcion del contenido del paquete"
-        End With
-
-        Dim listArray As New List(Of Label.LabelDescriptionList)
-        listArray.Add(descripcionLista)
-
-        Dim estafetaLabelRequest As New Estafeta.Label.EstafetaLabelRequest()
-        With estafetaLabelRequest
-            .customerNumber = estafetaUser.CustomerNumber
-            .login = estafetaUser.UserName
-            .password = estafetaUser.Password
-            .suscriberId = estafetaUser.UserId
-            .quadrant = 0
-            .paperType = 2
-            .labelDescriptionList = listArray.ToArray()
-        End With
-
-        Dim response = estafetaService.createLabel(estafetaLabelRequest)
-        Dim log As String = ConfigurationManager.AppSettings("Estafeta.LogRequestResponse")
-        If log = "true" Then
-            Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
-            Dim jsonRequest = serializer.Serialize(estafetaLabelRequest)
-            Dim jsonResonse = serializer.Serialize(response)
-            Dim imagenBase64 = ""
-            If response.labelPDF IsNot Nothing Then
-                imagenBase64 = Convert.ToBase64String(response.labelPDF, 0, response.labelPDF.Length)
-            End If
-
-            DaspackDALC.LogEstafetaRequestResponse("CreateLabel", jsonRequest, jsonResonse, estafetaUser.AccountId, 1, imagenBase64)
-        End If
-
-        DaspackDALC.InsFrecuanciaCotizador(envio("id_envio"), respuestaFrecuenciaCotizador, tipoServicio)
-        If response.globalResult.resultCode = 0 Then
-            'DaspackDALC.InsEstafetaLabel(envio("id_envio"), response)
-            Return "Envio Exportado"
-        Else
-            Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
-
-            Dim cancela As New seguimiento_envios
-            cancela.insertar_seguimiento(envio("id_envio"), "~/admin_pages/modif_cancel.aspx", observaciones, envio("id_usuario"))
-
-            Return observaciones
-        End If
-
-    End Function
-
     Public Function Label(envio As ObjEnvio, cliente As ObjCliente, destinatario As ObjDestinatario, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta(), cuenta As Integer, envios() As Integer) As String
         Dim estafetaService As New Estafeta.Label.EstafetaLabelService()
-        Dim estafetaUser = GetEstafetaUser("Label", destinatario.codigo_postal, Nothing, cuenta)
+        Dim estafetaUser = GetEstafetaUser("Label", destinatario.codigo_postal, cuenta)
 
         Dim origen As New Estafeta.Label.OriginInfo()
         With origen
@@ -365,7 +191,7 @@ Public Class EstafetaWrapper
         Dim serviceTypeId = "70"
 
         If cuenta = 3 Then
-            serviceTypeId = "78"
+            serviceTypeId = ConfigurationManager.AppSettings("Estafeta.Cuenta3.ServiceType")
         End If
         If tipoServicio.DescripcionServicio = "Dia Sig." Then
             serviceTypeId = "60"
@@ -456,6 +282,10 @@ Public Class EstafetaWrapper
                 message = "Envio Exportado"
             Else
                 Dim observaciones = IIf(response.globalResult.resultSpanishDescription <> "", response.globalResult.resultSpanishDescription, response.globalResult.resultDescription)
+
+                If response.labelResultList.Count > 0 Then
+                    observaciones = observaciones + " " + response.labelResultList(0).resultSpanishDescription
+                End If
 
                 Dim cancela As New seguimiento_envios
                 cancela.insertar_seguimiento(envios(index), "~/admin_pages/modif_cancel.aspx", observaciones, envio.id_usuario)
@@ -574,59 +404,9 @@ Public Class EstafetaWrapper
         Return trackHistory
     End Function
 
-    Public Function GetNumeroCuenta(servicio As String, zip_code As String, peso As Double, servicioEstafeta As String) As Integer
-        Dim numeroCuenta As Integer = 0
 
-        Dim cobertura = DaspackDALC.FindZipCode(zip_code)
-        If cobertura IsNot Nothing Then
-            Dim estadozona = DaspackDALC.FindGombarState(cobertura.siglas_plaza)
-            If estadozona IsNot Nothing Then
-                Dim cuentaZona = DaspackDALC.UserZone(estadozona.zona)
-                If cuentaZona IsNot Nothing Then
-                    numeroCuenta = cuentaZona.usuario_estafeta
-                End If
-            End If
-        End If
-
-        Return numeroCuenta
-    End Function
-
-    Public Function GetEstafetaCobertura(codigo_postal As String) As EstafetaCobertura
-        Dim estafetaCobertura As New EstafetaCobertura()
-
-        Dim cobertura = DaspackDALC.FindZipCode(codigo_postal)
-        If cobertura IsNot Nothing Then
-            Dim estadozona = DaspackDALC.FindGombarState(cobertura.siglas_plaza)
-            If estadozona IsNot Nothing Then
-                Dim cuentaZona = DaspackDALC.UserZone(estadozona.zona)
-                If cuentaZona IsNot Nothing Then
-                    With estafetaCobertura
-                        .CodigoPostal = codigo_postal
-                        .Cuenta = cuentaZona.usuario_estafeta
-                        .Zona = estadozona.zona
-                        .Ocurre = cobertura.ocurre
-                    End With
-                End If
-
-            End If
-        End If
-
-        Return estafetaCobertura
-    End Function
-
-    Public Function GetEstafetaUser(servicio As String, zip_code As String, cobertura As EstafetaCobertura, Optional cuentaSeleccionada As Integer = 0) As EstafetaUser
+    Public Function GetEstafetaUser(servicio As String, zip_code As String, cuenta As Integer) As EstafetaUser
         Dim estafetaUser As New EstafetaUser()
-        Dim cuenta As Integer = 0
-
-        If cobertura Is Nothing Then
-            cobertura = GetEstafetaCobertura(zip_code)
-        End If
-
-        If cuentaSeleccionada > 0 Then
-            cuenta = cuentaSeleccionada
-        Else
-            cuenta = cobertura.Cuenta
-        End If
 
         With estafetaUser
             .UserId = ConfigurationManager.AppSettings("Estafeta.Cuenta" & cuenta.ToString() & "." & servicio & ".UserId")
@@ -634,8 +414,6 @@ Public Class EstafetaWrapper
             .Password = ConfigurationManager.AppSettings("Estafeta.Cuenta" & cuenta.ToString() & "." & servicio & ".Password")
             .CustomerNumber = ConfigurationManager.AppSettings("Estafeta.Cuenta" & cuenta.ToString() & "." & servicio & ".CustomerNumber")
             .AccountId = cuenta
-            .Zone = cobertura.Zona
-            .Ocurre = IIf(cobertura IsNot Nothing, cobertura.Ocurre, False)
         End With
 
         Return estafetaUser

@@ -124,20 +124,20 @@ Partial Class ops_pages_Exportacion_Estafeta
                         Dim respuestaFrecuenciaCotizador = CType(Session(row.Cells(1).Text), Estafeta.Frecuenciacotizador.Respuesta())
                         Dim sessionTipoServico = respuestaFrecuenciaCotizador(0).TipoServicio
                         Dim tipoServicio = sessionTipoServico.FirstOrDefault(Function(x) x.DescripcionServicio = ddlTiposServicio.SelectedValue)
-                        Dim respuestaLabel As String = estafetaWrapper.Label(dsRow, tipoServicio, respuestaFrecuenciaCotizador)
+                        'Dim respuestaLabel As String = estafetaWrapper.Label(dsRow, tipoServicio, respuestaFrecuenciaCotizador)
 
-                        row.Cells(12).Text = respuestaLabel
-                        If respuestaLabel = "Envio Exportado" Then
-                            Dim hp As HyperLink = New HyperLink()
-                            hp.Text = "Ver Etiqueta"
-                            hp.NavigateUrl = "~\Reports\EstafetaLabel.aspx?id_envio=" + dsRow("id_envio").ToString()
-                            hp.Target = "_blank"
-                            row.Cells(13).Controls.Add(hp)
+                        'row.Cells(12).Text = respuestaLabel
+                        'If respuestaLabel = "Envio Exportado" Then
+                        '    Dim hp As HyperLink = New HyperLink()
+                        '    hp.Text = "Ver Etiqueta"
+                        '    hp.NavigateUrl = "~\Reports\EstafetaLabel.aspx?id_envio=" + dsRow("id_envio").ToString()
+                        '    hp.Target = "_blank"
+                        '    row.Cells(13).Controls.Add(hp)
 
-                            checkRow.Checked = False
-                            checkRow.Visible = False
+                        '    checkRow.Checked = False
+                        '    checkRow.Visible = False
 
-                        End If
+                        'End If
                     End If
                 End If
             End If
