@@ -122,7 +122,7 @@ Public Class EstafetaWrapper
             End If
         End If
 
-        If tipoServicios.Count > 0 Then
+        If tipoServicios IsNot Nothing AndAlso tipoServicios.Count > 0 Then
             respuestaFrecuenciaCotizador(0).TipoServicio = tipoServicios.Select(Function(x) x).ToArray()
         End If
 
@@ -189,12 +189,14 @@ Public Class EstafetaWrapper
 
 
         Dim serviceTypeId = "70"
+        Dim paperType = 2
 
         If cuenta = 3 Then
             serviceTypeId = ConfigurationManager.AppSettings("Estafeta.Cuenta3.ServiceType")
         End If
         If tipoServicio.DescripcionServicio = "Dia Sig." Then
             serviceTypeId = "60"
+            paperType = 1
         End If
 
         If tipoServicio.DescripcionServicio = "LTL" Then
@@ -242,7 +244,7 @@ Public Class EstafetaWrapper
             .password = estafetaUser.Password
             .suscriberId = estafetaUser.UserId
             .quadrant = 0
-            .paperType = 2
+            .paperType = paperType
             .labelDescriptionList = listArray.ToArray()
         End With
 

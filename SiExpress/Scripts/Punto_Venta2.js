@@ -37,8 +37,9 @@
             if (DBFieldText != "OBSERVACIONES")
                 $("#lstDBFields option:selected").remove();
         }
-    });
+    });    
 
+    
     $("#btnMatchRemove").click(function () {
         var matchText = $("#lstBoxMatches option:selected").text();
         if (matchText == "") {

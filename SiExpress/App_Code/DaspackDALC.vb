@@ -1,8 +1,12 @@
 ﻿Imports System.Data.Entity
+Imports System.Net
+Imports System.Xml
 Imports Microsoft.VisualBasic
 Imports SiExProData
 
 Public Class DaspackDALC
+    Public Shared Property JsonConvert As Object
+
     Public Shared Function GetModuloPrivilegio(ByVal idModulo As Integer, ByVal idUsuario As Integer, ByVal privilegio As Integer) As Boolean
         Dim db As New DaspackDataContext
         Dim tienePermiso As Boolean = False
@@ -379,5 +383,106 @@ Public Class DaspackDALC
             Return Nothing
         End If
     End Function
+
+    Public Shared Function FedexShipment(ByVal fedexShipRequest As ShipRequestDto) As ResponseData
+        Dim webClient As New WebClient()
+        Dim resByte As Byte()
+        Dim resString As String
+        Dim response As New ResponseData()
+        Try
+
+            webClient.Headers("Content-type") = "application/json"
+            webClient.Encoding = Encoding.UTF8
+
+            Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
+            Dim jsonRequest = serializer.Serialize(fedexShipRequest)
+
+            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            resByte = webClient.UploadData(ConfigurationManager.AppSettings("EstafetaService.Ship"), "post", reqString)
+            resString = Encoding.Default.GetString(resByte)
+            response = serializer.Deserialize(Of ResponseData)(resString)
+            webClient.Dispose()
+        Catch ex As Exception
+            response.Success = False
+            response.ErrorMessage = ex.Message
+        End Try
+        Return response
+    End Function
+
+    Public Shared Function FedexRate(ByVal fedexShipRequest As ShipRequestDto) As RateResponseData
+        Dim webClient As New WebClient()
+        Dim resByte As Byte()
+        Dim resString As String
+        Dim response As New RateResponseData()
+        Try
+
+            webClient.Headers("Content-type") = "application/json"
+            webClient.Encoding = Encoding.UTF8
+
+            Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
+            Dim jsonRequest = serializer.Serialize(fedexShipRequest)
+
+            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            resByte = webClient.UploadData(ConfigurationManager.AppSettings("EstafetaService.Rate"), "post", reqString)
+            resString = Encoding.Default.GetString(resByte)
+            response = serializer.Deserialize(Of RateResponseData)(resString)
+            webClient.Dispose()
+        Catch ex As Exception
+            response.Success = False
+            response.ErrorMessage = ex.Message
+        End Try
+        Return response
+    End Function
+
+    Public Shared Function PaqueteExpressQuote(ByVal fedexShipRequest As ShipRequestDto) As PaqueteExpressQuoteServiceResponse
+        Dim webClient As New WebClient()
+        Dim resByte As Byte()
+        Dim resString As String
+        Dim response As New PaqueteExpressQuoteServiceResponse()
+        Try
+
+            webClient.Headers("Content-type") = "application/json"
+            webClient.Encoding = Encoding.UTF8
+
+            Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
+            Dim jsonRequest = serializer.Serialize(fedexShipRequest)
+
+            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            resByte = webClient.UploadData(ConfigurationManager.AppSettings("PaqueteExpress.Quote"), "post", reqString)
+            resString = Encoding.Default.GetString(resByte)
+            response = serializer.Deserialize(Of PaqueteExpressQuoteServiceResponse)(resString)
+            webClient.Dispose()
+        Catch ex As Exception
+            response.Success = False
+            response.ErrorMessage = ex.Message
+        End Try
+        Return response
+    End Function
+
+    Public Shared Function PaqueteExpressShip(ByVal fedexShipRequest As ShipRequestDto) As PaqueteExpressShipResponse
+        Dim webClient As New WebClient()
+        Dim resByte As Byte()
+        Dim resString As String
+        Dim response As New PaqueteExpressShipResponse()
+        Try
+
+            webClient.Headers("Content-type") = "application/json"
+            webClient.Encoding = Encoding.UTF8
+
+            Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
+            Dim jsonRequest = serializer.Serialize(fedexShipRequest)
+
+            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            resByte = webClient.UploadData(ConfigurationManager.AppSettings("PaqueteExpress.Ship"), "post", reqString)
+            resString = Encoding.Default.GetString(resByte)
+            response = serializer.Deserialize(Of PaqueteExpressShipResponse)(resString)
+            webClient.Dispose()
+        Catch ex As Exception
+            response.Success = False
+            response.ErrorMessage = ex.Message
+        End Try
+        Return response
+    End Function
+
 
 End Class
