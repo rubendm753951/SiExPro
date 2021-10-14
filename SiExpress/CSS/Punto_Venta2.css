@@ -1,0 +1,124 @@
+﻿.page {
+	background: none repeat scroll 0 0 #FFF;
+	width: 855px;
+	height: 634px;
+	margin-left: 0px;
+	box-shadow:2px 2px 6px #999;
+	-o-box-shadow: 2px 2px 6px #999;
+	-moz-box-shadow: 2px 2px 6px #999;
+	-webkit-box-shadow:	2px 2px 6px #999;
+	border-radius: 5px;
+	z-index: 45;
+}
+
+.pageTitle {
+	margin-top: 0.25em;
+    padding-left: 25px;
+	color: #004D82;
+	font-size: 170%;
+	font-weight: bold;
+	text-align:left;
+    padding: 3px;
+    width: 843px;
+    /*border:1px solid gray;*/
+}
+Table
+{
+    width: 960px;
+    
+}
+
+#popupAddBook{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:800px;
+width:960px;
+background:#FFFFFF;
+border:2px solid #cecece;
+z-index:2;
+padding:12px;
+font-size:13px;
+}
+#popupAddBook h1{
+text-align:left;
+color:#6FA5FD;
+font-size:22px;
+font-weight:700;
+border-bottom:1px dotted #D3D3D3;
+padding-bottom:2px;
+margin-bottom:20px;
+}
+
+#backgroundPopup{
+display:none;
+position:fixed;
+_position:absolute; /* hack for internet explorer 6*/
+height:100%;
+width:100%;
+top:0;
+left:0;
+background:#000000;
+border:1px solid #cecece;
+z-index:1;
+}
+
+#popupAddBook div{    
+font-size:12px;
+font-weight:400;
+width:300;
+ }
+ 
+#popupAddBook table{    
+font-size:12px;
+font-weight:600;
+ } 
+ 
+#popupAddBook label{    
+font-size:12px;
+font-weight:400;
+font-style:normal;
+ } 
+#popupAddBookClose{
+font-size:14px;
+line-height:14px;
+right:6px;
+top:4px;
+position:absolute;
+color:#6fa5fd;
+font-weight:700;
+display:block;
+}
+
+#tblAddBook table {
+    width: 448px;
+}
+
+#gridAddBook .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 1px solid #c5dbec;
+    font-size: smaller;
+    font-weight: bold ;
+    color: #2e6e9e;
+}
+
+#gridAddBook .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 1px solid #c5dbec;
+    font-size: smaller;
+    font-weight: bold ;
+    color: #2e6e9e;
+}
+
+#pagerAddBook ui-state-default ui-jqgrid-pager ui-corner-bottom {
+    border: 1px solid #c5dbec;
+    font-size: smaller;
+    font-weight: bold ;
+    color: #2e6e9e;
+}
+
+.ui-jqgrid tr.jqgrow td {
+  white-space: normal !important;
+  height:15px;
+  vertical-align:middle;
+  padding-top:2px;
+    font-size: small;
+}

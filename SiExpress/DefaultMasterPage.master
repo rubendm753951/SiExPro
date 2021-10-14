@@ -1,0 +1,52 @@
+﻿<%@ Master Language="VB" CodeFile="DefaultMasterPage.master.vb" Inherits="DefaultMasterPage" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <link type="text/css" href="~/Skin/CSS/bootstrap.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/metisMenu.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/dataTables.bootstrap.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/dataTables.responsive.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/sb-admin-2.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/font-awesome.min.css" rel="stylesheet" />
+
+    <title>SiEx - Sistema Express</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div align="center">
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+            </asp:ToolkitScriptManager>
+            <br />
+            <table style="width: 675px; left: 227px; position: absolute; top: -5px;">
+                <tr>
+                    <td style="width: 800px; height: 21px;">
+                        <h1 style="color: #5e9ca0; text-align: center;"> </h1>
+                        <h1 style="color: #5e9ca0; text-align: center;"><strong>SiEx - Sistema Express</strong></h1>
+                        <h2 style="color: #2e6c80; text-align: center;"> </h2>
+                        <h2 style="color: #2e6c80; text-align: center;">Sistema de Control de Mensajería y Paquetería</h2>
+                        <p> </p>
+                        <p> </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 558px;  height: 21px; text-align: center;">Usuario: &nbsp;<asp:Label ID="Label2" runat="server" Font-Bold="True" Font-Size="10pt"
+                        Text="No autenticado" Width="96px"></asp:Label>
+                    </td>
+                </tr>
+            </table>
+            <asp:ContentPlaceHolder ID="DefaultContent" runat="server">
+            </asp:ContentPlaceHolder>
+            <br />
+        </div>
+    </form>
+    <script type="text/javascript" src="../Skin/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/metisMenu.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/dataTables.responsive.js"></script>
+    <script type="text/javascript" src="../Skin/js/sb-admin-2.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+﻿<%@ Master Language="VB" CodeFile="MasterPage.master.vb" Inherits="MasterPage" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>Página sin título</title>
+</head>
+<body>
+    <form id="form1" runat="server">
+        <div align="center">
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+            </asp:ToolkitScriptManager>
+            <br />
+            <table style="width: 375px; left: 227px; position: absolute; top: -5px;">
+                <tr>
+                    <td colspan="2" style="height: 46px; text-align: center;">
+                        <asp:Image ID="Image1" runat="server"  Style="text-align: center" Height="22px" Width="30px" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 558px; height: 21px;">
+                        <asp:Label ID="Label1" runat="server" Font-Bold="True" Font-Names="Arial" ForeColor="Blue"
+                            Text="Sistema de Control de Mensajería y Paquetería" Width="472px"
+                            Style="text-align: center" Font-Size="Small"></asp:Label>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 558px; height: 21px; text-align: center;">Usuario: &nbsp;<asp:Label ID="Label2" runat="server" Font-Bold="True" Font-Size="10pt"
+                        Text="No autenticado" Width="96px"></asp:Label>
+                    </td>
+                </tr>
+            </table>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+            <br />
+        </div>
+    </form>
+</body>
+</html>

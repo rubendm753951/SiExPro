@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  
+    <siteMapNode url="acceso.aspx" title="Home"  description="Home">
+      
+        <siteMapNode url="admin_pages/admin.aspx" title="Módulo Administrativo"  description="User can login to system">
+          <siteMapNode url="admin_pages/admin_usuarios.aspx" title="Usuarios"  description="Usuarios" />
+          <siteMapNode url="admin_pages/admin_corp.aspx" title="Corporativos"  description="Corporativos" />
+          <siteMapNode url="admin_pages/admin_agentes.aspx" title="Agentes"  description="Agentes" />
+          <siteMapNode url="admin_pages/admin_tarifas.aspx" title="Tarifas"  description="Tarifas" />
+          <siteMapNode url="admin_pages/admin_promotores.aspx" title="Promotores"  description="Promotores" />
+          <siteMapNode url="admin_pages/eliminacion.aspx" title="Modificación de Envíos"  description="modificar o eliminar un envío" />
+          <siteMapNode url="admin_pages/admin_vehiculos.aspx" title="Vehiculos"  description="Administración de Vehiculos" />
+          <siteMapNode url="admin_pages/admin_mantenimiento_vehiculos.aspx" title="Mantenimiento Vehiculos"  description="Mantenimiento de Vehiculos" />
+          <siteMapNode url="admin_pages/admin_operacion_vehiculos.aspx" title="Operación Vehiculos"  description="Operación de Vehiculos" />
+          <siteMapNode url="admin_pages/admin_adeudo_empresa.aspx" title="Adeudos"  description="Adeudos Empresa" />
+        </siteMapNode>
+
+        <siteMapNode url="ops_pages/operacion.aspx" title="Modulo Operativo"  description="Operación">
+          <siteMapNode url="ops_pages/asigna_guias.aspx" title="Preventa Guías de Guías"  description="Asignción/Preventa Guías" />
+          <siteMapNode url="ops_pages/check_point.aspx" title="Punto de Control"  description="Punto de Control" />
+          <siteMapNode url="ops_pages/asigna_envio_dev.aspx" title="Asignación con Devolución"  description="Asignación con Devolución" />
+          <siteMapNode url="ops_pages/asigna_envio.aspx" title="Asignación a Promotores"  description="Asignación de Envíos" />
+          <siteMapNode url="ops_Pages/excepcion_entrega.aspx" title="Excepción de Entrega"  description="Excepción de Entrega" />
+          <siteMapNode url="ops_pages/devolucion.aspx" title="Devolución"  description="Devolución de envío" />
+          <siteMapNode url="ops_pages/entrega.aspx" title="Confirma Entrega"  description="Confirma Entrega" />
+          <siteMapNode url="ops_pages/ActualizaFedEx.aspx" title="Actualiza Referencia FedEx"  description="Actualiza Referencia FedEx" />          
+        </siteMapNode>
+
+      <siteMapNode url="ops_pages/cliente_corporativo.aspx" title="Cliente Corporativo"  description="Cliente Corporativo">
+        <siteMapNode url="ops_pages/Punto_Venta2.aspx" title="Punto de Venta"  description="Punto de Venta" />
+        <siteMapNode url="Reports/Report_Manager.aspx" title="Report Manager"  description="Report Manager" />
+        <siteMapNode url="ops_pages/consulta_envio.aspx" title="Consulta de envíos"  description="Consulta de Envíos" />
+        <siteMapNode url="ops_pages/label_printer.aspx" title="Impresor de guías"  description="Imprimir guías por lotes" />
+        <siteMapNode url="admin_pages/modif_cancel.aspx" title="Cancelar un envío"  description="Cancelar un envío" />
+        <siteMapNode url="salir.aspx" title="Salir del sistema"  description="Salir del sistema" />        
+      </siteMapNode>
+
+      <siteMapNode url="About.aspx" title="About"  description="About" />
+
+    </siteMapNode>
+  
+</siteMap>
