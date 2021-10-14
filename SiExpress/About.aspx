@@ -12,7 +12,7 @@
         Acerca de</h1>
 
     <p style="color: #2e6c80; text-align: center;">
-        Sistema de Mensajería y Paquetería Mundial, Versión Beta 1.0</p>
+        Sistema de Mensajería y Paquetería Mundial</p>
 
 </asp:Content>
 
