@@ -160,9 +160,16 @@
                                             <strong><span style="font-size: 10pt">Tipo de Paquete :</span></strong></td>
                                         <td style="width: 110px; height: 9px; padding-top: 10px">
                                             <asp:DropDownList CssClass="form-control" Height="30px" ID="ddlTiposPaquete" runat="server" AutoPostBack="True"> 
-                                                 <asp:listitem text="Sobre" value="1"></asp:listitem>
-                                                 <asp:listitem text="Caja" value="2"></asp:listitem>
-                                                 <asp:listitem text="Paquete" value="3"></asp:listitem>
+                                                <asp:listitem text="CAJA" value="2"></asp:listitem>
+                                                <asp:listitem text="SOBRE" value="1"></asp:listitem>                                                                                                
+                                                <asp:listitem text="BOLSA" value="4"></asp:listitem>
+                                                <asp:listitem text="PIEZA" value="5"></asp:listitem>                                                
+                                                <asp:listitem text="TARIMA" value="11"></asp:listitem>
+                                                <asp:listitem text="BULTO" value="27"></asp:listitem>                                                
+                                                <asp:listitem text="PALET" value="14"></asp:listitem>
+                                                <asp:listitem text="ATADO" value="24"></asp:listitem>
+                                                <asp:listitem text="HUACAL" value="32"></asp:listitem>
+                                                <asp:listitem text="CUBETA" value="6"></asp:listitem>
                                             </asp:DropDownList>
                                         </td>
                                     </tr>

@@ -10,15 +10,17 @@
 Imports System
 Imports System.Collections.Generic
 
-Partial Public Class EstafetaRequestResponse
+Partial Public Class PaqueteExpressTipoPaquete
     Public Property id As Integer
-    Public Property metodo As String
-    Public Property request As String
-    Public Property response As String
-    Public Property fecha As Nullable(Of Date)
-    Public Property cuenta As Nullable(Of Integer)
-    Public Property imagenBase64 As String
-    Public Property carrier As Nullable(Of Integer)
-    Public Property identificador As Nullable(Of System.Guid)
+    Public Property id_envio As Integer
+    Public Property cantidad As Integer
+    Public Property contenido As String
+    Public Property tipoId As Integer
+    Public Property tipo As String
+    Public Property alto As Decimal
+    Public Property largo As Decimal
+    Public Property ancho As Decimal
+    Public Property peso As Decimal
+    Public Property fecha As Date
 
 End Class

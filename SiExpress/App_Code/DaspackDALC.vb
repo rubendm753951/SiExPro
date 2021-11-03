@@ -1,4 +1,5 @@
-﻿Imports System.Data.Entity
+﻿Imports System.Data
+Imports System.Data.Entity
 Imports System.Net
 Imports System.Xml
 Imports Microsoft.VisualBasic
@@ -484,5 +485,29 @@ Public Class DaspackDALC
         Return response
     End Function
 
+    Public Shared Function AddPaqueteExpressTipoPaquetes(dtgridview As DataTable, idEnvio As Integer) As Boolean
+        Dim dbContext As New SiExProEntities
 
+        For Each row As DataRow In dtgridview.Rows
+            Dim tipoPaquete As New PaqueteExpressTipoPaquete()
+
+            With tipoPaquete
+                .id_envio = idEnvio
+                .cantidad = row("Cantidad")
+                .contenido = row("Contenido")
+                .tipoId = row("TipoClave")
+                .tipo = row("Tipo")
+                .alto = row("Alto")
+                .largo = row("Largo")
+                .ancho = row("Ancho")
+                .peso = row("Peso")
+                .fecha = DateTime.Now
+            End With
+
+            dbContext.D_ENVIOS_PE_TIPO_PAQUETES.Add(tipoPaquete)
+        Next row
+
+        Return dbContext.SaveChanges() > 0
+
+    End Function
 End Class

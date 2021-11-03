@@ -8,4 +8,5 @@ Public Class ShipmentRequestItemDto
     Public Property Length() As Decimal
     Public Property Weight() As Decimal
     Public Property ShpCode() As String
+    Public Property ShpCodeDesc() As String
 End Class

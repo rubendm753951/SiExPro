@@ -28,5 +28,6 @@ Partial Public Class Cobertura
     Public Property reexpedicion As Boolean
     Public Property garantia_maxima As String
     Public Property ciudad As String
+    Public Property siglas_plaza_tarimas As String
 
 End Class

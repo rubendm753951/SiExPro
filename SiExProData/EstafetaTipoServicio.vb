@@ -26,5 +26,6 @@ Partial Public Class EstafetaTipoServicio
     Public Property AplicaServicio As String
     Public Property FechaCotizacion As Nullable(Of Date)
     Public Property Selecccionado As Nullable(Of Boolean)
+    Public Property identificador As Nullable(Of System.Guid)
 
 End Class

@@ -31,5 +31,6 @@ Partial Public Class EstafetaFrecuenciaCotizador
     Public Property Domingo As String
     Public Property id_envio As Integer
     Public Property FechaCotizacion As Nullable(Of Date)
+    Public Property identificador As Nullable(Of System.Guid)
 
 End Class

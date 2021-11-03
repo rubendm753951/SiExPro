@@ -8,8 +8,8 @@ Partial Class Reports_PrintFedexLabel
         Dim id_envio As Integer
         Dim chtLoginsByMonthStream As MemoryStream = New MemoryStream()
 
-        Dim Width As Double = Double.Parse(4) * 72
-        Dim Height As Double = Double.Parse(6) * 72
+        Dim Width As Double = Double.Parse(5.3) * 72
+        Dim Height As Double = Double.Parse(8.2) * 72
 
         Try
             If Integer.TryParse(Request.QueryString(0), id_envio) Then
