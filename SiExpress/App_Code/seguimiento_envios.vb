@@ -284,7 +284,7 @@ Public Class seguimiento_envios
     '    End Try
     'End Function
 
-    Public Function costo_estafeta_gombar(ByVal cp_destino As String, id_agencia As Integer, peso_vol As Decimal, area_extendida_express_saver As Decimal, area_extendida_standard_overnight As Decimal, peso As Decimal) As EstafetaPrecio
+    Public Function costo_estafeta_gombar(ByVal cp_destino As String, id_agencia As Integer, peso_vol As Decimal, area_extendida_express_saver As Decimal, area_extendida_standard_overnight As Decimal, peso As Decimal, valorAreaExtendida As Decimal, valorDeclarado As Decimal) As EstafetaPrecio
 
         Try
             Dim MyConnection As ConnectionStringSettings
@@ -326,6 +326,16 @@ Public Class seguimiento_envios
             parm6.Value = peso
             cmd.Parameters.Add(parm6)
 
+            Dim parm7 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm7.ParameterName = "@costo_ea_pe"
+            parm7.Value = valorAreaExtendida
+            cmd.Parameters.Add(parm7)
+
+            Dim parm8 As Data.Common.DbParameter = cmd.CreateParameter()
+            parm8.ParameterName = "@valor_declarado"
+            parm8.Value = valorDeclarado
+            cmd.Parameters.Add(parm8)
+
             connection.Open()
 
             Dim reader As Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
@@ -349,6 +359,7 @@ Public Class seguimiento_envios
                 estafetaPrecios.StandardOvernightUser = reader.GetValue(12)
                 estafetaPrecios.PaqueteExpressEconomic = reader.GetValue(13)
                 estafetaPrecios.PaqueteExpressNextDay = reader.GetValue(14)
+                estafetaPrecios.UserAccountPe = reader.GetValue(15)
             End If
             connection.Close()
 

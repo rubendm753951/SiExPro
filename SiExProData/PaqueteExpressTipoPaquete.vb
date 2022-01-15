@@ -22,5 +22,7 @@ Partial Public Class PaqueteExpressTipoPaquete
     Public Property ancho As Decimal
     Public Property peso As Decimal
     Public Property fecha As Date
+    Public Property seguro As Decimal
+    Public Property servicioSat As Integer
 
 End Class

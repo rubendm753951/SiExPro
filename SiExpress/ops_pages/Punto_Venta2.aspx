@@ -132,6 +132,17 @@
                                 <table style="width: 600px; margin-top: 30px; margin-right: 10px">
                                     <tr style="margin-top: 10px">
                                         <td style="width: 87px; height: 9px; padding-top: 10px">
+                                            <strong><span style="font-size: 10pt">Tipo Impresion :</span></strong></td>
+                                        <td style="width: 300px; height: 9px; padding-top: 10px">
+                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="ddlTipoImpresion" runat="server" AutoPostBack="True"> 
+                                                <asp:listitem text="TERMICA" value="2"></asp:listitem>
+                                                <asp:listitem text="BOND" value="1"></asp:listitem>                                                                                                                                                
+                                            </asp:DropDownList>
+                                        </td>
+                                        <td style="height: 9px; padding-top: 10px"></td>
+                                    </tr>
+                                    <tr style="margin-top: 10px">
+                                        <td style="width: 87px; height: 9px; padding-top: 10px">
                                             <strong><span style="font-size: 10pt">Proveedor :</span></strong></td>
                                         <td style="width: 300px; height: 9px; padding-top: 10px">
                                             <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownProveedores" runat="server" AutoPostBack="True"
@@ -155,6 +166,8 @@
                                                 <asp:TextBox CssClass="form-control" Height="27px" ID="txtContCont" runat="server" Width="250px"></asp:TextBox></td>
                                             <td style="height: 9px; padding-top: 10px"></td>
                                         </tr>  
+                                    </table>
+                                <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquete">
                                     <tr>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
                                             <strong><span style="font-size: 10pt">Tipo de Paquete :</span></strong></td>
@@ -172,6 +185,10 @@
                                                 <asp:listitem text="CUBETA" value="6"></asp:listitem>
                                             </asp:DropDownList>
                                         </td>
+                                        <td><strong><span style="font-size: 10pt">Servicio SAT:</span></strong></td>
+                                        <td>
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtServicioSat" runat="server" Width="180px"></asp:TextBox>                                            
+                                        </td>                                        
                                     </tr>
                                 </table>
                                 <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="contenidosCampos">
@@ -180,7 +197,8 @@
                                                 <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Largo (cms)</span></td>
                                                 <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Alto (cms)</span></td>
                                                 <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Peso (kg)</span></td>                                                    
-                                        <td style="width: 100px; height: 5px;"></td>                                                    
+                                                <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Valor Declarado</span></td>                                                    
+                                                <td style="width: 100px; height: 5px;"></td>                                                    
                                             </tr>
                                     <tr>                                        
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
@@ -191,6 +209,8 @@
                                             <asp:TextBox CssClass="form-control" Height="27px" ID="txtContAlto" runat="server" Width="80px"></asp:TextBox></td>                                        
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
                                             <asp:TextBox CssClass="form-control" Height="27px" ID="txtContPeso" runat="server" Width="80px"></asp:TextBox></td>                                        
+                                        <td style="width: 100px; height: 9px; padding-top: 10px">
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtPESeguro" runat="server" Width="80px"></asp:TextBox></td>                                        
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
                                             <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAddCont" runat="server" Width="100px" OnClick="OnAdd" Text="Agregar"></asp:Button></td>
                                     </tr>                                    
@@ -207,6 +227,9 @@
                                                 <asp:BoundField DataField="Alto" HeaderText="Alto" />
                                                 <asp:BoundField DataField="Peso" HeaderText="Peso" />
                                                 <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
+                                                <asp:BoundField DataField="Seguro" HeaderText="Valor Declarado" />
+                                                <asp:BoundField DataField="ServicioSAT" HeaderText="ServicioSAT" />
+                                                <asp:BoundField DataField="ServicioSATDesc" HeaderText="Descripcion Servicio SAT" />
                                                 <asp:CommandField ButtonType="Button" ShowDeleteButton="True" />
                                             </Columns>
                                         </asp:GridView>
@@ -447,8 +470,10 @@
                             <asp:HiddenField ID="estafetaTipoServicio" Value="" runat="server" />
                             <asp:HiddenField ID="fedexExpress" Value="" runat="server" />
                             <asp:HiddenField ID="fedexStandard" Value="" runat="server" />
-                            <asp:HiddenField ID="paqueteExpressEconomic" Value="" runat="server" />
-                            <asp:HiddenField ID="paqueteExpressNextDay" Value="" runat="server" />
+                            <asp:HiddenField ID="hdnPaqueteExpressEconomic" Value="" runat="server" />
+                            <asp:HiddenField ID="hdnPaqueteExpressNextDay" Value="" runat="server" />
+                            <asp:HiddenField ID="hdnValorTotalDeclarado" Value="" runat="server" />
+                            <asp:HiddenField ID="hdnValorAreaExtendida" Value="" runat="server" />
                             <br />
                             <asp:SqlDataSource ID="Tarifas" runat="server" SelectCommandType="StoredProcedure" SelectCommand="sp_SelectTarifas_por_Agente" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>">
                                 <SelectParameters>
@@ -505,8 +530,7 @@
                                     <asp:ControlParameter ControlID="DropDownPais2" Name="id_pais" PropertyName="SelectedValue"
                                         Type="Int32" />
                                 </SelectParameters>
-                            </asp:SqlDataSource>
-
+                            </asp:SqlDataSource>                            
                             <asp:SqlDataSource ID="SqlColonias" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
                                 SelectCommand="sp_SelectColonias" SelectCommandType="StoredProcedure">
                                 <SelectParameters>

@@ -158,6 +158,13 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="ciudad" Type="nvarchar" MaxLength="90" />
           <Property Name="siglas_plaza_tarimas" Type="varchar" MaxLength="10" />
         </EntityType>
+        <EntityType Name="D_CODIGOS_SERVICIOS_SAT">
+          <Key>
+            <PropertyRef Name="codigo_servicio_id" />
+          </Key>
+          <Property Name="codigo_servicio_id" Type="int" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="D_ENVIO_COMENTARIOS">
           <Key>
             <PropertyRef Name="id_comentario" />
@@ -212,6 +219,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="exportado" Type="bit" />
           <Property Name="entregado" Type="bit" />
           <Property Name="fecha_entrega" Type="datetime" />
+          <Property Name="id_proveedor" Type="int" />
         </EntityType>
         <EntityType Name="D_ENVIOS_PE_TIPO_PAQUETES">
           <Key>
@@ -228,6 +236,8 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="ancho" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="peso" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="seguro" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="servicioSat" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="D_ESTAFETA_FRECUENCIA_COTIZADOR">
           <Key>
@@ -370,6 +380,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySet Name="C_ZONAS" EntityType="Self.C_ZONAS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_CIUDADES_RUTAS" EntityType="Self.D_CIUDADES_RUTAS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_COBERTURA" EntityType="Self.D_COBERTURA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_CODIGOS_SERVICIOS_SAT" EntityType="Self.D_CODIGOS_SERVICIOS_SAT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIO_COMENTARIOS" EntityType="Self.D_ENVIO_COMENTARIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS" EntityType="Self.D_ENVIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS_DATOS" EntityType="Self.D_ENVIOS_DATOS" Schema="dbo" store:Type="Tables" />
@@ -535,6 +546,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <NavigationProperty Name="C_DESTINATARIOS" Relationship="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="C_DESTINATARIOS" />
           <Property Name="entregado" Type="Boolean" />
           <Property Name="fecha_entrega" Type="DateTime" Precision="3" />
+          <Property Name="id_proveedor" Type="Int32" />
         </EntityType>
         <Association Name="C_CLIENTES_D_ENVIOS_DATOS_fk">
           <End Role="C_CLIENTES" Type="MasupackModel.Cliente" Multiplicity="1" />
@@ -597,6 +609,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySet Name="D_ESTAFETA_REQUEST_RESPONSE" EntityType="MasupackModel.EstafetaRequestResponse" />
           <EntitySet Name="C_SEPOMEX" EntityType="MasupackModel.Sepomex" />
           <EntitySet Name="D_ENVIOS_PE_TIPO_PAQUETES" EntityType="MasupackModel.PaqueteExpressTipoPaquete" />
+          <EntitySet Name="D_CODIGOS_SERVICIOS_SAT" EntityType="MasupackModel.CodigosServiciosSat" />
         </EntityContainer>
         <EntityType Name="TarifaAgencia">
           <Key>
@@ -827,6 +840,15 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="ancho" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="peso" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="seguro" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="servicioSat" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CodigosServiciosSat">
+          <Key>
+            <PropertyRef Name="codigo_servicio_id" />
+          </Key>
+          <Property Name="codigo_servicio_id" Type="Int32" Nullable="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -937,6 +959,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="D_ENVIOS_DATOS">
             <EntityTypeMapping TypeName="MasupackModel.EnvioDatos">
               <MappingFragment StoreEntitySet="D_ENVIOS_DATOS">
+                <ScalarProperty Name="id_proveedor" ColumnName="id_proveedor" />
                 <ScalarProperty Name="fecha_entrega" ColumnName="fecha_entrega" />
                 <ScalarProperty Name="entregado" ColumnName="entregado" />
                 <ScalarProperty Name="id_envio" ColumnName="id_envio" />
@@ -1141,6 +1164,8 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="D_ENVIOS_PE_TIPO_PAQUETES">
             <EntityTypeMapping TypeName="MasupackModel.PaqueteExpressTipoPaquete">
               <MappingFragment StoreEntitySet="D_ENVIOS_PE_TIPO_PAQUETES">
+                <ScalarProperty Name="servicioSat" ColumnName="servicioSat" />
+                <ScalarProperty Name="seguro" ColumnName="seguro" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="peso" ColumnName="peso" />
                 <ScalarProperty Name="ancho" ColumnName="ancho" />
@@ -1152,6 +1177,14 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
                 <ScalarProperty Name="cantidad" ColumnName="cantidad" />
                 <ScalarProperty Name="id_envio" ColumnName="id_envio" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_CODIGOS_SERVICIOS_SAT">
+            <EntityTypeMapping TypeName="MasupackModel.CodigosServiciosSat">
+              <MappingFragment StoreEntitySet="D_CODIGOS_SERVICIOS_SAT">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="codigo_servicio_id" ColumnName="codigo_servicio_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

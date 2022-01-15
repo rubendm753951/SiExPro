@@ -187,6 +187,12 @@ Public Class DaspackDALC
         envio.id_status = 300
         dbContext.SaveChanges()
 
+        Dim envioDato As EnvioDatos = dbContext.D_ENVIOS_DATOS.FirstOrDefault(Function(x) x.id_envio = id_envio)
+
+        envioDato.id_proveedor = 1
+
+        dbContext.SaveChanges()
+
         Dim estafetaLabel As EstafetaLabel = dbContext.D_ESTAFETA_LABEL.FirstOrDefault(Function(x) x.id_envio = id_envio)
         Dim existeLabel As Boolean = True
 
@@ -442,13 +448,13 @@ Public Class DaspackDALC
         Dim response As New PaqueteExpressQuoteServiceResponse()
         Try
 
-            webClient.Headers("Content-type") = "application/json"
+            webClient.Headers("Content-type") = "application/json;charset=utf-8"
             webClient.Encoding = Encoding.UTF8
 
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(fedexShipRequest)
 
-            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            Dim reqString = Encoding.UTF8.GetBytes(jsonRequest)
             resByte = webClient.UploadData(ConfigurationManager.AppSettings("PaqueteExpress.Quote"), "post", reqString)
             resString = Encoding.Default.GetString(resByte)
             response = serializer.Deserialize(Of PaqueteExpressQuoteServiceResponse)(resString)
@@ -467,13 +473,13 @@ Public Class DaspackDALC
         Dim response As New PaqueteExpressShipResponse()
         Try
 
-            webClient.Headers("Content-type") = "application/json"
+            webClient.Headers("Content-type") = "application/json;charset=utf-8"
             webClient.Encoding = Encoding.UTF8
 
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(fedexShipRequest)
 
-            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            Dim reqString = Encoding.UTF8.GetBytes(jsonRequest)
             resByte = webClient.UploadData(ConfigurationManager.AppSettings("PaqueteExpress.Ship"), "post", reqString)
             resString = Encoding.Default.GetString(resByte)
             response = serializer.Deserialize(Of PaqueteExpressShipResponse)(resString)
@@ -502,6 +508,8 @@ Public Class DaspackDALC
                 .ancho = row("Ancho")
                 .peso = row("Peso")
                 .fecha = DateTime.Now
+                .seguro = row("Seguro")
+                .servicioSat = row("ServicioSAT")
             End With
 
             dbContext.D_ENVIOS_PE_TIPO_PAQUETES.Add(tipoPaquete)
@@ -509,5 +517,11 @@ Public Class DaspackDALC
 
         Return dbContext.SaveChanges() > 0
 
+    End Function
+
+    Public Shared Function BuscarCodigoSat(codigoSat As String) As CodigosServiciosSat
+        Dim dbContext As New SiExProEntities
+
+        Return dbContext.D_CODIGOS_SERVICIOS_SAT.FirstOrDefault(Function(x) x.codigo_servicio_id = codigoSat)
     End Function
 End Class

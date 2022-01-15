@@ -9,4 +9,7 @@ Public Class ShipmentRequestItemDto
     Public Property Weight() As Decimal
     Public Property ShpCode() As String
     Public Property ShpCodeDesc() As String
+    Public Property Insurance() As Decimal
+    Public Property SatService() As String
+    Public Property SatServiceDesc() As String
 End Class

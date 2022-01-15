@@ -23,5 +23,7 @@ Public Class ShipmentRequestDto
     Public Property AccountId() As Integer
     Public Property TypeSrvcId() As String
     Public Property ShipmentItems() As List(Of ShipmentRequestItemDto)
+    Public Property PaperType() As Integer
+    Public Property TotlDeclVlue() As Decimal
 End Class
 

@@ -133,7 +133,7 @@ Public Class EstafetaWrapper
 
     End Function
 
-    Public Function Label(envio As ObjEnvio, cliente As ObjCliente, destinatario As ObjDestinatario, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta(), cuenta As Integer, envios() As Integer) As String
+    Public Function Label(envio As ObjEnvio, cliente As ObjCliente, destinatario As ObjDestinatario, tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio, respuestaFrecuenciaCotizador As Estafeta.Frecuenciacotizador.Respuesta(), cuenta As Integer, envios() As Integer, tipoImpresion As Integer) As String
         Dim estafetaService As New Estafeta.Label.EstafetaLabelService()
         Dim estafetaUser = GetEstafetaUser("Label", destinatario.codigo_postal, cuenta)
 
@@ -189,14 +189,14 @@ Public Class EstafetaWrapper
 
 
         Dim serviceTypeId = "70"
-        Dim paperType = 2
+        'Dim paperType = 2
 
         If cuenta = 3 Then
             serviceTypeId = ConfigurationManager.AppSettings("Estafeta.Cuenta3.ServiceType")
         End If
         If tipoServicio.DescripcionServicio = "Dia Sig." Then
             serviceTypeId = "60"
-            paperType = 1
+            '   paperType = 1
         End If
 
         If tipoServicio.DescripcionServicio = "LTL" Then
@@ -244,7 +244,7 @@ Public Class EstafetaWrapper
             .password = estafetaUser.Password
             .suscriberId = estafetaUser.UserId
             .quadrant = 0
-            .paperType = paperType
+            .paperType = tipoImpresion
             .labelDescriptionList = listArray.ToArray()
         End With
 

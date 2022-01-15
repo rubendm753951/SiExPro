@@ -86,6 +86,9 @@
     <Compile Include="Cobertura.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="CodigosServiciosSat.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Destinatario.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>

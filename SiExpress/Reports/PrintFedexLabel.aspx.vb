@@ -6,13 +6,21 @@ Partial Class Reports_PrintFedexLabel
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
         Dim id_envio As Integer
+        Dim tipo_impresion As Integer = 2
         Dim chtLoginsByMonthStream As MemoryStream = New MemoryStream()
-
-        Dim Width As Double = Double.Parse(5.3) * 72
-        Dim Height As Double = Double.Parse(8.2) * 72
 
         Try
             If Integer.TryParse(Request.QueryString(0), id_envio) Then
+                Integer.TryParse(Request.QueryString(1), tipo_impresion)
+
+                Dim Width As Double = Double.Parse(5.3) * 72
+                Dim Height As Double = Double.Parse(8.2) * 72
+
+                If (tipo_impresion = 1) Then
+                    Width = Double.Parse(11.3) * 72
+                    Height = Double.Parse(15) * 72
+                End If
+
                 Dim estafetaLabel = DaspackDALC.EstafetaLabel(id_envio)
                 If estafetaLabel IsNot Nothing Then
                     chtLoginsByMonthStream.Position = 0

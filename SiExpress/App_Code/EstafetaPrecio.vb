@@ -16,6 +16,7 @@ Public Class EstafetaPrecio
     Public Property StandardOvernightUser() As Integer
     Public Property PaqueteExpressEconomic() As Decimal
     Public Property PaqueteExpressNextDay() As Decimal
+    Public Property UserAccountPe() As Integer
 End Class
 
 Public Class EstafetaTarimas
