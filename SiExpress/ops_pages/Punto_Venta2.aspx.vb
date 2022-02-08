@@ -356,14 +356,14 @@ Partial Class Punto_Venta
                     End If
                 End If
 
-                If estafetaPrecios.ExpressSaverUser > 0 Then
+                If estafetaPrecios.ExpressSaverUser > 0 And estafetaPrecios.ExpressSaverAmount > 0 Then
                     fedexExpress.Value = estafetaPrecios.ExpressSaverAmount
                     rbFedexExpress.Text = " Fedex Express Saver: " & FormatCurrency(estafetaPrecios.ExpressSaverAmount.ToString(), 2)
                     rbFedexExpress.Visible = True
                     brFedexExpress.Visible = True
                 End If
 
-                If estafetaPrecios.StandardOvernightUser > 0 Then
+                If estafetaPrecios.StandardOvernightUser > 0 And estafetaPrecios.StandardOvernightAmount > 0 Then
                     fedexStandard.Value = estafetaPrecios.StandardOvernightAmount
                     rbFedexStandard.Text = " Fedex Standar Overnight: " & FormatCurrency(estafetaPrecios.StandardOvernightAmount.ToString(), 2)
                     rbFedexStandard.Visible = True
@@ -398,21 +398,21 @@ Partial Class Punto_Venta
                         Session(sGUID) = respuestaFrecuenciaCotizador
 
                         For Each tipoServicio As Estafeta.Frecuenciacotizador.TipoServicio In respuestaFrecuenciaCotizador.Respuesta(0).TipoServicio
-                            If tipoServicio.DescripcionServicio = "Terrestre" Then
+                            If tipoServicio.DescripcionServicio = "Terrestre" And estafetaPrecios.Terrestre > 0 Then
                                 estafetaTerrestre.Value = estafetaPrecios.Terrestre
                                 rbTerrestre.Text = " Terrestre: " & FormatCurrency(estafetaPrecios.Terrestre.ToString(), 2)
                                 rbTerrestre.Visible = True
                                 brTerrestre.Visible = True
                             End If
 
-                            If tipoServicio.DescripcionServicio = "Dia Sig." Then
+                            If tipoServicio.DescripcionServicio = "Dia Sig." And estafetaPrecios.DiaSiguiente > 0 Then
                                 estafetaDiaSig.Value = estafetaPrecios.DiaSiguiente
                                 rbDiaSiguiente.Text = " Dia Siguiente: " & FormatCurrency(estafetaPrecios.DiaSiguiente.ToString(), 2)
                                 rbDiaSiguiente.Visible = True
                                 brDiaSiguiente.Visible = True
                             End If
 
-                            If tipoServicio.DescripcionServicio = "LTL" Then
+                            If tipoServicio.DescripcionServicio = "LTL" And estafetaPrecios.Ltl > 0 Then
                                 estafetaLtl.Value = estafetaPrecios.Ltl
                                 rbLtl.Text = " Tarimas: " & FormatCurrency(estafetaPrecios.Ltl.ToString(), 2)
                                 rbLtl.Visible = True
@@ -448,6 +448,7 @@ Partial Class Punto_Venta
                         .Height = datos_envio.alto
                         .Weight = datos_envio.peso
                         .Width = datos_envio.ancho
+                        .IsOcurre = IIf(chkOcurre.Checked, 1, 0)
                     End With
 
                     Dim dtgridview As DataTable = TryCast(ViewState("Data"), DataTable)
@@ -519,7 +520,7 @@ Partial Class Punto_Venta
                                 Dim valorAreaExtendida As Double = 0
 
                                 If areaExtendida IsNot Nothing Then
-                                    valorAreaExtendida = areaExtendida.Amt
+                                    valorAreaExtendida = areaExtendida.Amt + areaExtendida.AmtTax
                                 End If
 
                                 If dtgridview IsNot Nothing Then
@@ -527,10 +528,8 @@ Partial Class Punto_Venta
                                         pesoVol = (row("Alto") * row("Ancho") * row("Largo")) / 5000
                                         estafetaPrecios = seguimiento.costo_estafeta_gombar(Datos_Dest.codigo_postal, id_agencia, pesoVol, area_extendida_express_saver, area_extendida_standard_overnight, row("Peso"), valorAreaExtendida, valorTotalDeclarado)
 
-                                        paqueteExpressEconomic = paqueteExpressEconomic + estafetaPrecios.PaqueteExpressEconomic
-                                        paqueteExpressNextDay = paqueteExpressNextDay + estafetaPrecios.PaqueteExpressNextDay
+                                        paqueteExpressEconomic = paqueteExpressEconomic + (estafetaPrecios.PaqueteExpressEconomic * row("Cantidad"))
                                     Next row
-                                    estafetaPrecios.PaqueteExpressNextDay = paqueteExpressNextDay
                                     estafetaPrecios.PaqueteExpressEconomic = paqueteExpressEconomic
                                 End If
 
@@ -554,12 +553,9 @@ Partial Class Punto_Venta
                                     For Each row As DataRow In dtgridview.Rows
                                         pesoVol = (row("Alto") * row("Ancho") * row("Largo")) / 5000
                                         estafetaPrecios = seguimiento.costo_estafeta_gombar(Datos_Dest.codigo_postal, id_agencia, pesoVol, area_extendida_express_saver, area_extendida_standard_overnight, row("Peso"), valorAreaExtendida, valorTotalDeclarado)
-
-                                        paqueteExpressEconomic = paqueteExpressEconomic + estafetaPrecios.PaqueteExpressEconomic
-                                        paqueteExpressNextDay = paqueteExpressNextDay + estafetaPrecios.PaqueteExpressNextDay
+                                        paqueteExpressNextDay = paqueteExpressNextDay + (estafetaPrecios.PaqueteExpressNextDay * row("Cantidad"))
                                     Next row
                                     estafetaPrecios.PaqueteExpressNextDay = paqueteExpressNextDay
-                                    estafetaPrecios.PaqueteExpressEconomic = paqueteExpressEconomic
                                 End If
 
                                 hdnPaqueteExpressNextDay.Value = estafetaPrecios.PaqueteExpressNextDay
@@ -886,6 +882,7 @@ Partial Class Punto_Venta
                             .Height = datos_envio.alto
                             .Weight = datos_envio.peso
                             .Width = datos_envio.ancho
+                            .IsOcurre = IIf(chkOcurre.Checked, 1, 0)
                         End With
 
                         If rbPaqueteExpressEconomic.Checked Then
@@ -997,6 +994,7 @@ Partial Class Punto_Venta
                 If rbCosto.Checked Then
                     Dim clienteGombar = DaspackDALC.GetGombarSender(4)
                     id_cliente = clienteGombar.id_cliente
+                    datos_envio.observaciones = "DraftLogistics"
                 End If
 
                 'Insertar el Envío
@@ -1147,6 +1145,7 @@ Partial Class Punto_Venta
                             .TypeSrvcId = IIf(rbPaqueteExpressEconomic.Checked, "STD-T", "SEG-DS")
                             .PaperType = ddlTipoImpresion.SelectedValue
                             .ClientId = id_cliente
+                            .IsOcurre = IIf(chkOcurre.Checked, 1, 0)
                         End With
                         fedexShipRequest.ShipmentRequest = shipmentRequest
                         fedexShipRequest.Destinatary = destinatary

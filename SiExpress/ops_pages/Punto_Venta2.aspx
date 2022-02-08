@@ -188,7 +188,8 @@
                                         <td><strong><span style="font-size: 10pt">Servicio SAT:</span></strong></td>
                                         <td>
                                             <asp:TextBox CssClass="form-control" Height="27px" ID="txtServicioSat" runat="server" Width="180px"></asp:TextBox>                                            
-                                        </td>                                        
+                                        </td>    
+                                        <td style="width: 110px; height: 12px; text-align: left">Ocurre<asp:CheckBox ID="chkOcurre" runat="server" Text=" " /></td>
                                     </tr>
                                 </table>
                                 <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="contenidosCampos">

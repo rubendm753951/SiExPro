@@ -25,5 +25,6 @@ Public Class ShipmentRequestDto
     Public Property ShipmentItems() As List(Of ShipmentRequestItemDto)
     Public Property PaperType() As Integer
     Public Property TotlDeclVlue() As Decimal
+    Public Property IsOcurre() As Integer
 End Class
 

@@ -306,7 +306,7 @@ Public Class EstafetaWrapper
         Dim servicioSeleccionado = DaspackDALC.GetServicioSelecionado(envio.id_envio)
         Dim destinatario = DaspackDALC.GetDatosDestinatario(envio.id_envio)
 
-        Dim estafetaUser = GetEstafetaUser("Tracking", destinatario.codigo_postal, Nothing)
+        Dim estafetaUser = GetEstafetaUser("Tracking", destinatario.codigo_postal, 1)
 
         Dim searchType As New Estafeta.Tracking.SearchType()
 
