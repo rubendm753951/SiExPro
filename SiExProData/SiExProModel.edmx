@@ -50,6 +50,9 @@
           <Property Name="codigo_postal" Type="varchar" MaxLength="20" />
           <Property Name="email" Type="varchar" MaxLength="200" />
           <Property Name="NIT" Type="varchar" MaxLength="100" />
+          <Property Name="RFC" Type="varchar" MaxLength="100" />
+          <Property Name="RegistroTributario" Type="varchar" MaxLength="100" />
+          <Property Name="ResidenciaFiscal" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="C_DESTINATARIOS">
           <Key>
@@ -71,6 +74,9 @@
           <Property Name="telefono" Type="varchar" MaxLength="50" />
           <Property Name="codigo_postal" Type="varchar" MaxLength="20" />
           <Property Name="email" Type="varchar" MaxLength="200" />
+          <Property Name="RFC" Type="varchar" MaxLength="100" />
+          <Property Name="RegistroTributario" Type="varchar" MaxLength="100" />
+          <Property Name="ResidenciaFiscal" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="C_ESTADOS_GOMBAR">
           <Key>
@@ -163,7 +169,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
             <PropertyRef Name="codigo_servicio_id" />
           </Key>
           <Property Name="codigo_servicio_id" Type="int" Nullable="false" />
-          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
         <EntityType Name="D_ENVIO_COMENTARIOS">
           <Key>
@@ -479,6 +485,9 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="NIT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="Self.C_CLIENTES_D_ENVIOS_DATOS_fk" FromRole="C_CLIENTES" ToRole="D_ENVIOS_DATOS" />
+          <Property Name="RFC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RegistroTributario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ResidenciaFiscal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Destinatario">
           <Key>
@@ -501,6 +510,9 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="codigo_postal" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="C_DESTINATARIOS" ToRole="D_ENVIOS_DATOS" />
+          <Property Name="RFC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RegistroTributario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ResidenciaFiscal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Envio">
           <Key>
@@ -848,7 +860,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
             <PropertyRef Name="codigo_servicio_id" />
           </Key>
           <Property Name="codigo_servicio_id" Type="Int32" Nullable="false" />
-          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -884,6 +896,9 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="C_CLIENTES">
             <EntityTypeMapping TypeName="MasupackModel.Cliente">
               <MappingFragment StoreEntitySet="C_CLIENTES">
+                <ScalarProperty Name="ResidenciaFiscal" ColumnName="ResidenciaFiscal" />
+                <ScalarProperty Name="RegistroTributario" ColumnName="RegistroTributario" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
                 <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
                 <ScalarProperty Name="id_pais" ColumnName="id_pais" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
@@ -907,6 +922,9 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="C_DESTINATARIOS">
             <EntityTypeMapping TypeName="MasupackModel.Destinatario">
               <MappingFragment StoreEntitySet="C_DESTINATARIOS">
+                <ScalarProperty Name="ResidenciaFiscal" ColumnName="ResidenciaFiscal" />
+                <ScalarProperty Name="RegistroTributario" ColumnName="RegistroTributario" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
                 <ScalarProperty Name="id_destinatario" ColumnName="id_destinatario" />
                 <ScalarProperty Name="id_pais" ColumnName="id_pais" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />

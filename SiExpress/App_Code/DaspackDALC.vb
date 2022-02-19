@@ -398,13 +398,13 @@ Public Class DaspackDALC
         Dim response As New ResponseData()
         Try
 
-            webClient.Headers("Content-type") = "application/json"
+            webClient.Headers("Content-type") = "application/json;charset=utf-8"
             webClient.Encoding = Encoding.UTF8
 
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(fedexShipRequest)
 
-            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            Dim reqString = Encoding.UTF8.GetBytes(jsonRequest)
             resByte = webClient.UploadData(ConfigurationManager.AppSettings("EstafetaService.Ship"), "post", reqString)
             resString = Encoding.Default.GetString(resByte)
             response = serializer.Deserialize(Of ResponseData)(resString)
@@ -423,13 +423,13 @@ Public Class DaspackDALC
         Dim response As New RateResponseData()
         Try
 
-            webClient.Headers("Content-type") = "application/json"
+            webClient.Headers("Content-type") = "application/json;charset=utf-8"
             webClient.Encoding = Encoding.UTF8
 
             Dim serializer As New System.Web.Script.Serialization.JavaScriptSerializer()
             Dim jsonRequest = serializer.Serialize(fedexShipRequest)
 
-            Dim reqString = Encoding.Default.GetBytes(jsonRequest)
+            Dim reqString = Encoding.UTF8.GetBytes(jsonRequest)
             resByte = webClient.UploadData(ConfigurationManager.AppSettings("EstafetaService.Rate"), "post", reqString)
             resString = Encoding.Default.GetString(resByte)
             response = serializer.Deserialize(Of RateResponseData)(resString)

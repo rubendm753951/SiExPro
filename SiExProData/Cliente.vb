@@ -28,6 +28,9 @@ Partial Public Class Cliente
     Public Property codigo_postal As String
     Public Property email As String
     Public Property NIT As String
+    Public Property RFC As String
+    Public Property RegistroTributario As String
+    Public Property ResidenciaFiscal As String
 
     Public Overridable Property D_ENVIOS_DATOS As ICollection(Of EnvioDatos) = New HashSet(Of EnvioDatos)
 

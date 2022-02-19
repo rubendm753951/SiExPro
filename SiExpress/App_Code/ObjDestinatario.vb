@@ -3,6 +3,7 @@ Imports Microsoft.VisualBasic
 Public Class ObjDestinatario
     Private id_destinatario, _id_pais As Integer, _nombre As String, _apellidos As String, _empresa As String, _calle As String, _noexterior As Integer, _nointerior As String, _direccion2 As String
     Private _colonia As String, _ciudad As String, _municipio As String, _estadoprovincia As String, _telefono As String, _codigo_postal As String, _email As String, _direccion As String, _codigo_pais As String
+    Private _rfc As String, _registro_tributario As String, _residencia_fiscal As String
     Property id_pais() As Integer
         Get
             Return _id_pais
@@ -137,6 +138,30 @@ Public Class ObjDestinatario
         End Get
         Set(ByVal value As String)
             _codigo_pais = value
+        End Set
+    End Property
+    Public Property rfc() As String
+        Get
+            Return _rfc
+        End Get
+        Set(ByVal value As String)
+            _rfc = value
+        End Set
+    End Property
+    Public Property registro_tributario() As String
+        Get
+            Return _registro_tributario
+        End Get
+        Set(ByVal value As String)
+            _registro_tributario = value
+        End Set
+    End Property
+    Public Property residencia_fiscal() As String
+        Get
+            Return _residencia_fiscal
+        End Get
+        Set(ByVal value As String)
+            _residencia_fiscal = value
         End Set
     End Property
 End Class

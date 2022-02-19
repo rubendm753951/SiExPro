@@ -192,6 +192,14 @@
                                         <td style="width: 110px; height: 12px; text-align: left">Ocurre<asp:CheckBox ID="chkOcurre" runat="server" Text=" " /></td>
                                     </tr>
                                 </table>
+                                <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquetefedex">
+                                    <tr>                                        
+                                        <td><strong><span style="font-size: 10pt">Servicio SAT:</span></strong></td>
+                                        <td>
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtFedexServicioSat" runat="server" Width="180px"></asp:TextBox>                                            
+                                        </td>                                            
+                                    </tr>
+                                </table>
                                 <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="contenidosCampos">
                                     <tr >                                                
                                                 <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Ancho (cms)</span></td>
@@ -414,6 +422,14 @@
                                                             <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmail2" runat="server" Width="200px"></asp:TextBox>
                                                         </td>
                                                     </tr>
+                                                    <tr style="font-size: 12pt">
+                                                        <td style="width: 302px; height: 16px; text-align: left">
+                                                            <strong><span style="font-size: 10pt">RFC</span></strong>
+                                                        </td>
+                                                        <td colspan="2" style="height: 16px; text-align: left">
+                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtRFC" runat="server" Width="200px"></asp:TextBox>
+                                                        </td>
+                                                    </tr>                                                    
                                                 </tbody>
                                             </table>
                                         </asp:Panel>

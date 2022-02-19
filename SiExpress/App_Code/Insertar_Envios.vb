@@ -170,14 +170,29 @@ Public Class Insertar_Envios
         cmd.Parameters.Add(parm15)
 
         Dim parm16 As Data.Common.DbParameter = cmd.CreateParameter()
-        parm16.ParameterName = "@id_destinatario"
-        parm16.Size = 10
-        parm16.Direction = Data.ParameterDirection.Output
+        parm16.ParameterName = "@rfc"
+        parm16.Value = dest_datos.rfc
         cmd.Parameters.Add(parm16)
+
+        Dim parm17 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm17.ParameterName = "@registro_tributario"
+        parm17.Value = dest_datos.registro_tributario
+        cmd.Parameters.Add(parm17)
+
+        Dim parm18 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm18.ParameterName = "@residencia_fiscal"
+        parm18.Value = dest_datos.residencia_fiscal
+        cmd.Parameters.Add(parm18)
+
+        Dim parm19 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm19.ParameterName = "@id_destinatario"
+        parm19.Size = 10
+        parm19.Direction = Data.ParameterDirection.Output
+        cmd.Parameters.Add(parm19)
 
         connection.Open()
         cmd.ExecuteNonQuery()
-        id_destinatario = parm16.Value
+        id_destinatario = parm19.Value
         connection.Close()
 
         Return id_destinatario

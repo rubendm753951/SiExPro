@@ -18,5 +18,6 @@ Public Class DestinataryDto
     Public Property PhoneNumber() As String
     Public Property ZipCode() As String
     Public Property Email() As String
+    Public Property Rfc() As String
 End Class
 
