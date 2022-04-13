@@ -1,9 +1,7 @@
 ﻿Imports System.Data
 Imports System.Web.Services
 Imports System.Data.OleDb
-Imports System.Data.Entity
 Imports SiExProData
-Imports System.Security.Cryptography
 
 Partial Class Punto_Venta
     Inherits BasePage
@@ -26,12 +24,24 @@ Partial Class Punto_Venta
             DropDownColonia.Visible = False
         End If
 
+        If DropDownColoniaRem.Items.Count > 0 Then
+            TxtCol.Visible = False
+            DropDownColoniaRem.Visible = True
+        Else
+            TxtCol.Visible = True
+            DropDownColoniaRem.Visible = False
+        End If
+
         If Not IsPostBack Then
             contenidosDesc.Visible = False
             contenidosCampos.Visible = False
             contenidosGrid.Visible = False
             tipopaquete.Visible = False
-
+            remButton.Visible = False
+            remControl.Visible = False
+            remText.Visible = False
+            datosRemitente.Visible = False
+            tipopaquetedraft.Visible = False
         End If
 
         '        ScriptManager.RegisterStartupScript(UpdatePanel1, Me.GetType(), "AutoCompleteDropDowns", "$(function () {  $('input[id$=btnCheckOut]').click(function () { $('input[id$=btnAceptar]').removeAttr('disabled'); });  $('input[id$=btnAceptar]').click(function () { $('input[id$=btnAceptar]').attr('disabled', 'disabled'); }); });", True)
@@ -49,9 +59,20 @@ Partial Class Punto_Venta
         GetColonias(cp)
     End Sub
 
+    Protected Sub TxtCP_TextChanged(sender As Object, e As EventArgs)
+        Dim cp = DirectCast(sender, TextBox).Text
+        GetColoniasRem(cp)
+    End Sub
+
     Private Sub btnActualizar_Click(sender As Object, e As EventArgs) Handles btnActualizar.Click
         If TxtCP2.Text <> "" And TxtCP2.Text.Length >= 5 Then
             GetColonias(TxtCP2.Text)
+        End If
+    End Sub
+
+    Private Sub btnActualizarCpRem_Click(sender As Object, e As EventArgs) Handles btnActualizarCpRem.Click
+        If TxtCP.Text <> "" And TxtCP.Text.Length >= 5 Then
+            GetColoniasRem(TxtCP.Text)
         End If
     End Sub
 
@@ -76,6 +97,26 @@ Partial Class Punto_Venta
         Else
             TxtCol2.Visible = True
             DropDownColonia.Visible = False
+        End If
+    End Sub
+
+    Private Sub GetColoniasRem(cp As String)
+        Dim sepomexResult = DaspackDALC.GetSearchZipCode(cp)
+        If sepomexResult IsNot Nothing And sepomexResult.Count > 0 Then
+            TxtCol.Visible = False
+            DropDownColoniaRem.Visible = True
+            DropDownColoniaRem.DataSource = sepomexResult
+            DropDownColoniaRem.DataBind()
+
+            'DropDownPais2.SelectedValue = 52
+            txtCiudad.Visible = True
+            'txtEdo2.DataBind()
+            txtEdo.SelectedValue = sepomexResult(0).estado_codigo
+            txtCiudad.Text = sepomexResult(0).d_ciudad
+            TxtMpio.Text = sepomexResult(0).D_mnpio
+        Else
+            TxtCol.Visible = True
+            DropDownColoniaRem.Visible = False
         End If
     End Sub
 
@@ -457,12 +498,6 @@ Partial Class Punto_Venta
             '************ PAQUETE EXPRESS  **************
             If proveedor = 40 Then
                 If (estafetaPrecios.PaqueteExpressEconomic > 0 Or estafetaPrecios.PaqueteExpressNextDay > 0) Then
-                    If String.IsNullOrWhiteSpace(txtFedexServicioSat.Text) Then
-                        Label2.Text = "El codigo SAT ingresado no existe"
-                        ModalPopupExtender3.Show()
-                        Exit Sub
-                    End If
-
                     Dim shipmentRequest As New ShipmentRequestDto()
                     With shipmentRequest
                         .AgentId = id_agencia
@@ -606,6 +641,62 @@ Partial Class Punto_Venta
                 End If
             End If
 
+            If proveedor = 50 Then
+                Dim datos_cliente As New ObjCliente
+                Dim id_cliente As Integer
+                datos_cliente.id_pais = DropDownPais.SelectedValue
+                datos_cliente.nombre = txtNombre.Text
+                'datos_cliente.apellidos = TxtApellidos.Text
+                datos_cliente.empresa = txtEmpresa.Text
+                datos_cliente.calle = txtCalle.Text
+                datos_cliente.noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
+                datos_cliente.nointerior = Nothing
+                datos_cliente.direccion2 = Nothing
+                datos_cliente.colonia = TxtCol.Text
+                datos_cliente.ciudad = txtCiudad.Text
+                datos_cliente.municipio = TxtMpio.Text
+                datos_cliente.estadoprovincia = txtEdo.Text
+                datos_cliente.telefono = txtTelefono.Text
+                datos_cliente.codigo_postal = TxtCP.Text
+                datos_cliente.email = txtEmail.Text
+                datos_cliente.rfc = txtRemRfc.Text
+                datos_cliente.registro_tributario = txtRemRfc.Text
+                datos_cliente.residencia_fiscal = "MEX"
+
+                If Session("id_cliente") = 0 Then
+                    Mensaje = Crear_Envio.valida_datos_cliente(datos_cliente)
+                    If Mensaje = "OK" Then
+                        id_cliente = Crear_Envio.crea_cliente(datos_cliente)
+                        Session("id_cliente") = id_cliente
+                    Else
+                        Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
+                        ModalPopupExtender3.Show()
+                        Mensaje = ""
+                        Exit Sub
+                    End If
+                Else
+                    id_cliente = Session("id_cliente")
+                End If
+
+                If String.IsNullOrWhiteSpace(txtDraftServicioSat.Text) Then
+                    Label2.Text = "El codigo SAT ingresado no existe"
+                    ModalPopupExtender3.Show()
+                    Exit Sub
+                End If
+
+                If datos_envio.largo = 0 Or datos_envio.alto = 0 Or datos_envio.peso = 0 Or datos_envio.ancho = 0 Then
+                    Label2.Text = "Ocurrió un error, por favor revise los datos ---> Valores de dimensiones y peso no pueden ser cero"
+                    ModalPopupExtender3.Show()
+                    Exit Sub
+                End If
+
+                Dim codigoSat = DaspackDALC.BuscarCodigoSat(txtDraftServicioSat.Text)
+                If codigoSat Is Nothing Then
+                    Label2.Text = "El codigo SAT ingresado no existe"
+                    ModalPopupExtender3.Show()
+                    Exit Sub
+                End If
+            End If
             If Label2.Text = "" Then
                 ModalPopupExtender7.Show()
             End If
@@ -616,10 +707,45 @@ Partial Class Punto_Venta
 
     End Sub
 
+    Protected Sub Button1_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button1.Click
+        GridView3.DataBind()
+        ModalPopupExtender1.Show()
+    End Sub
+
+    Protected Sub GridView3_SelectedIndexChanged1(ByVal sender As Object, ByVal e As System.EventArgs) Handles GridView3.SelectedIndexChanged
+        Try
+            If Not (GridView3.SelectedIndex = 0 And GridView3.PageIndex = 0) Then
+                Dim row As GridViewRow = GridView3.SelectedRow
+                txtNombre.Text = row.Cells(2).Text
+                'TxtApellidos.Text = row.Cells(3).Text
+                txtEmpresa.Text = row.Cells(4).Text
+                txtCalle.Text = row.Cells(5).Text
+                txtCiudad.Text = row.Cells(6).Text
+                txtEdo.SelectedValue = row.Cells(7).Text
+                txtTelefono.Text = row.Cells(8).Text
+                txtEmail.Text = row.Cells(9).Text
+                TxtCP.Text = row.Cells(10).Text
+                txtRemRfc.Text = row.Cells(12).Text
+                TxtCol.Text = row.Cells(13).Text
+                TxtMpio.Text = row.Cells(14).Text
+
+                Session("id_cliente") = row.Cells(1).Text
+                TextBox1.Text = ""
+                GridView3.DataBind()
+            Else
+                Panel2.Enabled = True
+                txtNombre.Focus()
+                TextBox1.Text = ""
+                GridView3.DataBind()
+                Session("id_cliente") = 0
+            End If
+        Catch ex As Exception
+            Label2.Text = "Ocurrió un error, por favor revise los datos -->" + ex.Message.ToString
+            ModalPopupExtender3.Show()
+        End Try
+    End Sub
+
     Protected Sub Button2_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles Button2.Click
-        'If Panel3.Enabled = False Then
-        '    Panel3.Enabled = True
-        'End If
         GridView2.DataBind()
         ModalPopupExtender2.Show()
     End Sub
@@ -670,6 +796,7 @@ Partial Class Punto_Venta
             Dim Datos_Dest As New ObjDestinatario
             Dim datos_envio As New ObjEnvio
             Dim Crear_Envio As New Insertar_Envios
+            Dim codigoSat As CodigosServiciosSat
 
             Dim coloniaDesc = ""
 
@@ -841,15 +968,29 @@ Partial Class Punto_Venta
                         cliente = db.C_CLIENTES.FirstOrDefault(Function(x) x.NIT = estafetaPrecios.ExpressSaverUser)
                         shipmentRequest.AccountId = estafetaPrecios.ExpressSaverUser
                         shipmentRequest.ClientId = cliente.id_cliente
+
+                        If estafetaPrecios.ExpressSaverUser <> ConfigurationManager.AppSettings("FedEx.ExpressSaverAccountId") Then
+                            Label2.Text = "Existe un error en la configuracion del producto seleccionado"
+                            ModalPopupExtender3.Show()
+                            Exit Sub
+                        End If
+
                     End If
 
                     If rbFedexStandard.Checked Then
                         cliente = db.C_CLIENTES.FirstOrDefault(Function(x) x.NIT = estafetaPrecios.StandardOvernightUser)
                         shipmentRequest.AccountId = estafetaPrecios.StandardOvernightUser
                         shipmentRequest.ClientId = cliente.id_cliente
+
+                        If estafetaPrecios.StandardOvernightUser <> ConfigurationManager.AppSettings("FedEx.StandardOvernightAccountId") Then
+                            Label2.Text = "Existe un error en la configuracion del producto seleccionado"
+                            ModalPopupExtender3.Show()
+                            Exit Sub
+                        End If
+
                     End If
 
-                    Dim codigoSat = DaspackDALC.BuscarCodigoSat(txtFedexServicioSat.Text)
+                    codigoSat = DaspackDALC.BuscarCodigoSat(txtFedexServicioSat.Text)
                     If codigoSat Is Nothing Then
                         Label2.Text = "El codigo SAT ingresado no existe"
                         ModalPopupExtender3.Show()
@@ -897,6 +1038,13 @@ Partial Class Punto_Venta
                         shipmentRequest.ClientId = cliente.id_cliente
                         datos_envio.id_cliente = cliente.id_cliente
                         id_cliente = cliente.id_cliente
+
+                        If estafetaPrecios.ExpressSaverUser <> ConfigurationManager.AppSettings("FedEx.ExpressSaverAccountId") Then
+                            Label2.Text = "Existe un error en la configuracion del producto seleccionado"
+                            ModalPopupExtender3.Show()
+                            Exit Sub
+                        End If
+
                     End If
 
                     If rbFedexStandard.Checked Then
@@ -909,6 +1057,12 @@ Partial Class Punto_Venta
                         shipmentRequest.ClientId = cliente.id_cliente
                         datos_envio.id_cliente = cliente.id_cliente
                         id_cliente = cliente.id_cliente
+
+                        If estafetaPrecios.StandardOvernightUser <> ConfigurationManager.AppSettings("FedEx.StandardOvernightAccountId") Then
+                            Label2.Text = "Existe un error en la configuracion del producto seleccionado"
+                            ModalPopupExtender3.Show()
+                            Exit Sub
+                        End If
                     End If
                 End If
 
@@ -1016,6 +1170,9 @@ Partial Class Punto_Venta
                             total_envio = hdnPaqueteExpressNextDay.Value
                         End If
                     End If
+
+
+
                 End If
 
                 If cliente IsNot Nothing And (rbTerrestre.Checked Or rbDiaSiguiente.Checked Or rbLtl.Checked) Then
@@ -1038,8 +1195,52 @@ Partial Class Punto_Venta
                 End If
 
                 If rbCosto.Checked Then
-                    Dim clienteGombar = DaspackDALC.GetGombarSender(4)
-                    id_cliente = clienteGombar.id_cliente
+
+                    Dim proveedor = DropDownProveedores.SelectedValue
+                    If proveedor = 50 Then
+                        datos_cliente.id_pais = DropDownPais.SelectedValue
+                        datos_cliente.nombre = txtNombre.Text
+                        'datos_cliente.apellidos = TxtApellidos.Text
+                        datos_cliente.empresa = txtEmpresa.Text
+                        datos_cliente.calle = txtCalle.Text
+                        datos_cliente.noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
+                        datos_cliente.nointerior = Nothing
+                        datos_cliente.direccion2 = Nothing
+                        datos_cliente.colonia = TxtCol.Text
+                        datos_cliente.ciudad = txtCiudad.Text
+                        datos_cliente.municipio = TxtMpio.Text
+                        datos_cliente.estadoprovincia = txtEdo.Text
+                        datos_cliente.telefono = txtTelefono.Text
+                        datos_cliente.codigo_postal = TxtCP.Text
+                        datos_cliente.email = txtEmail.Text
+                        datos_cliente.rfc = txtRemRfc.Text
+                        datos_cliente.registro_tributario = txtRemRfc.Text
+                        datos_cliente.residencia_fiscal = "MEX"
+
+                        codigoSat = DaspackDALC.BuscarCodigoSat(txtDraftServicioSat.Text)
+                        If codigoSat Is Nothing Then
+                            Label2.Text = "El codigo SAT ingresado no existe"
+                            ModalPopupExtender3.Show()
+                            Exit Sub
+                        End If
+                        If Session("id_cliente") = 0 Then
+                            Mensaje = Crear_Envio.valida_datos_cliente(datos_cliente)
+                            If Mensaje = "OK" Then
+                                id_cliente = Crear_Envio.crea_cliente(datos_cliente)
+                                Session("id_cliente") = id_cliente
+                            Else
+                                Label2.Text = "Ocurrió un error, por favor revise los datos ---> " + Mensaje
+                                ModalPopupExtender3.Show()
+                                Mensaje = ""
+                                Exit Sub
+                            End If
+                        Else
+                            id_cliente = Session("id_cliente")
+                        End If
+                    Else
+                        Dim clienteGombar = DaspackDALC.GetGombarSender(4)
+                        id_cliente = clienteGombar.id_cliente
+                    End If
                     datos_envio.observaciones = "DraftLogistics"
                 End If
 
@@ -1090,8 +1291,13 @@ Partial Class Punto_Venta
                     Exit Sub
                 End If
 
+                Dim strCodigoSat = ""
                 'Registro de Envíos (Detalles)
-                Crear_Envio.Detalle_Envios(id_envio, datos_envio, 0, TxtObservaciones.Text)
+                If codigoSat IsNot Nothing Then
+                    strCodigoSat = codigoSat.codigo_servicio_id
+                End If
+
+                Crear_Envio.Detalle_Envios(id_envio, datos_envio, 0, TxtObservaciones.Text, strCodigoSat)
                 TextBox2.Text = id_envio.ToString
 
                 Guia.DataBind()
@@ -1146,7 +1352,7 @@ Partial Class Punto_Venta
                         .ClientId = id_cliente
                     End With
 
-                    Dim codigoSat = DaspackDALC.BuscarCodigoSat(txtFedexServicioSat.Text)
+                    codigoSat = DaspackDALC.BuscarCodigoSat(txtFedexServicioSat.Text)
                     If codigoSat Is Nothing Then
                         Label2.Text = "El codigo SAT ingresado no existe"
                         ModalPopupExtender3.Show()
@@ -1249,6 +1455,12 @@ Partial Class Punto_Venta
 
             Dim Ctrl As Control
             For Each Ctrl In Panel3.Controls
+                If (Ctrl.GetType() Is GetType(TextBox)) Then
+                    Dim txt As TextBox = CType(Ctrl, TextBox)
+                    txt.Text = ""
+                End If
+            Next
+            For Each Ctrl In Panel2.Controls
                 If (Ctrl.GetType() Is GetType(TextBox)) Then
                     Dim txt As TextBox = CType(Ctrl, TextBox)
                     txt.Text = ""
@@ -1367,6 +1579,23 @@ Partial Class Punto_Venta
                         txtRFC.Text = .RFC
                     End With
                 End If
+
+                Dim cliente As Cliente = DaspackDALC.GetDatosCliente(envio.id_envio)
+
+                If cliente IsNot Nothing Then
+                    txtNombre.Text = cliente.nombre
+                    txtEmpresa.Text = ""
+                    txtCalle.Text = cliente.calle
+                    TxtCol.Text = cliente.colonia
+                    txtCiudad.Text = cliente.ciudad
+                    TxtMpio.Text = cliente.municipio
+                    txtEdo.Text = cliente.estadoprovincia
+                    txtTelefono.Text = cliente.telefono
+                    TxtCP.Text = cliente.codigo_postal
+                    txtEmail.Text = cliente.email
+                    txtRemRfc.Text = cliente.RFC
+                End If
+
             Else
                 mensaje = "El usuario no tiene envios creados."
             End If
@@ -1465,7 +1694,7 @@ Partial Class Punto_Venta
                     End If
 
                     'Registro de Envíos (Detalles)
-                    Crear_Envio.Detalle_Envios(id_envio, requestEnvio, 0, "")
+                    Crear_Envio.Detalle_Envios(id_envio, requestEnvio, 0, "", "")
                     'Insertar SobreCargos
                     Crear_Envio.inserta_SobreCargos(id_envio)
                     'Inserta seguimiento
@@ -1519,6 +1748,7 @@ Partial Class Punto_Venta
             If reader.HasRows Then
                 reader.Read()
 
+                DropDownPais.SelectedValue = reader.GetInt32(1)
                 DropDownPais2.SelectedValue = reader.GetInt32(1) ' For masupack
                 txtCiudad2.Visible = True
             End If
@@ -1550,6 +1780,25 @@ Partial Class Punto_Venta
                 TxtSeguro.Text = ConfigurationManager.AppSettings("ValorCOD")
             Else
                 TxtSeguro.Text = "0"
+            End If
+
+            Dim db As New SiExProEntities
+            Dim agente = db.C_AGENCIAS.FirstOrDefault(Function(x) x.id_agencia = DropDownAgentes.SelectedValue)
+
+            If agente IsNot Nothing Then
+                txtNombre.Text = agente.nombre
+                'TxtApellidos.Text = ""
+                txtEmpresa.Text = ""
+                txtCalle.Text = agente.direccion
+                'noexterior = 0 ' Estamos pasando la dirección completa en el campo de calle.
+                TxtCol.Text = agente.colonia
+                txtCiudad.Text = agente.ciudad
+                TxtMpio.Text = agente.municipio
+                txtEdo.Text = agente.estado_provincia
+                txtTelefono.Text = agente.telefono
+                TxtCP.Text = agente.codigo_postal
+                txtEmail.Text = agente.email
+                txtRemRfc.Text = agente.RFC
             End If
 
         Catch ex As Exception
@@ -2158,6 +2407,12 @@ Partial Class Punto_Venta
         txtPESeguro.Text = "0"
         txtServicioSat.Text = ""
         txtFedexServicioSat.Text = ""
+        txtDraftServicioSat.Text = ""
+
+        remButton.Visible = False
+        remControl.Visible = False
+        remText.Visible = False
+        datosRemitente.Visible = False
 
         ViewState("Data") = Nothing
         BindGridView()
@@ -2167,6 +2422,8 @@ Partial Class Punto_Venta
             contenidosCampos.Visible = True
             contenidosGrid.Visible = True
             tipopaquete.Visible = True
+            tipopaquetefedex.Visible = False
+            tipopaquetedraft.Visible = False
             txtLargo.Text = 1
             txtAncho.Text = 1
             txtAlto.Text = 1
@@ -2179,6 +2436,7 @@ Partial Class Punto_Venta
             contenidosGrid.Visible = False
             tipopaquete.Visible = False
             tipopaquetefedex.Visible = True
+            tipopaquetedraft.Visible = False
         End If
 
         If proveedor = 30 Then
@@ -2187,6 +2445,16 @@ Partial Class Punto_Venta
             contenidosGrid.Visible = False
             tipopaquete.Visible = False
             tipopaquetefedex.Visible = False
+            tipopaquetedraft.Visible = False
+        End If
+
+        If proveedor = 50 Then
+            tipopaquetefedex.Visible = False
+            tipopaquetedraft.Visible = True
+            remButton.Visible = True
+            remControl.Visible = True
+            remText.Visible = True
+            datosRemitente.Visible = True
         End If
     End Sub
 

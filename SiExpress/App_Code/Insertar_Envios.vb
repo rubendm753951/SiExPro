@@ -224,7 +224,7 @@ Public Class Insertar_Envios
 
         Dim parm3 As Data.Common.DbParameter = cmd.CreateParameter()
         parm3.ParameterName = "@apellidos"
-        parm3.Value = cliente_datos.apellidos
+        parm3.Value = ""
         cmd.Parameters.Add(parm3)
 
         Dim parm4 As Data.Common.DbParameter = cmd.CreateParameter()
@@ -288,14 +288,29 @@ Public Class Insertar_Envios
         cmd.Parameters.Add(parm15)
 
         Dim parm16 As Data.Common.DbParameter = cmd.CreateParameter()
-        parm16.ParameterName = "@id_cliente"
-        parm16.Size = 10
-        parm16.Direction = Data.ParameterDirection.Output
+        parm16.ParameterName = "@rfc"
+        parm16.Value = cliente_datos.rfc
         cmd.Parameters.Add(parm16)
+
+        Dim parm17 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm17.ParameterName = "@registro_tributario"
+        parm17.Value = cliente_datos.registro_tributario
+        cmd.Parameters.Add(parm17)
+
+        Dim parm18 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm18.ParameterName = "@residencia_fiscal"
+        parm18.Value = cliente_datos.residencia_fiscal
+        cmd.Parameters.Add(parm18)
+
+        Dim parm19 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm19.ParameterName = "@id_cliente"
+        parm19.Size = 10
+        parm19.Direction = Data.ParameterDirection.Output
+        cmd.Parameters.Add(parm19)
 
         connection.Open()
         cmd.ExecuteNonQuery()
-        id_cliente = parm16.Value
+        id_cliente = parm19.Value
         connection.Close()
 
         Return id_cliente
@@ -578,7 +593,7 @@ Public Class Insertar_Envios
         Return id_envio
 
     End Function
-    Sub Detalle_Envios(ByVal id_envio As Integer, ByVal datos_envio As ObjEnvio, id_contenido As Integer, observaciones As String)
+    Sub Detalle_Envios(ByVal id_envio As Integer, ByVal datos_envio As ObjEnvio, id_contenido As Integer, observaciones As String, codigoSat As String)
         Dim MyConnection As ConnectionStringSettings
         MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
         Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
@@ -612,6 +627,11 @@ Public Class Insertar_Envios
         parm5.ParameterName = "@observaciones"
         parm5.Value = observaciones
         cmd.Parameters.Add(parm5)
+
+        Dim parm6 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm6.ParameterName = "@codigoSat"
+        parm6.Value = codigoSat
+        cmd.Parameters.Add(parm6)
 
         connection.Open()
         cmd.ExecuteNonQuery()
@@ -685,9 +705,8 @@ Public Class Insertar_Envios
         Return cod
     End Function
     Public Function valida_datos_cliente(ByVal datosCliente As ObjCliente) As String
-        If datosCliente.nombre Is Nothing Or Len(datosCliente.nombre) < 3 _
-          Or datosCliente.apellidos Is Nothing Or Len(datosCliente.apellidos) < 3 Then
-            Return "El nombre o apellido del cliente están incompletos"
+        If datosCliente.nombre Is Nothing Or Len(datosCliente.nombre) < 3 Then
+            Return "El nombre del cliente están incompletos"
         ElseIf datosCliente.calle Is Nothing Or Len(datosCliente.calle) < 3 Then
             Return "La dirección del cliente es incorrrecta o falta"
         ElseIf Not IsNumeric(datosCliente.noexterior) Then
@@ -716,6 +735,8 @@ Public Class Insertar_Envios
             Return "Estado o provincia del destinatario esincorrecta o falta"
         ElseIf datosDest.codigo_postal Is Nothing Or Len(datosDest.codigo_postal) < 4 Then
             Return "El código postal del destinatario es incorrecto"
+        ElseIf datosDest.rfc Is Nothing Or Len(datosDest.rfc) < 13 Then
+            Return "El RFC del destinatario es incorrecto"
         Else
             Return "OK"
         End If

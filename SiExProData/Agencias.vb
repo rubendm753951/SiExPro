@@ -30,6 +30,12 @@ Partial Public Class Agencias
     Public Property esquema_por_factor As Boolean
     Public Property costo_adicional As Decimal
     Public Property guia_estafeta As Boolean
+    Public Property noexterior As String
+    Public Property colonia As String
+    Public Property municipio As String
+    Public Property codigo_postal As String
+    Public Property email As String
+    Public Property RFC As String
 
     Public Overridable Property D_TARIFAS_AGENCIA As ICollection(Of TarifaAgencia) = New HashSet(Of TarifaAgencia)
 

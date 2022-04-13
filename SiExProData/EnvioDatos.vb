@@ -20,6 +20,7 @@ Partial Public Class EnvioDatos
     Public Property entregado As Nullable(Of Boolean)
     Public Property fecha_entrega As Nullable(Of Date)
     Public Property id_proveedor As Nullable(Of Integer)
+    Public Property codigoSat As String
 
     Public Overridable Property C_CLIENTES As Cliente
     Public Overridable Property C_DESTINATARIOS As Destinatario

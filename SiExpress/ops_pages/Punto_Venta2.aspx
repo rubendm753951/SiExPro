@@ -134,9 +134,9 @@
                                         <td style="width: 87px; height: 9px; padding-top: 10px">
                                             <strong><span style="font-size: 10pt">Tipo Impresion :</span></strong></td>
                                         <td style="width: 300px; height: 9px; padding-top: 10px">
-                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="ddlTipoImpresion" runat="server" AutoPostBack="True"> 
-                                                <asp:listitem text="TERMICA" value="2"></asp:listitem>
-                                                <asp:listitem text="BOND" value="1"></asp:listitem>                                                                                                                                                
+                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="ddlTipoImpresion" runat="server" AutoPostBack="True">
+                                                <asp:ListItem Text="TERMICA" Value="2"></asp:ListItem>
+                                                <asp:ListItem Text="BOND" Value="1"></asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                         <td style="height: 9px; padding-top: 10px"></td>
@@ -152,101 +152,116 @@
                                         </td>
                                         <td style="height: 9px; padding-top: 10px"></td>
                                     </tr>
-                                    </table>
-                                <table style="width: 600px; margin-right: 10px;" runat="server" id="contenidosDesc">                                    
-                                        <tr style="">
-                                            <td style="width: 100px; height: 9px; padding-top: 10px">
-                                                <strong><span style="font-size: 10pt">Cantidad :</span></strong></td>
-                                            <td style="width: 110px; height: 9px; padding-top: 10px">
-                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtContCant" runat="server" Width="100px"></asp:TextBox></td>
-                                            <td style="height: 9px; padding-top: 10px"></td>
-                                            <td style="width: 100px; height: 9px; padding-top: 10px">
-                                                <strong><span style="font-size: 10pt">Contenido :</span></strong></td>
-                                            <td style="width: 300px; height: 9px; padding-top: 10px">
-                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtContCont" runat="server" Width="250px"></asp:TextBox></td>
-                                            <td style="height: 9px; padding-top: 10px"></td>
-                                        </tr>  
-                                    </table>
-                                <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquete">
+                                </table>
+                                <table style="width: 600px; margin-right: 10px;" runat="server" id="contenidosDesc">
+                                    <tr style="">
+                                        <td style="width: 100px; height: 9px; padding-top: 10px">
+                                            <strong><span style="font-size: 10pt">Cantidad :</span></strong></td>
+                                        <td style="width: 110px; height: 9px; padding-top: 10px">
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContCant" runat="server" Width="100px"></asp:TextBox></td>
+                                        <td style="height: 9px; padding-top: 10px"></td>
+                                        <td style="width: 100px; height: 9px; padding-top: 10px">
+                                            <strong><span style="font-size: 10pt">Contenido :</span></strong></td>
+                                        <td style="width: 300px; height: 9px; padding-top: 10px">
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContCont" runat="server" Width="250px"></asp:TextBox></td>
+                                        <td style="height: 9px; padding-top: 10px"></td>
+                                    </tr>
+                                </table>
+                                <table style="width: 600px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquete">
                                     <tr>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
                                             <strong><span style="font-size: 10pt">Tipo de Paquete :</span></strong></td>
                                         <td style="width: 110px; height: 9px; padding-top: 10px">
-                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="ddlTiposPaquete" runat="server" AutoPostBack="True"> 
-                                                <asp:listitem text="CAJA" value="2"></asp:listitem>
-                                                <asp:listitem text="SOBRE" value="1"></asp:listitem>                                                                                                
-                                                <asp:listitem text="BOLSA" value="4"></asp:listitem>
-                                                <asp:listitem text="PIEZA" value="5"></asp:listitem>                                                
-                                                <asp:listitem text="TARIMA" value="11"></asp:listitem>
-                                                <asp:listitem text="BULTO" value="27"></asp:listitem>                                                
-                                                <asp:listitem text="PALET" value="14"></asp:listitem>
-                                                <asp:listitem text="ATADO" value="24"></asp:listitem>
-                                                <asp:listitem text="HUACAL" value="32"></asp:listitem>
-                                                <asp:listitem text="CUBETA" value="6"></asp:listitem>
+                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="ddlTiposPaquete" runat="server" AutoPostBack="True">
+                                                <asp:ListItem Text="CAJA" Value="2"></asp:ListItem>
+                                                <asp:ListItem Text="SOBRE" Value="1"></asp:ListItem>
+                                                <asp:ListItem Text="BOLSA" Value="4"></asp:ListItem>
+                                                <asp:ListItem Text="PIEZA" Value="5"></asp:ListItem>
+                                                <asp:ListItem Text="TARIMA" Value="11"></asp:ListItem>
+                                                <asp:ListItem Text="BULTO" Value="27"></asp:ListItem>
+                                                <asp:ListItem Text="PALET" Value="14"></asp:ListItem>
+                                                <asp:ListItem Text="ATADO" Value="24"></asp:ListItem>
+                                                <asp:ListItem Text="HUACAL" Value="32"></asp:ListItem>
+                                                <asp:ListItem Text="CUBETA" Value="6"></asp:ListItem>
                                             </asp:DropDownList>
                                         </td>
                                         <td><strong><span style="font-size: 10pt">Servicio SAT:</span></strong></td>
                                         <td>
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtServicioSat" runat="server" Width="180px"></asp:TextBox>                                            
-                                        </td>    
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtServicioSat" runat="server" Width="180px"></asp:TextBox>
+                                        </td>
                                         <td style="width: 110px; height: 12px; text-align: left">Ocurre<asp:CheckBox ID="chkOcurre" runat="server" Text=" " /></td>
                                     </tr>
                                 </table>
-                                <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquetefedex">
-                                    <tr>                                        
+                                <table style="width: 600px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquetefedex">
+                                    <tr>
                                         <td><strong><span style="font-size: 10pt">Servicio SAT:</span></strong></td>
                                         <td>
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtFedexServicioSat" runat="server" Width="180px"></asp:TextBox>                                            
-                                        </td>                                            
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtFedexServicioSat" runat="server" Width="180px"></asp:TextBox>
+                                        </td>
                                     </tr>
                                 </table>
-                                <table style="width: 600px; margin-right: 10px;  margin-top: 10px; margin-bottom: 10px" runat="server" id="contenidosCampos">
-                                    <tr >                                                
-                                                <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Ancho (cms)</span></td>
-                                                <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Largo (cms)</span></td>
-                                                <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Alto (cms)</span></td>
-                                                <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Peso (kg)</span></td>                                                    
-                                                <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Valor Declarado</span></td>                                                    
-                                                <td style="width: 100px; height: 5px;"></td>                                                    
-                                            </tr>
-                                    <tr>                                        
+                                <table style="width: 600px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" runat="server" id="tipopaquetedraft">
+                                    <tr>
+                                        <td><strong><span style="font-size: 10pt">Servicio SAT:</span></strong></td>
+                                        <td>
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtDraftServicioSat" runat="server" Width="180px"></asp:TextBox>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table style="width: 600px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px" runat="server" id="contenidosCampos">
+                                    <tr>
+                                        <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Ancho (cms)</span></td>
+                                        <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Largo (cms)</span></td>
+                                        <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Alto (cms)</span></td>
+                                        <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Peso (kg)</span></td>
+                                        <td style="width: 100px; height: 5px;"><span style="font-size: 10pt">Valor Declarado</span></td>
+                                        <td style="width: 100px; height: 5px;"></td>
+                                    </tr>
+                                    <tr>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContAncho" runat="server" Width="80px"></asp:TextBox></td>                                        
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContAncho" runat="server" Width="80px"></asp:TextBox></td>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContLargo" runat="server" Width="80px"></asp:TextBox></td>                                        
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContLargo" runat="server" Width="80px"></asp:TextBox></td>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContAlto" runat="server" Width="80px"></asp:TextBox></td>                                        
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContAlto" runat="server" Width="80px"></asp:TextBox></td>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContPeso" runat="server" Width="80px"></asp:TextBox></td>                                        
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtContPeso" runat="server" Width="80px"></asp:TextBox></td>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
-                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtPESeguro" runat="server" Width="80px"></asp:TextBox></td>                                        
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtPESeguro" runat="server" Width="80px"></asp:TextBox></td>
                                         <td style="width: 100px; height: 9px; padding-top: 10px">
                                             <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAddCont" runat="server" Width="100px" OnClick="OnAdd" Text="Agregar"></asp:Button></td>
-                                    </tr>                                    
+                                    </tr>
                                 </table>
                                 <table style="width: 600px; margin-right: 10px" runat="server" id="contenidosGrid">
                                     <tr>
-                                    <td>
-                                        <asp:GridView class="table table-striped table-bordered table-hover" ID="GridView1" runat="server" AutoGenerateColumns="false" DataKeyNames="Contenido" OnRowDeleting="GridView1_RowDeleting">
-                                            <Columns>
-                                                <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
-                                                <asp:BoundField DataField="Contenido" HeaderText="Contenido" />
-                                                <asp:BoundField DataField="Ancho" HeaderText="Ancho" />
-                                                <asp:BoundField DataField="Largo" HeaderText="Largo" />
-                                                <asp:BoundField DataField="Alto" HeaderText="Alto" />
-                                                <asp:BoundField DataField="Peso" HeaderText="Peso" />
-                                                <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
-                                                <asp:BoundField DataField="Seguro" HeaderText="Valor Declarado" />
-                                                <asp:BoundField DataField="ServicioSAT" HeaderText="ServicioSAT" />
-                                                <asp:BoundField DataField="ServicioSATDesc" HeaderText="Descripcion Servicio SAT" />
-                                                <asp:CommandField ButtonType="Button" ShowDeleteButton="True" />
-                                            </Columns>
-                                        </asp:GridView>
-                                    </td>                                   
-                                        </tr>
+                                        <td>
+                                            <asp:GridView class="table table-striped table-bordered table-hover" ID="GridView1" runat="server" AutoGenerateColumns="false" DataKeyNames="Contenido" OnRowDeleting="GridView1_RowDeleting">
+                                                <Columns>
+                                                    <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
+                                                    <asp:BoundField DataField="Contenido" HeaderText="Contenido" />
+                                                    <asp:BoundField DataField="Ancho" HeaderText="Ancho" />
+                                                    <asp:BoundField DataField="Largo" HeaderText="Largo" />
+                                                    <asp:BoundField DataField="Alto" HeaderText="Alto" />
+                                                    <asp:BoundField DataField="Peso" HeaderText="Peso" />
+                                                    <asp:BoundField DataField="Tipo" HeaderText="Tipo" />
+                                                    <asp:BoundField DataField="Seguro" HeaderText="Valor Declarado" />
+                                                    <asp:BoundField DataField="ServicioSAT" HeaderText="ServicioSAT" />
+                                                    <asp:BoundField DataField="ServicioSATDesc" HeaderText="Descripcion Servicio SAT" />
+                                                    <asp:CommandField ButtonType="Button" ShowDeleteButton="True" />
+                                                </Columns>
+                                            </asp:GridView>
+                                        </td>
+                                    </tr>
                                 </table>
                                 <table style="width: 600px; margin-right: 10px">
                                     <tr style="margin-top: 10px">
+                                        <td style="width: 86px; height: 9px" id="remText" runat="server">
+                                            <strong><span style="font-size: 10pt">Remitente :</span></strong></td>
+                                        <td style="width: 131px; height: 9px" id="remControl" runat="server">
+                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TextBox1" runat="server" Width="299px"></asp:TextBox></td>
+                                        <td style="width: 28px; height: 9px" id="remButton" runat="server">
+                                            <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="Button1" runat="server" Text="Buscar"></asp:Button></td>
+
                                         <td style="width: 87px; height: 9px; padding-top: 10px">
                                             <strong><span style="font-size: 10pt">Destinatario :</span></strong></td>
                                         <td style="width: 300px; height: 9px; padding-top: 10px">
@@ -256,6 +271,116 @@
                                     </tr>
                                     <tr>
                                         <td colspan="6" valign="top">
+                                            <asp:ModalPopupExtender ID="ModalPopupExtender1" runat="server"
+                                                TargetControlID="Button6" PopupControlID="Remitente" BackgroundCssClass="modalBackground">
+                                            </asp:ModalPopupExtender>
+                                            <asp:Panel ID="Remitente" runat="server" HorizontalAlign="Center"
+                                                ScrollBars="Horizontal" Width="600px">
+                                                <asp:GridView class="table table-striped table-bordered table-hover" ID="GridView3" runat="server" AllowPaging="True"
+                                                    AutoGenerateColumns="False" CaptionAlign="Top" DataSourceID="Clientes"
+                                                    Font-Size="8pt" Height="150px" HorizontalAlign="Center"
+                                                    UseAccessibleHeader="False" Width="600px" BackColor="White"
+                                                    BorderStyle="Outset" BorderWidth="0px" CssClass="grids">
+                                                    <Columns>
+                                                        <asp:CommandField ShowSelectButton="True" ShowHeader="True">
+                                                            <ControlStyle Width="60px" />
+                                                            <FooterStyle Width="60px" Wrap="True" />
+                                                            <HeaderStyle Width="60px" HorizontalAlign="Left" Wrap="True" />
+                                                            <ItemStyle Width="60px" Wrap="True" HorizontalAlign="Left" />
+                                                        </asp:CommandField>
+                                                        <asp:BoundField DataField="id_cliente" HeaderText="id"
+                                                            SortExpression="id_cliente" ReadOnly="True">
+                                                            <ItemStyle Width="20px" Wrap="False" HorizontalAlign="Left" />
+                                                            <ControlStyle Width="0px" />
+                                                            <HeaderStyle HorizontalAlign="Left" Width="20px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="Nombre" HeaderText="Remitente" ReadOnly="True"
+                                                            SortExpression="Nombre">
+                                                            <ControlStyle Width="100px" />
+                                                            <HeaderStyle Width="100px" />
+                                                            <ItemStyle Width="100px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="apellidos" HeaderText="Apellidos" ReadOnly="True"
+                                                            SortExpression="apellidos">
+                                                            <ControlStyle Width="100px" />
+                                                            <HeaderStyle Width="100px" Wrap="False" />
+                                                            <ItemStyle Width="100px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="empresa" HeaderText="Empresa" ReadOnly="True"
+                                                            SortExpression="empresa">
+                                                            <ControlStyle Width="20px" />
+                                                            <HeaderStyle Width="20px" />
+                                                            <ItemStyle Width="100px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="direccion" HeaderText="Direccion" ReadOnly="True"
+                                                            SortExpression="direccion">
+                                                            <ControlStyle Width="100px" />
+                                                            <HeaderStyle Width="100px" Wrap="False" />
+                                                            <ItemStyle Width="100px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="ciudad" HeaderText="Ciudad" ReadOnly="True"
+                                                            SortExpression="ciudad">
+                                                            <ControlStyle Width="100px" />
+                                                            <HeaderStyle Width="100px" />
+                                                            <ItemStyle Width="100px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="estadoprovincia" HeaderText="Estado"
+                                                            ReadOnly="True" SortExpression="estadoprovincia">
+                                                            <ControlStyle Width="20px" />
+                                                            <HeaderStyle Width="20px" />
+                                                            <ItemStyle Width="20px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="telefono" HeaderText="Telefono" ReadOnly="True"
+                                                            SortExpression="telefono">
+                                                            <ControlStyle Width="20px" />
+                                                            <HeaderStyle Width="20px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="email" HeaderText="Email" ReadOnly="True"
+                                                            SortExpression="email">
+                                                            <ControlStyle Width="50px" />
+                                                            <HeaderStyle Width="50px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="codigo_postal" HeaderText="CP"
+                                                            ReadOnly="True" SortExpression="codigo_postal">
+                                                            <ControlStyle Width="50px" />
+                                                            <HeaderStyle Width="50px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="pais" HeaderText="Pais" ReadOnly="True"
+                                                            SortExpression="pais">
+                                                            <ControlStyle Width="50px" />
+                                                            <HeaderStyle Width="50px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="rfc" HeaderText="RFC" ReadOnly="True"
+                                                            SortExpression="rfc">
+                                                            <ControlStyle Width="50px" />
+                                                            <HeaderStyle Width="50px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="colonia" HeaderText="Colonia" ReadOnly="True"
+                                                            SortExpression="colonia">
+                                                            <ControlStyle Width="50px" />
+                                                            <HeaderStyle Width="50px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                        <asp:BoundField DataField="municipio" HeaderText="Municipio" ReadOnly="True"
+                                                            SortExpression="municipio">
+                                                            <ControlStyle Width="50px" />
+                                                            <HeaderStyle Width="50px" />
+                                                            <ItemStyle Width="50px" Wrap="False" />
+                                                        </asp:BoundField>
+                                                    </Columns>
+                                                    <PagerStyle CssClass="pagination-ys"></PagerStyle>
+                                                    <RowStyle HorizontalAlign="Left" Width="720px" Wrap="False" />
+                                                    <SelectedRowStyle Width="720px" Wrap="False" />
+                                                    <HeaderStyle BackColor="" HorizontalAlign="Left" Width="720px"
+                                                        Wrap="True" />
+                                                </asp:GridView>
+                                                <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnCancel" runat="server" Text="Cancel" />
+                                            </asp:Panel>
                                             <asp:ModalPopupExtender ID="ModalPopupExtender2" runat="server"
                                                 TargetControlID="Button7" PopupControlID="Destinatario" BackgroundCssClass="modalBackground">
                                             </asp:ModalPopupExtender>
@@ -338,101 +463,201 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="3" style="height: 118px" valign="top">&nbsp;<asp:Panel ID="Panel3" runat="server" Wrap="False">
-                                            <table style="width: 443px; height: 51px;">
-                                                <tbody id="tblDest">
-                                                    <tr>
-                                                        <td style="width: 9px; text-align: left"><span style="font-size: 10pt"><strong>Pais</strong></span></td>
-                                                        <td style="text-align: left">
-                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownPais2" runat="server" Width="350px" DataSourceID="Paises2" DataValueField="id_pais" DataTextField="country_code" AutoPostBack="True"></asp:DropDownList></td>
-                                                    </tr>
-                                                    <tr style="font-weight: bold; font-size: 10pt">
-                                                        <td style="height: 3px">Nombre</td>
-                                                        <td style="height: 3px">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TxtNombre2" runat="server" MaxLength="30"
-                                                                Width="350px"></asp:TextBox>
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtApellidos2" runat="server" Visible="False" MaxLength="20" Width="1px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-weight: bold; font-size: 10pt">
-                                                        <td style="width: 9px; text-align: left">Empresa</td>
-                                                        <td style="text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmpresa2" runat="server" Width="350px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-weight: bold; font-size: 10pt">
-                                                        <td style="width: 9px; height: 20px; text-align: left">Dirección</td>
-                                                        <td style="height: 20px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtCalle2" runat="server" MaxLength="30" Width="350px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">CP</span></strong>
-                                                        </td>
-                                                        <td style="width: 320px; height: 27px; display: flex">
-                                                            <asp:TextBox OnTextChanged="TxtCP2_TextChanged" runat="server" AutoPostBack="true" CssClass="form-control" Height="27px" ID="TxtCP2" Width="130px"></asp:TextBox>
-                                                            <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnActualizar" runat="server" Text="Actualizar" Height="27px" Width="98px"></asp:Button>
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr style="font-weight: bold; font-size: 10pt">
-                                                        <td style="width: 9px; height: 20px; text-align: left">Colonia</td>
-                                                        <td style="font-size: 10pt; height: 20px; text-align: left; width: 322px;">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TxtCol2" runat="server" Width="350px"></asp:TextBox>
-                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownColonia" runat="server" Width="350px"
-                                                                DataValueField="id_asenta_cpcons" DataTextField="d_asenta" AutoPostBack="True">
-                                                            </asp:DropDownList>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-weight: bold; font-size: 10pt">
-                                                        <td style="width: 9px; height: 20px; text-align: left">Municipio</td>
-                                                        <td style="height: 20px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="TxtMpio2" runat="server" Width="350px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">Estado</span></strong></td>
-                                                        <td colspan="2" style="height: 16px; text-align: left">
-                                                            <asp:DropDownList CssClass="form-control" Height="30px" ID="txtEdo2" runat="server" DataSourceID="Estados2"
-                                                                DataTextField="estado" DataValueField="codigo" Width="180px" AutoPostBack="true">
-                                                            </asp:DropDownList>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td style="width: 9px; height: 11px; text-align: left"><strong><span style="font-size: 10pt">Ciudad</span></strong></td>
-                                                        <td style="height: 11px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad2" runat="server" Width="350px" Wrap="False"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">Teléfono</span></strong>
-                                                        </td>
-                                                        <td colspan="2" style="height: 16px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtTelefono2" runat="server" Width="130px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">Email</span></strong>
-                                                        </td>
-                                                        <td colspan="2" style="height: 16px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmail2" runat="server" Width="200px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>
-                                                    <tr style="font-size: 12pt">
-                                                        <td style="width: 302px; height: 16px; text-align: left">
-                                                            <strong><span style="font-size: 10pt">RFC</span></strong>
-                                                        </td>
-                                                        <td colspan="2" style="height: 16px; text-align: left">
-                                                            <asp:TextBox CssClass="form-control" Height="27px" ID="txtRFC" runat="server" Width="200px"></asp:TextBox>
-                                                        </td>
-                                                    </tr>                                                    
-                                                </tbody>
-                                            </table>
-                                        </asp:Panel>
+                                        <td colspan="3" style="height: 118px" valign="top" id="datosRemitente" runat="server">&nbsp;
+                                            <asp:Panel ID="Panel2" runat="server" Height="270px">
+                                                <table style="width: 445px; height: 51px;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="width: 302px; height: 20px; text-align: left"><span style="font-size: 10pt"><strong>Pais</strong></span></td>
+                                                            <td style="width: 1420px; height: 20px; text-align: left">
+                                                                <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownPais" runat="server" Width="193px" DataSourceID="Paises2" DataValueField="id_pais" DataTextField="nombre" Enabled="False" AutoPostBack="True"></asp:DropDownList></td>
+                                                            <td style="width: 1420px; height: 20px; text-align: left"></td>
+                                                        </tr>                                                        
+                                                        <tr style="font-weight: bold; font-size: 10pt">
+                                                            <td style="height: 3px">Nombre</td>
+                                                            <td style="height: 3px">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtNombre" runat="server" MaxLength="30"
+                                                                    Width="350px"></asp:TextBox>                                                                
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 10pt; font-weight: bold;">
+                                                            <td style="width: 302px; height: 19px; text-align: left">Empresa</td>
+                                                            <td style="height: 19px; text-align: left" colspan="2">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmpresa" runat="server" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 10pt; font-weight: bold;">
+                                                            <td style="width: 302px; height: 16px; text-align: left">Dirección</td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtCalle" runat="server" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">CP</span></strong>
+                                                            </td>
+                                                            <td style="width: 320px; height: 27px; display: flex">
+                                                                <asp:TextBox OnTextChanged="TxtCP_TextChanged" runat="server" AutoPostBack="true" CssClass="form-control" Height="27px" ID="TxtCP" Width="130px"></asp:TextBox>
+                                                                <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnActualizarCpRem" runat="server" Text="Actualizar" Height="27px" Width="98px"></asp:Button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt; height: 30px !important">
+                                                            <td style="width: 302px; height: 24px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Colonia</span></strong></td>
+                                                            <td colspan="2" style="height: 24px; text-align: left; display: flex">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TxtCol" runat="server" Width="350px"></asp:TextBox>
+                                                                <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownColoniaRem" runat="server" Width="350px"
+                                                                    DataValueField="id_asenta_cpcons" DataTextField="d_asenta" AutoPostBack="True">
+                                                                </asp:DropDownList>
+                                                            </td>
+                                                        </tr>                                                       
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Municipio</span></strong></td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TxtMpio" runat="server" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Estado</span></strong></td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:DropDownList CssClass="form-control" Height="30px" ID="txtEdo" runat="server" DataSourceID="Estados"
+                                                                    DataTextField="estado" DataValueField="codigo" Width="180px">
+                                                                </asp:DropDownList>
+                                                            </td>
+                                                        </tr>        
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Ciudad</span></strong></td>
+                                                            <td style="height: 16px; text-align: left" colspan="2">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad" runat="server" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>                                                                                                        
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Teléfono</span></strong>
+                                                            </td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtTelefono" runat="server" Width="130px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Email</span></strong>
+                                                            </td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmail" runat="server" Width="200px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">RFC</span></strong>
+                                                            </td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtRemRfc" runat="server" Width="200px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                &nbsp;
+                                            </asp:Panel>
+                                        </td>
+                                        <td colspan="3" style="height: 118px" valign="top">&nbsp;
+                                            <asp:Panel ID="Panel3" runat="server" Wrap="False">
+                                                <table style="width: 443px; height: 51px;">
+                                                    <tbody id="tblDest">
+                                                        <tr>
+                                                            <td style="width: 9px; text-align: left"><span style="font-size: 10pt"><strong>Pais</strong></span></td>
+                                                            <td style="text-align: left">
+                                                                <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownPais2" runat="server" Width="350px" DataSourceID="Paises2" DataValueField="id_pais" DataTextField="country_code" AutoPostBack="True"></asp:DropDownList></td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold; font-size: 10pt">
+                                                            <td style="height: 3px">Nombre</td>
+                                                            <td style="height: 3px">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TxtNombre2" runat="server" MaxLength="30"
+                                                                    Width="350px"></asp:TextBox>
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtApellidos2" runat="server" Visible="False" MaxLength="20" Width="1px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold; font-size: 10pt">
+                                                            <td style="width: 9px; text-align: left">Empresa</td>
+                                                            <td style="text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmpresa2" runat="server" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold; font-size: 10pt">
+                                                            <td style="width: 9px; height: 20px; text-align: left">Dirección</td>
+                                                            <td style="height: 20px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtCalle2" runat="server" MaxLength="30" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">CP</span></strong>
+                                                            </td>
+                                                            <td style="width: 320px; height: 27px; display: flex">
+                                                                <asp:TextBox OnTextChanged="TxtCP2_TextChanged" runat="server" AutoPostBack="true" CssClass="form-control" Height="27px" ID="TxtCP2" Width="130px"></asp:TextBox>
+                                                                <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnActualizar" runat="server" Text="Actualizar" Height="27px" Width="98px"></asp:Button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold; font-size: 10pt">
+                                                            <td style="width: 9px; height: 20px; text-align: left">Colonia</td>
+                                                            <td style="font-size: 10pt; height: 20px; text-align: left; width: 322px;">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TxtCol2" runat="server" Width="350px"></asp:TextBox>
+                                                                <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownColonia" runat="server" Width="350px"
+                                                                    DataValueField="id_asenta_cpcons" DataTextField="d_asenta" AutoPostBack="True">
+                                                                </asp:DropDownList>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-weight: bold; font-size: 10pt">
+                                                            <td style="width: 9px; height: 20px; text-align: left">Municipio</td>
+                                                            <td style="height: 20px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="TxtMpio2" runat="server" Width="350px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Estado</span></strong></td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:DropDownList CssClass="form-control" Height="30px" ID="txtEdo2" runat="server" DataSourceID="Estados2"
+                                                                    DataTextField="estado" DataValueField="codigo" Width="180px" AutoPostBack="true">
+                                                                </asp:DropDownList>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="width: 9px; height: 11px; text-align: left"><strong><span style="font-size: 10pt">Ciudad</span></strong></td>
+                                                            <td style="height: 11px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtCiudad2" runat="server" Width="350px" Wrap="False"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Teléfono</span></strong>
+                                                            </td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtTelefono2" runat="server" Width="130px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">Email</span></strong>
+                                                            </td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtEmail2" runat="server" Width="200px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                        <tr style="font-size: 12pt">
+                                                            <td style="width: 302px; height: 16px; text-align: left">
+                                                                <strong><span style="font-size: 10pt">RFC</span></strong>
+                                                            </td>
+                                                            <td colspan="2" style="height: 16px; text-align: left">
+                                                                <asp:TextBox CssClass="form-control" Height="27px" ID="txtRFC" runat="server" Width="200px"></asp:TextBox>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </asp:Panel>
                                             <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="Button5" runat="server" Height="23px" OnClick="Button5_Click" Text="ValidarDomicilio"
                                                 Width="164px" Visible="False" />
                                         </td>
@@ -447,13 +672,13 @@
                                                 Style="text-align: left; background-color: white; height: auto; padding-bottom: 15px">
                                                 <asp:Label ID="lblOcurre" runat="server" Width="452px" Height="27px" Style="margin-left: 15px; margin-top: 15px; color: red; font-weight: bold">Ocurre Forzoso</asp:Label>
                                                 <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DraftLogistic:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brCosto" runat="server" />
-                                                <asp:RadioButton ID="rbTerrestre" GroupName="myg" Text=" Terrestre:" Style="margin-left: 15px" runat="server" /><br id="brTerrestre"  runat="server"/>
-                                                <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brDiaSiguiente"  runat="server"/>
-                                                <asp:RadioButton ID="rbLtl" GroupName="myg" Text=" Tarimas:" Style="margin-left: 15px" runat="server" /><br id="brLtl" runat="server"/>
-                                                <asp:RadioButton ID="rbFedexExpress" GroupName="myg" Text=" Fedex Express Saver:" Style="margin-left: 15px" runat="server" /><br id="brFedexExpress"  runat="server"/>
-                                                <asp:RadioButton ID="rbFedexStandard" GroupName="myg" Text=" Fedex Standar Overnight:" Style="margin-left: 15px" runat="server" /><br id="brFedexStandard"  runat="server"/>
-                                                <asp:RadioButton ID="rbPaqueteExpressEconomic" GroupName="myg" Text=" Paquete Express Economico:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressEconomic"  runat="server"/>
-                                                <asp:RadioButton ID="rbPaqueteExpressNextDay" GroupName="myg" Text=" Paquete Express Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressNextDay"  runat="server"/>
+                                                <asp:RadioButton ID="rbTerrestre" GroupName="myg" Text=" Terrestre:" Style="margin-left: 15px" runat="server" /><br id="brTerrestre" runat="server" />
+                                                <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brDiaSiguiente" runat="server" />
+                                                <asp:RadioButton ID="rbLtl" GroupName="myg" Text=" Tarimas:" Style="margin-left: 15px" runat="server" /><br id="brLtl" runat="server" />
+                                                <asp:RadioButton ID="rbFedexExpress" GroupName="myg" Text=" Fedex Express Saver:" Style="margin-left: 15px" runat="server" /><br id="brFedexExpress" runat="server" />
+                                                <asp:RadioButton ID="rbFedexStandard" GroupName="myg" Text=" Fedex Standar Overnight:" Style="margin-left: 15px" runat="server" /><br id="brFedexStandard" runat="server" />
+                                                <asp:RadioButton ID="rbPaqueteExpressEconomic" GroupName="myg" Text=" Paquete Express Economico:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressEconomic" runat="server" />
+                                                <asp:RadioButton ID="rbPaqueteExpressNextDay" GroupName="myg" Text=" Paquete Express Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressNextDay" runat="server" />
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAceptar" Style="margin-left: 15px" OnClientClick="this.disabled=true;" UseSubmitBehavior="false" runat="server" Text="Guardar Envío" Width="118px"></asp:Button>
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" Style="margin-left: 10px" ID="btnCancelar" runat="server" Text="Cancelar" Width="118px"></asp:Button>
                                             </asp:Panel>
@@ -517,6 +742,13 @@
                                     <asp:Parameter DefaultValue="2" Name="id_moneda" Type="Int32" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
+                            <asp:SqlDataSource ID="Clientes" runat="server" SelectCommandType="StoredProcedure" SelectCommand="sp_busca_clientes_2" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="TextBox1" DefaultValue="" Name="Customer" PropertyName="Text" Type="String" />
+                                    <asp:ControlParameter ControlID="DropDownPais" DefaultValue="" Name="id_pais" PropertyName="SelectedValue" Type="Int32" />
+                                    <asp:ControlParameter ControlID="DropDownAgentes" DefaultValue="" Name="id_agencia" PropertyName="SelectedValue" Type="Int32" />
+                                </SelectParameters>
+                            </asp:SqlDataSource>
                             <asp:SqlDataSource ID="Destinatarios" runat="server" SelectCommandType="StoredProcedure" SelectCommand="sp_busca_destinatarios2" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>">
                                 <SelectParameters>
                                     <asp:ControlParameter ControlID="TxtBuscaDest" DefaultValue="" Name="Destinatario" PropertyName="Text" Type="String" />
@@ -527,6 +759,13 @@
                             <asp:SqlDataSource ID="Paises2" runat="server" SelectCommandType="StoredProcedure" SelectCommand="sp_SelectPaises" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>">
                                 <SelectParameters>
                                     <%-- <asp:Parameter Name="id_pais" Type="Int32"></asp:Parameter>--%>
+                                </SelectParameters>
+                            </asp:SqlDataSource>
+                            <asp:SqlDataSource ID="Estados" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
+                                SelectCommand="sp_SelectEstados" SelectCommandType="StoredProcedure">
+                                <SelectParameters>
+                                    <asp:ControlParameter ControlID="DropDownPais" Name="id_pais" PropertyName="SelectedValue"
+                                        Type="Int32" />
                                 </SelectParameters>
                             </asp:SqlDataSource>
                             <asp:SqlDataSource ID="LibroDirecciones" runat="server" SelectCommandType="StoredProcedure" SelectCommand="sp_select_libro_direcciones" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>">
@@ -547,7 +786,7 @@
                                     <asp:ControlParameter ControlID="DropDownPais2" Name="id_pais" PropertyName="SelectedValue"
                                         Type="Int32" />
                                 </SelectParameters>
-                            </asp:SqlDataSource>                            
+                            </asp:SqlDataSource>
                             <asp:SqlDataSource ID="SqlColonias" runat="server" ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>"
                                 SelectCommand="sp_SelectColonias" SelectCommandType="StoredProcedure">
                                 <SelectParameters>
