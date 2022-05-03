@@ -360,6 +360,9 @@ Public Class seguimiento_envios
                 estafetaPrecios.PaqueteExpressEconomic = reader.GetValue(13)
                 estafetaPrecios.PaqueteExpressNextDay = reader.GetValue(14)
                 estafetaPrecios.UserAccountPe = reader.GetValue(15)
+                estafetaPrecios.AmountGombarExpress = reader.GetValue(16)
+                estafetaPrecios.AmountGombarTarima = reader.GetValue(17)
+                estafetaPrecios.AmountGombarNacional = reader.GetValue(18)
             End If
             connection.Close()
 

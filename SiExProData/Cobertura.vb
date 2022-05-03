@@ -29,5 +29,9 @@ Partial Public Class Cobertura
     Public Property garantia_maxima As String
     Public Property ciudad As String
     Public Property siglas_plaza_tarimas As String
+    Public Property area_extendida As Nullable(Of Integer)
+    Public Property DL_Paqueteria As Nullable(Of Integer)
+    Public Property DL_Express As Nullable(Of Integer)
+    Public Property DL_Tarimas As Nullable(Of Integer)
 
 End Class

@@ -17,6 +17,9 @@ Public Class EstafetaPrecio
     Public Property PaqueteExpressEconomic() As Decimal
     Public Property PaqueteExpressNextDay() As Decimal
     Public Property UserAccountPe() As Integer
+    Public Property AmountGombarExpress() As Decimal
+    Public Property AmountGombarTarima() As Decimal
+    Public Property AmountGombarNacional() As Decimal
 End Class
 
 Public Class EstafetaTarimas

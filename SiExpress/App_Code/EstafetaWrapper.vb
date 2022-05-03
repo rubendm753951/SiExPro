@@ -3,9 +3,9 @@ Imports Estafeta
 Imports System.Net
 
 Public Class EstafetaWrapper
-    Public Const TERRESTRE = "Terrestre"
-    Public Const DIA_SIGUIENTE = "Dia Sig."
-    Public Const LTL = "LTL"
+    Public Const TERRESTRE = "terrestre"
+    Public Const DIA_SIGUIENTE = "dia sig."
+    Public Const LTL = "ltl"
 
     Public Function FrecuenciaCotizadorSingle(envioExportar As FrecuenciaCotizadorExport, estafetaPrecios As EstafetaPrecio) As FrecuenciaCotizadorRespuesta
         Dim estafetaService As New Frecuenciacotizador.Service()
@@ -64,7 +64,7 @@ Public Class EstafetaWrapper
 
             If respuestaFrecuenciaCotizador.Length > 0 Then
                 If respuestaFrecuenciaCotizador(0).MensajeError = "" Then
-                    tipoServicios = respuestaFrecuenciaCotizador(0).TipoServicio.Where(Function(x) x.DescripcionServicio = LTL).ToList()
+                    tipoServicios = respuestaFrecuenciaCotizador(0).TipoServicio.Where(Function(x) x.DescripcionServicio.ToLower = LTL).ToList()
                 End If
             End If
         End If
@@ -112,7 +112,7 @@ Public Class EstafetaWrapper
 
             If respuestaFrecuenciaCotizador.Length > 0 Then
                 If respuestaFrecuenciaCotizador(0).MensajeError = "" Then
-                    Dim ts = respuestaFrecuenciaCotizador(0).TipoServicio.Where(Function(x) x.DescripcionServicio = TERRESTRE Or x.DescripcionServicio = DIA_SIGUIENTE).ToList()
+                    Dim ts = respuestaFrecuenciaCotizador(0).TipoServicio.Where(Function(x) x.DescripcionServicio.ToLower = TERRESTRE Or x.DescripcionServicio.ToLower = DIA_SIGUIENTE).ToList()
                     If tipoServicios IsNot Nothing Then
                         tipoServicios.AddRange(ts)
                     Else
@@ -194,12 +194,12 @@ Public Class EstafetaWrapper
         If cuenta = 3 Then
             serviceTypeId = ConfigurationManager.AppSettings("Estafeta.Cuenta3.ServiceType")
         End If
-        If tipoServicio.DescripcionServicio = "Dia Sig." Then
+        If tipoServicio.DescripcionServicio.ToLower = DIA_SIGUIENTE Then
             serviceTypeId = "60"
             '   paperType = 1
         End If
 
-        If tipoServicio.DescripcionServicio = "LTL" Then
+        If tipoServicio.DescripcionServicio.ToLower = LTL Then
             serviceTypeId = "L0"
         End If
 

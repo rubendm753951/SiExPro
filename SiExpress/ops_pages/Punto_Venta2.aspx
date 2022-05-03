@@ -671,7 +671,7 @@
                                             <asp:Panel ID="checkoutPanel" runat="server" Width="400px"
                                                 Style="text-align: left; background-color: white; height: auto; padding-bottom: 15px">
                                                 <asp:Label ID="lblOcurre" runat="server" Width="452px" Height="27px" Style="margin-left: 15px; margin-top: 15px; color: red; font-weight: bold">Ocurre Forzoso</asp:Label>
-                                                <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DraftLogistic:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brCosto" runat="server" />
+                                                <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DL Paqueteria:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brCosto" runat="server" />
                                                 <asp:RadioButton ID="rbTerrestre" GroupName="myg" Text=" Terrestre:" Style="margin-left: 15px" runat="server" /><br id="brTerrestre" runat="server" />
                                                 <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brDiaSiguiente" runat="server" />
                                                 <asp:RadioButton ID="rbLtl" GroupName="myg" Text=" Tarimas:" Style="margin-left: 15px" runat="server" /><br id="brLtl" runat="server" />
@@ -679,6 +679,9 @@
                                                 <asp:RadioButton ID="rbFedexStandard" GroupName="myg" Text=" Fedex Standar Overnight:" Style="margin-left: 15px" runat="server" /><br id="brFedexStandard" runat="server" />
                                                 <asp:RadioButton ID="rbPaqueteExpressEconomic" GroupName="myg" Text=" Paquete Express Economico:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressEconomic" runat="server" />
                                                 <asp:RadioButton ID="rbPaqueteExpressNextDay" GroupName="myg" Text=" Paquete Express Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressNextDay" runat="server" />
+                                                <asp:RadioButton ID="rbGombarExpress" GroupName="myg" Text=" DL Express:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarExpress" runat="server" />
+                                                <asp:RadioButton ID="rbGombarTarima" GroupName="myg" Text=" DL Tarimas:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarTarima" runat="server" />
+                                                <asp:RadioButton ID="rbGombarNacional" GroupName="myg" Text=" DL Paqueteria Nacional:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarNacional" runat="server" />
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAceptar" Style="margin-left: 15px" OnClientClick="this.disabled=true;" UseSubmitBehavior="false" runat="server" Text="Guardar Envío" Width="118px"></asp:Button>
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" Style="margin-left: 10px" ID="btnCancelar" runat="server" Text="Cancelar" Width="118px"></asp:Button>
                                             </asp:Panel>

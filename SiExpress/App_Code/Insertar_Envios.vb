@@ -4,6 +4,8 @@ Imports ObjDestinatario, ObjCliente, ObjEnvio
 Imports System.Data.SqlClient
 Imports System.Data.OleDb
 Imports System
+Imports System.Drawing
+Imports System.Drawing.Imaging
 
 Public Class Insertar_Envios
     Inherits System.Web.UI.Page
@@ -594,6 +596,16 @@ Public Class Insertar_Envios
 
     End Function
     Sub Detalle_Envios(ByVal id_envio As Integer, ByVal datos_envio As ObjEnvio, id_contenido As Integer, observaciones As String, codigoSat As String)
+
+        Dim barcodeBm As Bitmap = Nothing
+        barcodeBm = DaspackDALC.codigo128("A" + id_envio.ToString + "B", False, 20)
+        Dim bitmapBytes As Byte()
+
+        Using stream As New System.IO.MemoryStream
+            barcodeBm.Save(stream, ImageFormat.Png)
+            bitmapBytes = stream.GetBuffer()
+        End Using
+
         Dim MyConnection As ConnectionStringSettings
         MyConnection = ConfigurationManager.ConnectionStrings("paqueteriaDB_ConnectionString")
         Dim connection As Data.Common.DbConnection = New Data.SqlClient.SqlConnection()
@@ -633,6 +645,11 @@ Public Class Insertar_Envios
         parm6.Value = codigoSat
         cmd.Parameters.Add(parm6)
 
+        Dim parm7 As Data.Common.DbParameter = cmd.CreateParameter()
+        parm7.ParameterName = "@codigoBarras"
+        parm7.Value = bitmapBytes
+        cmd.Parameters.Add(parm7)
+
         connection.Open()
         cmd.ExecuteNonQuery()
         connection.Close()
@@ -671,8 +688,8 @@ Public Class Insertar_Envios
             Return "Seleccione un gente"
         ElseIf datos_envio.id_tarifa_agencia = 0 Or datos_envio.id_tarifa_agencia Is Nothing Then
             Return "EL producto es inválido"
-        'ElseIf datos_envio.precio = 0 And Not esAgenteCod Then
-        '    Return "La tarifa es incorrecta, seleccione un subprodcuto"
+            'ElseIf datos_envio.precio = 0 And Not esAgenteCod Then
+            '    Return "La tarifa es incorrecta, seleccione un subprodcuto"
         ElseIf datos_envio.largo Is Nothing Or datos_envio.ancho Is Nothing _
             Or datos_envio.alto Is Nothing Or datos_envio.peso Is Nothing Then
             Return "Las dimensiones del paquete son incorrectas"

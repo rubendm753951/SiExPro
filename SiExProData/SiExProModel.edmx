@@ -169,6 +169,10 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="garantia_maxima" Type="nvarchar" MaxLength="50" />
           <Property Name="ciudad" Type="nvarchar" MaxLength="90" />
           <Property Name="siglas_plaza_tarimas" Type="varchar" MaxLength="10" />
+          <Property Name="area_extendida" Type="int" />
+          <Property Name="DL_Paqueteria" Type="int" />
+          <Property Name="DL_Express" Type="int" />
+          <Property Name="DL_Tarimas" Type="int" />
         </EntityType>
         <EntityType Name="D_CODIGOS_SERVICIOS_SAT">
           <Key>
@@ -233,6 +237,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="fecha_entrega" Type="datetime" />
           <Property Name="id_proveedor" Type="int" />
           <Property Name="codigoSat" Type="varchar" MaxLength="50" />
+          <Property Name="codigo_barras" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="D_ENVIOS_PE_TIPO_PAQUETES">
           <Key>
@@ -573,6 +578,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="fecha_entrega" Type="DateTime" Precision="3" />
           <Property Name="id_proveedor" Type="Int32" />
           <Property Name="codigoSat" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_barras" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="C_CLIENTES_D_ENVIOS_DATOS_fk">
           <End Role="C_CLIENTES" Type="MasupackModel.Cliente" Multiplicity="1" />
@@ -802,6 +808,10 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="garantia_maxima" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ciudad" Type="String" MaxLength="90" FixedLength="false" Unicode="true" />
           <Property Name="siglas_plaza_tarimas" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="area_extendida" Type="Int32" />
+          <Property Name="DL_Paqueteria" Type="Int32" />
+          <Property Name="DL_Express" Type="Int32" />
+          <Property Name="DL_Tarimas" Type="Int32" />
         </EntityType>
         <EntityType Name="EstafetaRequestResponse">
           <Key>
@@ -997,6 +1007,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="D_ENVIOS_DATOS">
             <EntityTypeMapping TypeName="MasupackModel.EnvioDatos">
               <MappingFragment StoreEntitySet="D_ENVIOS_DATOS">
+                <ScalarProperty Name="codigo_barras" ColumnName="codigo_barras" />
                 <ScalarProperty Name="codigoSat" ColumnName="codigoSat" />
                 <ScalarProperty Name="id_proveedor" ColumnName="id_proveedor" />
                 <ScalarProperty Name="fecha_entrega" ColumnName="fecha_entrega" />
@@ -1141,6 +1152,10 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySetMapping Name="D_COBERTURAS">
             <EntityTypeMapping TypeName="MasupackModel.Cobertura">
               <MappingFragment StoreEntitySet="D_COBERTURA">
+                <ScalarProperty Name="DL_Tarimas" ColumnName="DL_Tarimas" />
+                <ScalarProperty Name="DL_Express" ColumnName="DL_Express" />
+                <ScalarProperty Name="DL_Paqueteria" ColumnName="DL_Paqueteria" />
+                <ScalarProperty Name="area_extendida" ColumnName="area_extendida" />
                 <ScalarProperty Name="siglas_plaza_tarimas" ColumnName="siglas_plaza_tarimas" />
                 <ScalarProperty Name="ciudad" ColumnName="ciudad" />
                 <ScalarProperty Name="garantia_maxima" ColumnName="garantia_maxima" />

@@ -79,7 +79,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="sp_Select_Datos_Envio_MultTableAdapter" GeneratorDataComponentClassName="sp_Select_Datos_Envio_MultTableAdapter" Name="sp_Select_Datos_Envio_Mult" UserDataComponentName="sp_Select_Datos_Envio_MultTableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="paqueteriaDB_ConnectionString (Web.config)" DbObjectName="Masupack.dbo.sp_Select_Datos_Envio_Mult" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="paqueteriaDB_ConnectionString (Web.config)" DbObjectName="Gombar.dbo.sp_Select_Datos_Envio_Mult" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.sp_Select_Datos_Envio_Mult</CommandText>
@@ -145,6 +145,7 @@
               <Mapping SourceColumn="inst_entrega" DataSetColumn="inst_entrega" />
               <Mapping SourceColumn="contenedores" DataSetColumn="contenedores1" />
               <Mapping SourceColumn="IATA" DataSetColumn="IATA" />
+              <Mapping SourceColumn="codigo_barras" DataSetColumn="codigo_barras" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -200,7 +201,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="sp_Select_Datos_Envio_Mult2TableAdapter" GeneratorDataComponentClassName="sp_Select_Datos_Envio_Mult2TableAdapter" Name="sp_Select_Datos_Envio_Mult2" UserDataComponentName="sp_Select_Datos_Envio_Mult2TableAdapter">
             <MainSource>
-              <DbSource ConnectionRef="paqueteriaDB_ConnectionString (Web.config)" DbObjectName="Masupack.dbo.sp_Select_Datos_Envio_Mult2" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="paqueteriaDB_ConnectionString (Web.config)" DbObjectName="Gombar.dbo.sp_Select_Datos_Envio_Mult2" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.sp_Select_Datos_Envio_Mult2</CommandText>
@@ -266,6 +267,7 @@
               <Mapping SourceColumn="mpio_dest" DataSetColumn="mpio_dest" />
               <Mapping SourceColumn="inst_entrega" DataSetColumn="inst_entrega" />
               <Mapping SourceColumn="IATA" DataSetColumn="IATA" />
+              <Mapping SourceColumn="codigo_barras" DataSetColumn="codigo_barras" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -810,10 +812,11 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="codigo_barras" msprop:Generator_ColumnVarNameInTable="columncodigo_barras" msprop:Generator_ColumnPropNameInRow="codigo_barras" msprop:Generator_ColumnPropNameInTable="codigo_barrasColumn" msprop:Generator_UserColumnName="codigo_barras" type="xs:base64Binary" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="sp_Select_Datos_Envio_iata" msprop:Generator_TableClassName="sp_Select_Datos_Envio_iataDataTable" msprop:Generator_TableVarName="tablesp_Select_Datos_Envio_iata" msprop:Generator_RowChangedName="sp_Select_Datos_Envio_iataRowChanged" msprop:Generator_TablePropName="sp_Select_Datos_Envio_iata" msprop:Generator_RowDeletingName="sp_Select_Datos_Envio_iataRowDeleting" msprop:Generator_RowChangingName="sp_Select_Datos_Envio_iataRowChanging" msprop:Generator_RowEvHandlerName="sp_Select_Datos_Envio_iataRowChangeEventHandler" msprop:Generator_RowDeletedName="sp_Select_Datos_Envio_iataRowDeleted" msprop:Generator_RowClassName="sp_Select_Datos_Envio_iataRow" msprop:Generator_UserTableName="sp_Select_Datos_Envio_iata" msprop:Generator_RowEvArgName="sp_Select_Datos_Envio_iataRowChangeEvent">
+        <xs:element name="sp_Select_Datos_Envio_iata" msprop:Generator_TableClassName="sp_Select_Datos_Envio_iataDataTable" msprop:Generator_TableVarName="tablesp_Select_Datos_Envio_iata" msprop:Generator_TablePropName="sp_Select_Datos_Envio_iata" msprop:Generator_RowDeletingName="sp_Select_Datos_Envio_iataRowDeleting" msprop:Generator_RowChangingName="sp_Select_Datos_Envio_iataRowChanging" msprop:Generator_RowEvHandlerName="sp_Select_Datos_Envio_iataRowChangeEventHandler" msprop:Generator_RowDeletedName="sp_Select_Datos_Envio_iataRowDeleted" msprop:Generator_UserTableName="sp_Select_Datos_Envio_iata" msprop:Generator_RowChangedName="sp_Select_Datos_Envio_iataRowChanged" msprop:Generator_RowEvArgName="sp_Select_Datos_Envio_iataRowChangeEvent" msprop:Generator_RowClassName="sp_Select_Datos_Envio_iataRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id_envio" msprop:Generator_ColumnVarNameInTable="columnid_envio" msprop:Generator_ColumnPropNameInRow="id_envio" msprop:Generator_ColumnPropNameInTable="id_envioColumn" msprop:Generator_UserColumnName="id_envio" type="xs:int" />
@@ -946,7 +949,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="sp_Select_Datos_Envio_Mult2" msprop:Generator_TableClassName="sp_Select_Datos_Envio_Mult2DataTable" msprop:Generator_TableVarName="tablesp_Select_Datos_Envio_Mult2" msprop:Generator_TablePropName="sp_Select_Datos_Envio_Mult2" msprop:Generator_RowDeletingName="sp_Select_Datos_Envio_Mult2RowDeleting" msprop:Generator_RowChangingName="sp_Select_Datos_Envio_Mult2RowChanging" msprop:Generator_RowEvHandlerName="sp_Select_Datos_Envio_Mult2RowChangeEventHandler" msprop:Generator_RowDeletedName="sp_Select_Datos_Envio_Mult2RowDeleted" msprop:Generator_UserTableName="sp_Select_Datos_Envio_Mult2" msprop:Generator_RowChangedName="sp_Select_Datos_Envio_Mult2RowChanged" msprop:Generator_RowEvArgName="sp_Select_Datos_Envio_Mult2RowChangeEvent" msprop:Generator_RowClassName="sp_Select_Datos_Envio_Mult2Row">
+        <xs:element name="sp_Select_Datos_Envio_Mult2" msprop:Generator_TableClassName="sp_Select_Datos_Envio_Mult2DataTable" msprop:Generator_TableVarName="tablesp_Select_Datos_Envio_Mult2" msprop:Generator_RowChangedName="sp_Select_Datos_Envio_Mult2RowChanged" msprop:Generator_TablePropName="sp_Select_Datos_Envio_Mult2" msprop:Generator_RowDeletingName="sp_Select_Datos_Envio_Mult2RowDeleting" msprop:Generator_RowChangingName="sp_Select_Datos_Envio_Mult2RowChanging" msprop:Generator_RowEvHandlerName="sp_Select_Datos_Envio_Mult2RowChangeEventHandler" msprop:Generator_RowDeletedName="sp_Select_Datos_Envio_Mult2RowDeleted" msprop:Generator_RowClassName="sp_Select_Datos_Envio_Mult2Row" msprop:Generator_UserTableName="sp_Select_Datos_Envio_Mult2" msprop:Generator_RowEvArgName="sp_Select_Datos_Envio_Mult2RowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="id_envio" msprop:Generator_ColumnVarNameInTable="columnid_envio" msprop:Generator_ColumnPropNameInRow="id_envio" msprop:Generator_ColumnPropNameInTable="id_envioColumn" msprop:Generator_UserColumnName="id_envio" type="xs:int" />
@@ -1216,6 +1219,7 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
+              <xs:element name="codigo_barras" msprop:Generator_ColumnVarNameInTable="columncodigo_barras" msprop:Generator_ColumnPropNameInRow="codigo_barras" msprop:Generator_ColumnPropNameInTable="codigo_barrasColumn" msprop:Generator_UserColumnName="codigo_barras" type="xs:base64Binary" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>
