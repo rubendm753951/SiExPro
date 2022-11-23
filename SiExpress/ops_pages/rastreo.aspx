@@ -2,6 +2,13 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
+    <style>    
+            .imgClass     
+            {    
+                max-width: 80px !important;
+            }                   
+            
+        </style>
 <Div style="position: absolute; top: 92px; left: 222px; height: 602px; width: 599px;">
 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
 <ContentTemplate>
@@ -38,7 +45,7 @@
         <td>
             <asp:TextBox CssClass="form-control" Height="52px"   ID="TextBox1" runat="server" BorderStyle="Solid" 
                 style="font-weight: 700" TextMode="MultiLine" Visible="False" Width="604px"></asp:TextBox>
-            <asp:GridView class="table table-striped table-bordered table-hover"  ID="GridView1" runat="server" AllowPaging="True" 
+            <asp:GridView class="table table-striped table-bordered table-hover"  ID="GridView1" runat="server" AllowPaging="True"  OnRowDataBound="OnRowDataBound"
                 AutoGenerateColumns="False" BackColor="White" BorderColor="#336666" 
                 BorderStyle="Double" BorderWidth="3px" CellPadding="4" 
                 DataSourceID="SummaryTracking" GridLines="Horizontal" style="font-size: small" 
@@ -60,6 +67,11 @@
                         ReadOnly="True" SortExpression="observaciones">
                         <ItemStyle Width="400px" />
                     </asp:BoundField>
+                    <asp:TemplateField HeaderText="Image" ItemStyle-Width="100px">
+                        <ItemTemplate>
+                            <asp:Image ID="Image1" runat="server" CssClass="imgClass" onclick = "clickImage(this);"/>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                 </Columns> <PagerStyle CssClass="pagination-ys"></PagerStyle>
                 <FooterStyle BackColor="White" ForeColor="#333333" />
                 <PagerStyle BackColor="#336666" ForeColor="White" HorizontalAlign="Center" />
@@ -85,7 +97,7 @@
                         <ItemStyle Width="100px" />
                     </asp:BoundField>
                     <asp:BoundField DataField="obs" HeaderText="Observaciones" ReadOnly="True" 
-                        SortExpression="obs" />
+                        SortExpression="obs" />                    
                 </Columns> <PagerStyle CssClass="pagination-ys"></PagerStyle>
                 <FooterStyle BackColor="White" ForeColor="#333333" />
                 <PagerStyle BackColor="#336666" ForeColor="White" HorizontalAlign="Center" />
@@ -115,6 +127,8 @@
             </asp:GridView>        
       </tr>
     </table>
+    <div id="dialog" style="display: none">
+</div>
         <asp:SqlDataSource ID="SummaryTracking" runat="server" 
         ConnectionString="<%$ ConnectionStrings:paqueteriaDB_ConnectionString %>" 
         SelectCommand="sp_select_sumary_tracking" SelectCommandType="StoredProcedure">
@@ -152,4 +166,27 @@
 </asp:UpdatePanel>   
 </div>
 </asp:Content>
+<asp:Content ContentPlaceHolderID="ScriptSection" runat="server">
+    
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/themes/start/jquery-ui.css" />
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui.min.js"></script>    
+    <script language="javascript" type="text/javascript">
+        function clickImage(objRef) {
+             $("#dialog").dialog({
+            autoOpen: false,
+            modal: true,
+            height: 600,
+            width: 600,
+            title: "Zoom"
+             });
+
+            console.log(objRef.src)
+            $('#dialog').html('');
+            $('#dialog').append($(objRef).clone().removeClass( "imgClass"));
+            $('#dialog').dialog('open');
+        }       
+    </script>    
+</asp:Content>
+
 

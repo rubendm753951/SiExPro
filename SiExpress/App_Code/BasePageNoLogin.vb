@@ -13,29 +13,25 @@ Public MustInherit Class BasePageNoLogin
     Private Sub BasePage_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         Dim empresa As Empresa
-        If Session("empresa") IsNot Nothing Then
-            Dim logoImage As Image = CType(Master.FindControl("Image1"), Image)
+        Dim logoImage As Image = CType(Master.FindControl("Image1"), Image)
             logoImage.Height = 280
             logoImage.Width = 70
-            Try
-                empresa = CType(Session("empresa"), Empresa)
+        Try
+            empresa = DaspackDALC.GetUsuarioEmpresa(1)
 
-                If empresa.logo IsNot Nothing Then
-                    LogoImageBase = empresa.logo
-                    Dim base64String As String = Convert.ToBase64String(empresa.logo, 0, empresa.logo.Length)
+            If empresa.logo IsNot Nothing Then
+                LogoImageBase = empresa.logo
+                Dim base64String As String = Convert.ToBase64String(empresa.logo, 0, empresa.logo.Length)
 
-                    logoImage.ImageUrl = "data:image/jpeg;base64," + base64String
-                    logoImage.Height = empresa.alto
-                    logoImage.Width = empresa.ancho
-                Else
-                    logoImage.ImageUrl = "~/Images/451logoUnavailable.png"
-                End If
-            Catch ex As Exception
+                logoImage.ImageUrl = "data:image/jpeg;base64," + base64String
+                logoImage.Height = empresa.alto
+                logoImage.Width = empresa.ancho
+            Else
                 logoImage.ImageUrl = "~/Images/451logoUnavailable.png"
-            End Try
-        Else
-            Response.Redirect("~/no_access.aspx")
-        End If
+            End If
+        Catch ex As Exception
+            logoImage.ImageUrl = "~/Images/451logoUnavailable.png"
+        End Try
     End Sub
 
     Public Shared Function IsUserLogged() As Integer

@@ -38,5 +38,6 @@
             <br />
         </div>
     </form>
+    <asp:ContentPlaceHolder ID="ScriptSection" runat="server" />
 </body>
 </html>

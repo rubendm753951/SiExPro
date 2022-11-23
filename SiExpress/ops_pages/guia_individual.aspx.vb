@@ -35,6 +35,21 @@ Partial Class ops_pages_guia_individual
             reader.Read()
             archivo = reader.GetValue(0)
         End If
+
+        connection.Close()
+
+        cmd = connection.CreateCommand()
+        cmd.CommandType = Data.CommandType.Text
+        connection.Open()
+        If logoImageBase Is Nothing Then
+            cmd.CommandText = "select top 1 logo from C_Empresas Where Nombre = 'Gombar' "
+            Dim readerCompany As Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
+            If readerCompany.HasRows Then
+                readerCompany.Read()
+                logoImageBase = readerCompany.GetValue(0)
+            End If
+        End If
+
         connection.Close()
 
         Dim provider = String.Empty

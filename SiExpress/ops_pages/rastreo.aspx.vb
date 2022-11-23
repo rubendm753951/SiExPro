@@ -1,4 +1,5 @@
-﻿Imports System.Data.SqlClient
+﻿Imports System.Data
+Imports System.Data.SqlClient
 Imports SiExProData
 
 Partial Class ops_pages_rastreo
@@ -81,5 +82,17 @@ Partial Class ops_pages_rastreo
         'Session("Envio8") = "0"
         'Session("Envio9") = "0"
         'Session("Envio10") = "0"
+    End Sub
+
+    Protected Sub OnRowDataBound(ByVal sender As Object, ByVal e As GridViewRowEventArgs)
+
+        'https://www.aspsnippets.com/Articles/Display-Binary-Image-from-database-in-ASPNet-GridView-control-using-C-and-VBNet.aspx
+        If e.Row.RowType = DataControlRowType.DataRow Then
+            Dim dr As DataRowView = CType(e.Row.DataItem, DataRowView)
+            If dr("SignImage") IsNot System.DBNull.Value Then
+                Dim imageUrl As String = "data:image/jpg;base64," & Convert.ToBase64String(CType(dr("SignImage"), Byte()))
+                CType(e.Row.FindControl("Image1"), Image).ImageUrl = imageUrl
+            End If
+        End If
     End Sub
 End Class

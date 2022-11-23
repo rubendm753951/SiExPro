@@ -363,6 +363,11 @@ Public Class seguimiento_envios
                 estafetaPrecios.AmountGombarExpress = reader.GetValue(16)
                 estafetaPrecios.AmountGombarTarima = reader.GetValue(17)
                 estafetaPrecios.AmountGombarNacional = reader.GetValue(18)
+                estafetaPrecios.AmountGombarDLRutaLeonPueCdmx = reader.GetValue(19)
+                estafetaPrecios.AmountGombarDLTarimasRutaLeonPueCdmx = reader.GetValue(20)
+                estafetaPrecios.AmountGombarDLRutaPacifico = reader.GetValue(21)
+                estafetaPrecios.AmountGombarDLTarimasRutaPacifico = reader.GetValue(22)
+                estafetaPrecios.AmountGombarDLTarimasOcurreRutaPacifico = reader.GetValue(23)
             End If
             connection.Close()
 

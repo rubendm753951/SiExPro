@@ -50,7 +50,7 @@
                                             <tr>
                                                 <td style="width: 164px; height: 1px"><span style="font-size: 9pt">Contenido</span></td>
                                                 <td style="width: 36px; height: 1px"><span style="font-size: 9pt">Subproducto</span></td>
-                                                <td></td>
+                                                <td style="width: 264px; height: 1px"><span style="font-size: 9pt">Envio PreAsignado</span></td>
                                                 <td></td>
                                             </tr>
                                             <tr>
@@ -60,7 +60,7 @@
                                                 <td style="width: 36px; height: 12px">
                                                     <asp:DropDownList CssClass="form-control" Height="30px" ID="DropDownProduct" runat="server" Width="322px" DataSourceID="Tarifas" DataValueField="id_tarifa_agencia" DataTextField="SubProducto" AutoPostBack="True"></asp:DropDownList>
                                                 </td>
-                                                <td style="width: 177px; height: 12px">&nbsp;</td>
+                                                <td style="width: 177px; height: 12px"><asp:TextBox CssClass="form-control" Height="27px" ID="txtIdEnvioPreAsignado" runat="server" Width="100px"></asp:TextBox></td>
                                                 <td style="width: 177px; height: 12px">&nbsp;</td>
                                             </tr>
                                         </tbody>
@@ -671,17 +671,22 @@
                                             <asp:Panel ID="checkoutPanel" runat="server" Width="400px"
                                                 Style="text-align: left; background-color: white; height: auto; padding-bottom: 15px">
                                                 <asp:Label ID="lblOcurre" runat="server" Width="452px" Height="27px" Style="margin-left: 15px; margin-top: 15px; color: red; font-weight: bold">Ocurre Forzoso</asp:Label>
-                                                <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DL Paqueteria:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brCosto" runat="server" />
+                                                <asp:RadioButton ID="rbCosto" GroupName="myg" Text=" DL Ruta Gdl León Ags:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brCosto" runat="server" />
                                                 <asp:RadioButton ID="rbTerrestre" GroupName="myg" Text=" Terrestre:" Style="margin-left: 15px" runat="server" /><br id="brTerrestre" runat="server" />
                                                 <asp:RadioButton ID="rbDiaSiguiente" GroupName="myg" Text=" Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brDiaSiguiente" runat="server" />
                                                 <asp:RadioButton ID="rbLtl" GroupName="myg" Text=" Tarimas:" Style="margin-left: 15px" runat="server" /><br id="brLtl" runat="server" />
-                                                <asp:RadioButton ID="rbFedexExpress" GroupName="myg" Text=" Fedex Express Saver:" Style="margin-left: 15px" runat="server" /><br id="brFedexExpress" runat="server" />
+                                                <asp:RadioButton ID="rbFedexExpress" GroupName="myg" Text=" Fedex Económico:" Style="margin-left: 15px" runat="server" /><br id="brFedexExpress" runat="server" />
                                                 <asp:RadioButton ID="rbFedexStandard" GroupName="myg" Text=" Fedex Standar Overnight:" Style="margin-left: 15px" runat="server" /><br id="brFedexStandard" runat="server" />
                                                 <asp:RadioButton ID="rbPaqueteExpressEconomic" GroupName="myg" Text=" Paquete Express Economico:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressEconomic" runat="server" />
                                                 <asp:RadioButton ID="rbPaqueteExpressNextDay" GroupName="myg" Text=" Paquete Express Dia Siguiente:" Style="margin-left: 15px" runat="server" /><br id="brPaqueteExpressNextDay" runat="server" />
                                                 <asp:RadioButton ID="rbGombarExpress" GroupName="myg" Text=" DL Express:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarExpress" runat="server" />
                                                 <asp:RadioButton ID="rbGombarTarima" GroupName="myg" Text=" DL Tarimas:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarTarima" runat="server" />
                                                 <asp:RadioButton ID="rbGombarNacional" GroupName="myg" Text=" DL Paqueteria Nacional:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarNacional" runat="server" />
+                                                <asp:RadioButton ID="rbGombarLeonPueCdmx" GroupName="myg" Text=" DL Ruta León-Pue-CDMX:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarLeonPueCdmx" runat="server" />
+                                                <asp:RadioButton ID="rbGombarTarimasLeonPueCdmx" GroupName="myg" Text=" DL Tarimas Ruta León-Pue-CDMX:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brGombarTarimasLeonPueCdmx" runat="server" />
+                                                <asp:RadioButton ID="rbRutaPacifico" GroupName="myg" Text=" DL Ruta Pacífico:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brRutaPacifico" runat="server" />
+                                                <asp:RadioButton ID="rbTarimasRutaPacifico" GroupName="myg" Text=" DL Tarimas Ruta Pacífico:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brTarimasRutaPacifico" runat="server" />
+                                                <asp:RadioButton ID="rbTarimasOcurreRutaPacifico" GroupName="myg" Text=" DL Tarimas Ocurre Ruta Pacífico:" Style="margin-left: 15px; margin-top: 15px" runat="server" /><br id="brTarimasOcurreRutaPacifico" runat="server" />
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" ID="btnAceptar" Style="margin-left: 15px" OnClientClick="this.disabled=true;" UseSubmitBehavior="false" runat="server" Text="Guardar Envío" Width="118px"></asp:Button>
                                                 <asp:Button CssClass="btn btn-outline btn-success btn-sm" Style="margin-left: 10px" ID="btnCancelar" runat="server" Text="Cancelar" Width="118px"></asp:Button>
                                             </asp:Panel>

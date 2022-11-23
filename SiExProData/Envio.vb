@@ -37,5 +37,6 @@ Partial Public Class Envio
     Public Property observaciones As String
 
     Public Overridable Property D_TARIFAS_AGENCIA As TarifaAgencia
+    Public Overridable Property D_ENVIOS_PREASIGNADOS As EnviosPreAsignados
 
 End Class

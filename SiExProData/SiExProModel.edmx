@@ -139,6 +139,19 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="Descripcion" Type="varchar" MaxLength="50" />
           <Property Name="usuario_estafeta" Type="int" />
         </EntityType>
+        <EntityType Name="D_AUDIT_LOG">
+          <Key>
+            <PropertyRef Name="AuditLogId" />
+          </Key>
+          <Property Name="AuditLogId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Tabla" Type="varchar" MaxLength="80" />
+          <Property Name="Columna" Type="varchar" MaxLength="80" />
+          <Property Name="ValorAnterior" Type="varchar" MaxLength="150" />
+          <Property Name="ValorActual" Type="varchar" MaxLength="150" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Usuario" Type="int" />
+          <Property Name="IdEnvio" Type="int" />
+        </EntityType>
         <EntityType Name="D_CIUDADES_RUTAS">
           <Key>
             <PropertyRef Name="id_ciudad_ruta" />
@@ -180,6 +193,21 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           </Key>
           <Property Name="codigo_servicio_id" Type="int" Nullable="false" />
           <Property Name="descripcion" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="D_DELIVERY_CONFIRMATION">
+          <Key>
+            <PropertyRef Name="DeliveryConfirmationId" />
+          </Key>
+          <Property Name="DeliveryConfirmationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="int" Nullable="false" />
+          <Property Name="ShipmentId" Type="int" Nullable="false" />
+          <Property Name="TrackId" Type="varchar" MaxLength="50" />
+          <Property Name="SignImage" Type="image" Nullable="false" />
+          <Property Name="SignName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="DeliveryDate" Type="datetime" Nullable="false" />
+          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
+          <Property Name="DeliveryImage" Type="image" />
         </EntityType>
         <EntityType Name="D_ENVIO_COMENTARIOS">
           <Key>
@@ -237,7 +265,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="fecha_entrega" Type="datetime" />
           <Property Name="id_proveedor" Type="int" />
           <Property Name="codigoSat" Type="varchar" MaxLength="50" />
-          <Property Name="codigo_barras" Type="varchar(max)" />
+          <Property Name="codigo_barras" Type="image" />
         </EntityType>
         <EntityType Name="D_ENVIOS_PE_TIPO_PAQUETES">
           <Key>
@@ -256,6 +284,17 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="fecha" Type="datetime" Nullable="false" />
           <Property Name="seguro" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="servicioSat" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="D_ENVIOS_PREASIGNADOS">
+          <Key>
+            <PropertyRef Name="id_envio" />
+          </Key>
+          <Property Name="id_envio" Type="int" Nullable="false" />
+          <Property Name="id_agencia" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="datetime" />
+          <Property Name="id_tarifa_tipo" Type="int" />
+          <Property Name="tarifa" Type="money" />
+          <Property Name="id_moneda" Type="int" />
         </EntityType>
         <EntityType Name="D_ESTAFETA_FRECUENCIA_COTIZADOR">
           <Key>
@@ -339,6 +378,108 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="valor" Type="money" />
           <Property Name="Activado" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="D_TARIFAS_AGENCIA_DLIVER_EXPRESS">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_AGENCIA" Type="int" />
+          <Property Name="ID_ZONA" Type="int" />
+          <Property Name="ID_CUENTA" Type="int" />
+          <Property Name="SERVICE_ID" Type="int" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="float" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="float" />
+          <Property Name="PRECIO" Type="money" />
+          <Property Name="PRECIO_KILO" Type="money" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="money" />
+          <Property Name="PRECIO_AREA_EXTENDIDA" Type="money" />
+          <Property Name="PRECIO_EXCESO_DIMENSIONES" Type="money" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="D_TARIFAS_AGENCIA_DRAFT">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_AGENCIA" Type="int" />
+          <Property Name="ID_ZONA" Type="int" />
+          <Property Name="ID_CUENTA" Type="int" />
+          <Property Name="SERVICE_ID" Type="int" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="float" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="float" />
+          <Property Name="PRECIO" Type="money" />
+          <Property Name="PRECIO_KILO" Type="money" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="money" />
+          <Property Name="PRECIO_AREA_EXTENDIDA" Type="money" />
+          <Property Name="PRECIO_EXCESO_DIMENSIONES" Type="money" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="D_TARIFAS_AGENCIA_ESTAFETA">
+          <Key>
+            <PropertyRef Name="ID_TARIFAS_AGENCIA_ESTAFETA" />
+          </Key>
+          <Property Name="ID_TARIFAS_AGENCIA_ESTAFETA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_AGENCIA" Type="int" />
+          <Property Name="ID_ZONA" Type="int" />
+          <Property Name="ID_CUENTA" Type="int" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="float" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="float" />
+          <Property Name="PRECIO" Type="money" />
+          <Property Name="PRECIO_POR_KILO" Type="bit" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="money" />
+          <Property Name="PRECIO_DIA_SIGUIENTE" Type="money" />
+          <Property Name="PRECIO_POR_KILO_DIA_SIGUIENTE" Type="bit" />
+          <Property Name="PRECIO_KILO_ADICIONAL_DIA_SIGUIENTE" Type="money" />
+          <Property Name="PRECIO_GOMBAR" Type="money" />
+          <Property Name="PRECIO_POR_KILO_GOMBAR" Type="bit" />
+          <Property Name="PRECIO_KILO_ADICIONAL_GOMBAR" Type="money" />
+          <Property Name="IsDeleted" Type="int" />
+        </EntityType>
+        <EntityType Name="D_TARIFAS_AGENCIA_FEDEX">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_AGENCIA" Type="int" Nullable="false" />
+          <Property Name="ID_CUENTA" Type="int" />
+          <Property Name="SERVICE_ID" Type="int" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="float" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="float" />
+          <Property Name="PRECIO" Type="money" />
+          <Property Name="PRECIO_KILO" Type="bit" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="money" />
+          <Property Name="PRECIO_AREA_EXTENDIDA" Type="money" />
+          <Property Name="PRECIO_EXCESO_DIMENSIONES" Type="money" />
+          <Property Name="IsDeleted" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="D_TARIFAS_AGENCIA_PAQUETE_EXPRESS">
+          <Key>
+            <PropertyRef Name="ID_TARIFAS_AGENCIA_PAQUETE_EXPRESS" />
+          </Key>
+          <Property Name="ID_TARIFAS_AGENCIA_PAQUETE_EXPRESS" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_AGENCIA" Type="int" />
+          <Property Name="Tarifa" Type="varchar" MaxLength="20" />
+          <Property Name="KG_start" Type="decimal" Precision="12" Scale="4" />
+          <Property Name="KG_End" Type="decimal" Precision="12" Scale="4" />
+          <Property Name="CUM_start" Type="decimal" Precision="12" Scale="4" />
+          <Property Name="CUM_end" Type="decimal" Precision="12" Scale="4" />
+          <Property Name="PRECIO_ECONOMICO" Type="money" />
+          <Property Name="DIA_SIGUIENTE_BASE" Type="money" />
+          <Property Name="DIA_SIGUIENTE_KILO" Type="money" />
+          <Property Name="is_deleted" Type="int" />
+        </EntityType>
+        <Association Name="C_AGENCIAS_D_ENVIOS_PREVENTA_fk">
+          <End Role="C_AGENCIAS" Type="Self.C_AGENCIAS" Multiplicity="1" />
+          <End Role="D_ENVIOS_PREASIGNADOS" Type="Self.D_ENVIOS_PREASIGNADOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="C_AGENCIAS">
+              <PropertyRef Name="id_agencia" />
+            </Principal>
+            <Dependent Role="D_ENVIOS_PREASIGNADOS">
+              <PropertyRef Name="id_agencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="C_AGENCIAS_D_TARIFAS_AGENCIA_fk">
           <End Role="C_AGENCIAS" Type="Self.C_AGENCIAS" Multiplicity="1" />
           <End Role="D_TARIFAS_AGENCIA" Type="Self.D_TARIFAS_AGENCIA" Multiplicity="*" />
@@ -375,6 +516,30 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk">
+          <End Role="D_ENVIOS_PREASIGNADOS" Type="Self.D_ENVIOS_PREASIGNADOS" Multiplicity="1" />
+          <End Role="D_ENVIOS_DATOS" Type="Self.D_ENVIOS_DATOS" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="D_ENVIOS_PREASIGNADOS">
+              <PropertyRef Name="id_envio" />
+            </Principal>
+            <Dependent Role="D_ENVIOS_DATOS">
+              <PropertyRef Name="id_envio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk">
+          <End Role="D_ENVIOS_PREASIGNADOS" Type="Self.D_ENVIOS_PREASIGNADOS" Multiplicity="1" />
+          <End Role="D_ENVIOS" Type="Self.D_ENVIOS" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="D_ENVIOS_PREASIGNADOS">
+              <PropertyRef Name="id_envio" />
+            </Principal>
+            <Dependent Role="D_ENVIOS">
+              <PropertyRef Name="id_envio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="D_TARIFAS_AGENCIA_D_ENVIOS_fk">
           <End Role="D_TARIFAS_AGENCIA" Type="Self.D_TARIFAS_AGENCIA" Multiplicity="1" />
           <End Role="D_ENVIOS" Type="Self.D_ENVIOS" Multiplicity="*" />
@@ -396,18 +561,26 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySet Name="C_DESTINATARIOS" EntityType="Self.C_DESTINATARIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="C_ESTADOS_GOMBAR" EntityType="Self.C_ESTADOS_GOMBAR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="C_ZONAS" EntityType="Self.C_ZONAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_AUDIT_LOG" EntityType="Self.D_AUDIT_LOG" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_CIUDADES_RUTAS" EntityType="Self.D_CIUDADES_RUTAS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_COBERTURA" EntityType="Self.D_COBERTURA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_CODIGOS_SERVICIOS_SAT" EntityType="Self.D_CODIGOS_SERVICIOS_SAT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_DELIVERY_CONFIRMATION" EntityType="Self.D_DELIVERY_CONFIRMATION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIO_COMENTARIOS" EntityType="Self.D_ENVIO_COMENTARIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS" EntityType="Self.D_ENVIOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS_DATOS" EntityType="Self.D_ENVIOS_DATOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ENVIOS_PE_TIPO_PAQUETES" EntityType="Self.D_ENVIOS_PE_TIPO_PAQUETES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_ENVIOS_PREASIGNADOS" EntityType="Self.D_ENVIOS_PREASIGNADOS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_FRECUENCIA_COTIZADOR" EntityType="Self.D_ESTAFETA_FRECUENCIA_COTIZADOR" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_LABEL" EntityType="Self.D_ESTAFETA_LABEL" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_REQUEST_RESPONSE" EntityType="Self.D_ESTAFETA_REQUEST_RESPONSE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_ESTAFETA_TIPO_SERVICIO" EntityType="Self.D_ESTAFETA_TIPO_SERVICIO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="D_TARIFAS_AGENCIA" EntityType="Self.D_TARIFAS_AGENCIA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_DLIVER_EXPRESS" EntityType="Self.D_TARIFAS_AGENCIA_DLIVER_EXPRESS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_DRAFT" EntityType="Self.D_TARIFAS_AGENCIA_DRAFT" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_ESTAFETA" EntityType="Self.D_TARIFAS_AGENCIA_ESTAFETA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_FEDEX" EntityType="Self.D_TARIFAS_AGENCIA_FEDEX" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_PAQUETE_EXPRESS" EntityType="Self.D_TARIFAS_AGENCIA_PAQUETE_EXPRESS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="C_SEPOMEX" EntityType="Self.C_SEPOMEX" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [C_SEPOMEX].[d_codigo] AS [d_codigo], 
@@ -429,6 +602,10 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
     [C_SEPOMEX].[estado_codigo] AS [estado_codigo]
     FROM [dbo].[C_SEPOMEX] AS [C_SEPOMEX]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="C_AGENCIAS_D_ENVIOS_PREVENTA_fk" Association="Self.C_AGENCIAS_D_ENVIOS_PREVENTA_fk">
+            <End Role="C_AGENCIAS" EntitySet="C_AGENCIAS" />
+            <End Role="D_ENVIOS_PREASIGNADOS" EntitySet="D_ENVIOS_PREASIGNADOS" />
+          </AssociationSet>
           <AssociationSet Name="C_AGENCIAS_D_TARIFAS_AGENCIA_fk" Association="Self.C_AGENCIAS_D_TARIFAS_AGENCIA_fk">
             <End Role="C_AGENCIAS" EntitySet="C_AGENCIAS" />
             <End Role="D_TARIFAS_AGENCIA" EntitySet="D_TARIFAS_AGENCIA" />
@@ -440,6 +617,14 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <AssociationSet Name="C_DESTINATARIOS_D_ENVIOS_DATOS_fk" Association="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk">
             <End Role="C_DESTINATARIOS" EntitySet="C_DESTINATARIOS" />
             <End Role="D_ENVIOS_DATOS" EntitySet="D_ENVIOS_DATOS" />
+          </AssociationSet>
+          <AssociationSet Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk" Association="Self.D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk">
+            <End Role="D_ENVIOS_PREASIGNADOS" EntitySet="D_ENVIOS_PREASIGNADOS" />
+            <End Role="D_ENVIOS_DATOS" EntitySet="D_ENVIOS_DATOS" />
+          </AssociationSet>
+          <AssociationSet Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk" Association="Self.D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk">
+            <End Role="D_ENVIOS_PREASIGNADOS" EntitySet="D_ENVIOS_PREASIGNADOS" />
+            <End Role="D_ENVIOS" EntitySet="D_ENVIOS" />
           </AssociationSet>
           <AssociationSet Name="D_TARIFAS_AGENCIA_D_ENVIOS_fk" Association="Self.D_TARIFAS_AGENCIA_D_ENVIOS_fk">
             <End Role="D_TARIFAS_AGENCIA" EntitySet="D_TARIFAS_AGENCIA" />
@@ -480,6 +665,7 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="codigo_postal" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RFC" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="D_ENVIOS_PREASIGNADOS" Relationship="MasupackModel.C_AGENCIAS_D_ENVIOS_PREVENTA_fk" FromRole="Agencias" ToRole="D_ENVIOS_PREASIGNADOS" />
         </EntityType>
         <EntityType Name="Cliente">
           <Key>
@@ -502,10 +688,10 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="codigo_postal" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="NIT" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="Self.C_CLIENTES_D_ENVIOS_DATOS_fk" FromRole="C_CLIENTES" ToRole="D_ENVIOS_DATOS" />
           <Property Name="RFC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RegistroTributario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ResidenciaFiscal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="MasupackModel.C_CLIENTES_D_ENVIOS_DATOS_fk" FromRole="Cliente" ToRole="D_ENVIOS_DATOS" />
         </EntityType>
         <EntityType Name="Destinatario">
           <Key>
@@ -527,10 +713,10 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="codigo_postal" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="email" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="C_DESTINATARIOS" ToRole="D_ENVIOS_DATOS" />
           <Property Name="RFC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="RegistroTributario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ResidenciaFiscal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="MasupackModel.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="Destinatario" ToRole="D_ENVIOS_DATOS" />
         </EntityType>
         <EntityType Name="Envio">
           <Key>
@@ -561,63 +747,13 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="contenedores" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="observaciones" Type="String" MaxLength="3000" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="D_TARIFAS_AGENCIA" Relationship="MasupackModel.D_TARIFAS_AGENCIA_D_ENVIOS_fk" FromRole="Envio" ToRole="D_TARIFAS_AGENCIA" />
+          <NavigationProperty Name="D_ENVIOS_PREASIGNADOS" Relationship="MasupackModel.D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk" FromRole="Envio" ToRole="D_ENVIOS_PREASIGNADOS" />
         </EntityType>
-        <EntityType Name="EnvioDatos">
-          <Key>
-            <PropertyRef Name="id_envio" />
-          </Key>
-          <Property Name="id_envio" Type="Int32" Nullable="false" />
-          <Property Name="id_cliente" Type="Int32" Nullable="false" />
-          <Property Name="id_destinatario" Type="Int32" Nullable="false" />
-          <Property Name="id_contenido" Type="Int32" />
-          <Property Name="observaciones" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="exportado" Type="Boolean" />
-          <NavigationProperty Name="C_CLIENTES" Relationship="Self.C_CLIENTES_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="C_CLIENTES" />
-          <NavigationProperty Name="C_DESTINATARIOS" Relationship="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="C_DESTINATARIOS" />
-          <Property Name="entregado" Type="Boolean" />
-          <Property Name="fecha_entrega" Type="DateTime" Precision="3" />
-          <Property Name="id_proveedor" Type="Int32" />
-          <Property Name="codigoSat" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="codigo_barras" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <Association Name="C_CLIENTES_D_ENVIOS_DATOS_fk">
-          <End Role="C_CLIENTES" Type="MasupackModel.Cliente" Multiplicity="1" />
-          <End Role="D_ENVIOS_DATOS" Type="MasupackModel.EnvioDatos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C_CLIENTES">
-              <PropertyRef Name="id_cliente" />
-            </Principal>
-            <Dependent Role="D_ENVIOS_DATOS">
-              <PropertyRef Name="id_cliente" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="C_DESTINATARIOS_D_ENVIOS_DATOS_fk">
-          <End Role="C_DESTINATARIOS" Type="MasupackModel.Destinatario" Multiplicity="1" />
-          <End Role="D_ENVIOS_DATOS" Type="MasupackModel.EnvioDatos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="C_DESTINATARIOS">
-              <PropertyRef Name="id_destinatario" />
-            </Principal>
-            <Dependent Role="D_ENVIOS_DATOS">
-              <PropertyRef Name="id_destinatario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="SiExProEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="C_AGENCIAS" EntityType="MasupackModel.Agencias" />
           <EntitySet Name="C_CLIENTES" EntityType="MasupackModel.Cliente" />
           <EntitySet Name="C_DESTINATARIOS" EntityType="MasupackModel.Destinatario" />
           <EntitySet Name="D_ENVIOS" EntityType="MasupackModel.Envio" />
-          <EntitySet Name="D_ENVIOS_DATOS" EntityType="MasupackModel.EnvioDatos" />
-          <AssociationSet Name="C_CLIENTES_D_ENVIOS_DATOS_fk" Association="Self.C_CLIENTES_D_ENVIOS_DATOS_fk">
-            <End Role="C_CLIENTES" EntitySet="C_CLIENTES" />
-            <End Role="D_ENVIOS_DATOS" EntitySet="D_ENVIOS_DATOS" />
-          </AssociationSet>
-          <AssociationSet Name="C_DESTINATARIOS_D_ENVIOS_DATOS_fk" Association="Self.C_DESTINATARIOS_D_ENVIOS_DATOS_fk">
-            <End Role="C_DESTINATARIOS" EntitySet="C_DESTINATARIOS" />
-            <End Role="D_ENVIOS_DATOS" EntitySet="D_ENVIOS_DATOS" />
-          </AssociationSet>
           <EntitySet Name="D_TARIFAS_AGENCIA" EntityType="MasupackModel.TarifaAgencia" />
           <AssociationSet Name="C_AGENCIAS_D_TARIFAS_AGENCIA_fk" Association="MasupackModel.C_AGENCIAS_D_TARIFAS_AGENCIA_fk">
             <End Role="Agencias" EntitySet="C_AGENCIAS" />
@@ -642,6 +778,35 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <EntitySet Name="C_SEPOMEX" EntityType="MasupackModel.Sepomex" />
           <EntitySet Name="D_ENVIOS_PE_TIPO_PAQUETES" EntityType="MasupackModel.PaqueteExpressTipoPaquete" />
           <EntitySet Name="D_CODIGOS_SERVICIOS_SAT" EntityType="MasupackModel.CodigosServiciosSat" />
+          <EntitySet Name="D_ENVIOS_DATOS" EntityType="MasupackModel.EnvioDatos" />
+          <AssociationSet Name="C_CLIENTES_D_ENVIOS_DATOS_fk" Association="MasupackModel.C_CLIENTES_D_ENVIOS_DATOS_fk">
+            <End Role="Cliente" EntitySet="C_CLIENTES" />
+            <End Role="D_ENVIOS_DATOS" EntitySet="D_ENVIOS_DATOS" />
+          </AssociationSet>
+          <AssociationSet Name="C_DESTINATARIOS_D_ENVIOS_DATOS_fk" Association="MasupackModel.C_DESTINATARIOS_D_ENVIOS_DATOS_fk">
+            <End Role="Destinatario" EntitySet="C_DESTINATARIOS" />
+            <End Role="D_ENVIOS_DATOS" EntitySet="D_ENVIOS_DATOS" />
+          </AssociationSet>
+          <EntitySet Name="D_DELIVERY_CONFIRMATION" EntityType="MasupackModel.DeliveryConfirmation" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_DRAFT" EntityType="MasupackModel.TarifaAgenciaDraft" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_ESTAFETA" EntityType="MasupackModel.TarifaAgenciaEstafeta" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_FEDEX" EntityType="MasupackModel.TarifaAgenciaFedex" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_PAQUETE_EXPRESS" EntityType="MasupackModel.TarifaAgenciaPaqueteExpress" />
+          <EntitySet Name="D_ENVIOS_PREASIGNADOS" EntityType="MasupackModel.EnviosPreAsignados" />
+          <AssociationSet Name="C_AGENCIAS_D_ENVIOS_PREVENTA_fk" Association="MasupackModel.C_AGENCIAS_D_ENVIOS_PREVENTA_fk">
+            <End Role="Agencias" EntitySet="C_AGENCIAS" />
+            <End Role="D_ENVIOS_PREASIGNADOS" EntitySet="D_ENVIOS_PREASIGNADOS" />
+          </AssociationSet>
+          <AssociationSet Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk" Association="MasupackModel.D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk">
+            <End Role="D_ENVIOS_PREASIGNADOS" EntitySet="D_ENVIOS_PREASIGNADOS" />
+            <End Role="Envio" EntitySet="D_ENVIOS" />
+          </AssociationSet>
+          <AssociationSet Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk" Association="MasupackModel.D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk">
+            <End Role="D_ENVIOS_PREASIGNADOS" EntitySet="D_ENVIOS_PREASIGNADOS" />
+            <End Role="EnvioDatos" EntitySet="D_ENVIOS_DATOS" />
+          </AssociationSet>
+          <EntitySet Name="D_AUDIT_LOG" EntityType="MasupackModel.AuditLog" />
+          <EntitySet Name="D_TARIFAS_AGENCIA_DLIVER_EXPRESS" EntityType="MasupackModel.TarifaAgenciaDliverExpress" />
         </EntityContainer>
         <EntityType Name="TarifaAgencia">
           <Key>
@@ -886,6 +1051,217 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
           <Property Name="codigo_servicio_id" Type="Int32" Nullable="false" />
           <Property Name="descripcion" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="EnvioDatos">
+          <Key>
+            <PropertyRef Name="id_envio" />
+          </Key>
+          <Property Name="id_envio" Type="Int32" Nullable="false" />
+          <Property Name="id_cliente" Type="Int32" Nullable="false" />
+          <Property Name="id_destinatario" Type="Int32" Nullable="false" />
+          <Property Name="id_contenido" Type="Int32" />
+          <Property Name="observaciones" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="exportado" Type="Boolean" />
+          <Property Name="entregado" Type="Boolean" />
+          <Property Name="fecha_entrega" Type="DateTime" Precision="3" />
+          <Property Name="id_proveedor" Type="Int32" />
+          <Property Name="codigoSat" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="codigo_barras" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="C_CLIENTES" Relationship="MasupackModel.C_CLIENTES_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="Cliente" />
+          <NavigationProperty Name="C_DESTINATARIOS" Relationship="MasupackModel.C_DESTINATARIOS_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_DATOS" ToRole="Destinatario" />
+          <NavigationProperty Name="D_ENVIOS_PREASIGNADOS" Relationship="MasupackModel.D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk" FromRole="EnvioDatos" ToRole="D_ENVIOS_PREASIGNADOS" />
+        </EntityType>
+        <Association Name="C_CLIENTES_D_ENVIOS_DATOS_fk">
+          <End Type="MasupackModel.Cliente" Role="Cliente" Multiplicity="1" />
+          <End Type="MasupackModel.EnvioDatos" Role="D_ENVIOS_DATOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="id_cliente" />
+            </Principal>
+            <Dependent Role="D_ENVIOS_DATOS">
+              <PropertyRef Name="id_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="C_DESTINATARIOS_D_ENVIOS_DATOS_fk">
+          <End Type="MasupackModel.Destinatario" Role="Destinatario" Multiplicity="1" />
+          <End Type="MasupackModel.EnvioDatos" Role="D_ENVIOS_DATOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Destinatario">
+              <PropertyRef Name="id_destinatario" />
+            </Principal>
+            <Dependent Role="D_ENVIOS_DATOS">
+              <PropertyRef Name="id_destinatario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DeliveryConfirmation">
+          <Key>
+            <PropertyRef Name="DeliveryConfirmationId" />
+          </Key>
+          <Property Name="DeliveryConfirmationId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="Int32" Nullable="false" />
+          <Property Name="ShipmentId" Type="Int32" Nullable="false" />
+          <Property Name="TrackId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SignImage" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="SignName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeliveryImage" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="TarifaAgenciaDraft">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_AGENCIA" Type="Int32" />
+          <Property Name="ID_ZONA" Type="Int32" />
+          <Property Name="ID_CUENTA" Type="Int32" />
+          <Property Name="SERVICE_ID" Type="Int32" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="Double" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="Double" />
+          <Property Name="PRECIO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_KILO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_AREA_EXTENDIDA" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_EXCESO_DIMENSIONES" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IsDeleted" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TarifaAgenciaEstafeta">
+          <Key>
+            <PropertyRef Name="ID_TARIFAS_AGENCIA_ESTAFETA" />
+          </Key>
+          <Property Name="ID_TARIFAS_AGENCIA_ESTAFETA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_AGENCIA" Type="Int32" />
+          <Property Name="ID_ZONA" Type="Int32" />
+          <Property Name="ID_CUENTA" Type="Int32" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="Double" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="Double" />
+          <Property Name="PRECIO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_POR_KILO" Type="Boolean" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_DIA_SIGUIENTE" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_POR_KILO_DIA_SIGUIENTE" Type="Boolean" />
+          <Property Name="PRECIO_KILO_ADICIONAL_DIA_SIGUIENTE" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_GOMBAR" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_POR_KILO_GOMBAR" Type="Boolean" />
+          <Property Name="PRECIO_KILO_ADICIONAL_GOMBAR" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IsDeleted" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TarifaAgenciaFedex">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_AGENCIA" Type="Int32" Nullable="false" />
+          <Property Name="ID_CUENTA" Type="Int32" />
+          <Property Name="SERVICE_ID" Type="Int32" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="Double" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="Double" />
+          <Property Name="PRECIO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_KILO" Type="Boolean" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_AREA_EXTENDIDA" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_EXCESO_DIMENSIONES" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IsDeleted" Type="Byte" />
+        </EntityType>
+        <EntityType Name="TarifaAgenciaPaqueteExpress">
+          <Key>
+            <PropertyRef Name="ID_TARIFAS_AGENCIA_PAQUETE_EXPRESS" />
+          </Key>
+          <Property Name="ID_TARIFAS_AGENCIA_PAQUETE_EXPRESS" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_AGENCIA" Type="Int32" />
+          <Property Name="Tarifa" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="KG_start" Type="Decimal" Precision="12" Scale="4" />
+          <Property Name="KG_End" Type="Decimal" Precision="12" Scale="4" />
+          <Property Name="CUM_start" Type="Decimal" Precision="12" Scale="4" />
+          <Property Name="CUM_end" Type="Decimal" Precision="12" Scale="4" />
+          <Property Name="PRECIO_ECONOMICO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DIA_SIGUIENTE_BASE" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DIA_SIGUIENTE_KILO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="is_deleted" Type="Int32" />
+        </EntityType>
+        <EntityType Name="EnviosPreAsignados">
+          <Key>
+            <PropertyRef Name="id_envio" />
+          </Key>
+          <Property Name="id_envio" Type="Int32" Nullable="false" />
+          <Property Name="id_agencia" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+          <Property Name="id_tarifa_tipo" Type="Int32" />
+          <Property Name="tarifa" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="id_moneda" Type="Int32" />
+          <NavigationProperty Name="C_AGENCIAS" Relationship="MasupackModel.C_AGENCIAS_D_ENVIOS_PREVENTA_fk" FromRole="D_ENVIOS_PREASIGNADOS" ToRole="Agencias" />
+          <NavigationProperty Name="D_ENVIOS" Relationship="MasupackModel.D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk" FromRole="D_ENVIOS_PREASIGNADOS" ToRole="Envio" />
+          <NavigationProperty Name="D_ENVIOS_DATOS" Relationship="MasupackModel.D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk" FromRole="D_ENVIOS_PREASIGNADOS" ToRole="EnvioDatos" />
+        </EntityType>
+        <Association Name="C_AGENCIAS_D_ENVIOS_PREVENTA_fk">
+          <End Type="MasupackModel.Agencias" Role="Agencias" Multiplicity="1" />
+          <End Type="MasupackModel.EnviosPreAsignados" Role="D_ENVIOS_PREASIGNADOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Agencias">
+              <PropertyRef Name="id_agencia" />
+            </Principal>
+            <Dependent Role="D_ENVIOS_PREASIGNADOS">
+              <PropertyRef Name="id_agencia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_fk">
+          <End Type="MasupackModel.EnviosPreAsignados" Role="D_ENVIOS_PREASIGNADOS" Multiplicity="1" />
+          <End Type="MasupackModel.Envio" Role="Envio" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="D_ENVIOS_PREASIGNADOS">
+              <PropertyRef Name="id_envio" />
+            </Principal>
+            <Dependent Role="Envio">
+              <PropertyRef Name="id_envio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="D_ENVIOS_PREASIGNADOS_D_ENVIOS_DATOS_fk">
+          <End Type="MasupackModel.EnviosPreAsignados" Role="D_ENVIOS_PREASIGNADOS" Multiplicity="1" />
+          <End Type="MasupackModel.EnvioDatos" Role="EnvioDatos" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="D_ENVIOS_PREASIGNADOS">
+              <PropertyRef Name="id_envio" />
+            </Principal>
+            <Dependent Role="EnvioDatos">
+              <PropertyRef Name="id_envio" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AuditLog">
+          <Key>
+            <PropertyRef Name="AuditLogId" />
+          </Key>
+          <Property Name="AuditLogId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tabla" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Columna" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="ValorAnterior" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ValorActual" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Usuario" Type="Int32" />
+          <Property Name="IdEnvio" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TarifaAgenciaDliverExpress">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_AGENCIA" Type="Int32" />
+          <Property Name="ID_ZONA" Type="Int32" />
+          <Property Name="ID_CUENTA" Type="Int32" />
+          <Property Name="SERVICE_ID" Type="Int32" />
+          <Property Name="PESO_LIMITE_INFERIOR" Type="Double" />
+          <Property Name="PESO_LIMITE_SUPERIOR" Type="Double" />
+          <Property Name="PRECIO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_KILO" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_KILO_ADICIONAL" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_AREA_EXTENDIDA" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="PRECIO_EXCESO_DIMENSIONES" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="IsDeleted" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1001,23 +1377,6 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
                 <ScalarProperty Name="id_subproducto" ColumnName="id_subproducto" />
                 <ScalarProperty Name="contenedores" ColumnName="contenedores" />
                 <ScalarProperty Name="observaciones" ColumnName="observaciones" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="D_ENVIOS_DATOS">
-            <EntityTypeMapping TypeName="MasupackModel.EnvioDatos">
-              <MappingFragment StoreEntitySet="D_ENVIOS_DATOS">
-                <ScalarProperty Name="codigo_barras" ColumnName="codigo_barras" />
-                <ScalarProperty Name="codigoSat" ColumnName="codigoSat" />
-                <ScalarProperty Name="id_proveedor" ColumnName="id_proveedor" />
-                <ScalarProperty Name="fecha_entrega" ColumnName="fecha_entrega" />
-                <ScalarProperty Name="entregado" ColumnName="entregado" />
-                <ScalarProperty Name="id_envio" ColumnName="id_envio" />
-                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
-                <ScalarProperty Name="id_destinatario" ColumnName="id_destinatario" />
-                <ScalarProperty Name="id_contenido" ColumnName="id_contenido" />
-                <ScalarProperty Name="observaciones" ColumnName="observaciones" />
-                <ScalarProperty Name="exportado" ColumnName="exportado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1239,6 +1598,160 @@ warning 6002: The table/view 'Gombar.dbo.C_SEPOMEX' does not have a primary key 
               <MappingFragment StoreEntitySet="D_CODIGOS_SERVICIOS_SAT">
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="codigo_servicio_id" ColumnName="codigo_servicio_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_ENVIOS_DATOS">
+            <EntityTypeMapping TypeName="MasupackModel.EnvioDatos">
+              <MappingFragment StoreEntitySet="D_ENVIOS_DATOS">
+                <ScalarProperty Name="codigo_barras" ColumnName="codigo_barras" />
+                <ScalarProperty Name="codigoSat" ColumnName="codigoSat" />
+                <ScalarProperty Name="id_proveedor" ColumnName="id_proveedor" />
+                <ScalarProperty Name="fecha_entrega" ColumnName="fecha_entrega" />
+                <ScalarProperty Name="entregado" ColumnName="entregado" />
+                <ScalarProperty Name="exportado" ColumnName="exportado" />
+                <ScalarProperty Name="observaciones" ColumnName="observaciones" />
+                <ScalarProperty Name="id_contenido" ColumnName="id_contenido" />
+                <ScalarProperty Name="id_destinatario" ColumnName="id_destinatario" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="id_envio" ColumnName="id_envio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_DELIVERY_CONFIRMATION">
+            <EntityTypeMapping TypeName="MasupackModel.DeliveryConfirmation">
+              <MappingFragment StoreEntitySet="D_DELIVERY_CONFIRMATION">
+                <ScalarProperty Name="DeliveryImage" ColumnName="DeliveryImage" />
+                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="SignName" ColumnName="SignName" />
+                <ScalarProperty Name="SignImage" ColumnName="SignImage" />
+                <ScalarProperty Name="TrackId" ColumnName="TrackId" />
+                <ScalarProperty Name="ShipmentId" ColumnName="ShipmentId" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="DeliveryConfirmationId" ColumnName="DeliveryConfirmationId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_TARIFAS_AGENCIA_DRAFT">
+            <EntityTypeMapping TypeName="MasupackModel.TarifaAgenciaDraft">
+              <MappingFragment StoreEntitySet="D_TARIFAS_AGENCIA_DRAFT">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="PRECIO_EXCESO_DIMENSIONES" ColumnName="PRECIO_EXCESO_DIMENSIONES" />
+                <ScalarProperty Name="PRECIO_AREA_EXTENDIDA" ColumnName="PRECIO_AREA_EXTENDIDA" />
+                <ScalarProperty Name="PRECIO_KILO_ADICIONAL" ColumnName="PRECIO_KILO_ADICIONAL" />
+                <ScalarProperty Name="PRECIO_KILO" ColumnName="PRECIO_KILO" />
+                <ScalarProperty Name="PRECIO" ColumnName="PRECIO" />
+                <ScalarProperty Name="PESO_LIMITE_SUPERIOR" ColumnName="PESO_LIMITE_SUPERIOR" />
+                <ScalarProperty Name="PESO_LIMITE_INFERIOR" ColumnName="PESO_LIMITE_INFERIOR" />
+                <ScalarProperty Name="SERVICE_ID" ColumnName="SERVICE_ID" />
+                <ScalarProperty Name="ID_CUENTA" ColumnName="ID_CUENTA" />
+                <ScalarProperty Name="ID_ZONA" ColumnName="ID_ZONA" />
+                <ScalarProperty Name="ID_AGENCIA" ColumnName="ID_AGENCIA" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_TARIFAS_AGENCIA_ESTAFETA">
+            <EntityTypeMapping TypeName="MasupackModel.TarifaAgenciaEstafeta">
+              <MappingFragment StoreEntitySet="D_TARIFAS_AGENCIA_ESTAFETA">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="PRECIO_KILO_ADICIONAL_GOMBAR" ColumnName="PRECIO_KILO_ADICIONAL_GOMBAR" />
+                <ScalarProperty Name="PRECIO_POR_KILO_GOMBAR" ColumnName="PRECIO_POR_KILO_GOMBAR" />
+                <ScalarProperty Name="PRECIO_GOMBAR" ColumnName="PRECIO_GOMBAR" />
+                <ScalarProperty Name="PRECIO_KILO_ADICIONAL_DIA_SIGUIENTE" ColumnName="PRECIO_KILO_ADICIONAL_DIA_SIGUIENTE" />
+                <ScalarProperty Name="PRECIO_POR_KILO_DIA_SIGUIENTE" ColumnName="PRECIO_POR_KILO_DIA_SIGUIENTE" />
+                <ScalarProperty Name="PRECIO_DIA_SIGUIENTE" ColumnName="PRECIO_DIA_SIGUIENTE" />
+                <ScalarProperty Name="PRECIO_KILO_ADICIONAL" ColumnName="PRECIO_KILO_ADICIONAL" />
+                <ScalarProperty Name="PRECIO_POR_KILO" ColumnName="PRECIO_POR_KILO" />
+                <ScalarProperty Name="PRECIO" ColumnName="PRECIO" />
+                <ScalarProperty Name="PESO_LIMITE_SUPERIOR" ColumnName="PESO_LIMITE_SUPERIOR" />
+                <ScalarProperty Name="PESO_LIMITE_INFERIOR" ColumnName="PESO_LIMITE_INFERIOR" />
+                <ScalarProperty Name="ID_CUENTA" ColumnName="ID_CUENTA" />
+                <ScalarProperty Name="ID_ZONA" ColumnName="ID_ZONA" />
+                <ScalarProperty Name="ID_AGENCIA" ColumnName="ID_AGENCIA" />
+                <ScalarProperty Name="ID_TARIFAS_AGENCIA_ESTAFETA" ColumnName="ID_TARIFAS_AGENCIA_ESTAFETA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_TARIFAS_AGENCIA_FEDEX">
+            <EntityTypeMapping TypeName="MasupackModel.TarifaAgenciaFedex">
+              <MappingFragment StoreEntitySet="D_TARIFAS_AGENCIA_FEDEX">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="PRECIO_EXCESO_DIMENSIONES" ColumnName="PRECIO_EXCESO_DIMENSIONES" />
+                <ScalarProperty Name="PRECIO_AREA_EXTENDIDA" ColumnName="PRECIO_AREA_EXTENDIDA" />
+                <ScalarProperty Name="PRECIO_KILO_ADICIONAL" ColumnName="PRECIO_KILO_ADICIONAL" />
+                <ScalarProperty Name="PRECIO_KILO" ColumnName="PRECIO_KILO" />
+                <ScalarProperty Name="PRECIO" ColumnName="PRECIO" />
+                <ScalarProperty Name="PESO_LIMITE_SUPERIOR" ColumnName="PESO_LIMITE_SUPERIOR" />
+                <ScalarProperty Name="PESO_LIMITE_INFERIOR" ColumnName="PESO_LIMITE_INFERIOR" />
+                <ScalarProperty Name="SERVICE_ID" ColumnName="SERVICE_ID" />
+                <ScalarProperty Name="ID_CUENTA" ColumnName="ID_CUENTA" />
+                <ScalarProperty Name="ID_AGENCIA" ColumnName="ID_AGENCIA" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_TARIFAS_AGENCIA_PAQUETE_EXPRESS">
+            <EntityTypeMapping TypeName="MasupackModel.TarifaAgenciaPaqueteExpress">
+              <MappingFragment StoreEntitySet="D_TARIFAS_AGENCIA_PAQUETE_EXPRESS">
+                <ScalarProperty Name="is_deleted" ColumnName="is_deleted" />
+                <ScalarProperty Name="DIA_SIGUIENTE_KILO" ColumnName="DIA_SIGUIENTE_KILO" />
+                <ScalarProperty Name="DIA_SIGUIENTE_BASE" ColumnName="DIA_SIGUIENTE_BASE" />
+                <ScalarProperty Name="PRECIO_ECONOMICO" ColumnName="PRECIO_ECONOMICO" />
+                <ScalarProperty Name="CUM_end" ColumnName="CUM_end" />
+                <ScalarProperty Name="CUM_start" ColumnName="CUM_start" />
+                <ScalarProperty Name="KG_End" ColumnName="KG_End" />
+                <ScalarProperty Name="KG_start" ColumnName="KG_start" />
+                <ScalarProperty Name="Tarifa" ColumnName="Tarifa" />
+                <ScalarProperty Name="ID_AGENCIA" ColumnName="ID_AGENCIA" />
+                <ScalarProperty Name="ID_TARIFAS_AGENCIA_PAQUETE_EXPRESS" ColumnName="ID_TARIFAS_AGENCIA_PAQUETE_EXPRESS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_ENVIOS_PREASIGNADOS">
+            <EntityTypeMapping TypeName="MasupackModel.EnviosPreAsignados">
+              <MappingFragment StoreEntitySet="D_ENVIOS_PREASIGNADOS">
+                <ScalarProperty Name="id_moneda" ColumnName="id_moneda" />
+                <ScalarProperty Name="tarifa" ColumnName="tarifa" />
+                <ScalarProperty Name="id_tarifa_tipo" ColumnName="id_tarifa_tipo" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id_agencia" ColumnName="id_agencia" />
+                <ScalarProperty Name="id_envio" ColumnName="id_envio" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_AUDIT_LOG">
+            <EntityTypeMapping TypeName="MasupackModel.AuditLog">
+              <MappingFragment StoreEntitySet="D_AUDIT_LOG">
+                <ScalarProperty Name="IdEnvio" ColumnName="IdEnvio" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="ValorActual" ColumnName="ValorActual" />
+                <ScalarProperty Name="ValorAnterior" ColumnName="ValorAnterior" />
+                <ScalarProperty Name="Columna" ColumnName="Columna" />
+                <ScalarProperty Name="Tabla" ColumnName="Tabla" />
+                <ScalarProperty Name="AuditLogId" ColumnName="AuditLogId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="D_TARIFAS_AGENCIA_DLIVER_EXPRESS">
+            <EntityTypeMapping TypeName="MasupackModel.TarifaAgenciaDliverExpress">
+              <MappingFragment StoreEntitySet="D_TARIFAS_AGENCIA_DLIVER_EXPRESS">
+                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
+                <ScalarProperty Name="PRECIO_EXCESO_DIMENSIONES" ColumnName="PRECIO_EXCESO_DIMENSIONES" />
+                <ScalarProperty Name="PRECIO_AREA_EXTENDIDA" ColumnName="PRECIO_AREA_EXTENDIDA" />
+                <ScalarProperty Name="PRECIO_KILO_ADICIONAL" ColumnName="PRECIO_KILO_ADICIONAL" />
+                <ScalarProperty Name="PRECIO_KILO" ColumnName="PRECIO_KILO" />
+                <ScalarProperty Name="PRECIO" ColumnName="PRECIO" />
+                <ScalarProperty Name="PESO_LIMITE_SUPERIOR" ColumnName="PESO_LIMITE_SUPERIOR" />
+                <ScalarProperty Name="PESO_LIMITE_INFERIOR" ColumnName="PESO_LIMITE_INFERIOR" />
+                <ScalarProperty Name="SERVICE_ID" ColumnName="SERVICE_ID" />
+                <ScalarProperty Name="ID_CUENTA" ColumnName="ID_CUENTA" />
+                <ScalarProperty Name="ID_ZONA" ColumnName="ID_ZONA" />
+                <ScalarProperty Name="ID_AGENCIA" ColumnName="ID_AGENCIA" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

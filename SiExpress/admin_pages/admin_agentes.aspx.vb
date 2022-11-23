@@ -37,31 +37,31 @@ Partial Class admin_agentes
         nuevo_agente = crea_agente.insertar_agente(agente)
 
         'Inserta tarifas, tarifas sobrepeso y comisiones para cada agente y por cada tipo de tarifa
-        Dim i As Integer
-        For i = 0 To CheckBoxList1.Items.Count - 1
-            If CheckBoxList1.Items(i).Selected Then
+        'Dim i As Integer
+        'For i = 0 To CheckBoxList1.Items.Count - 1
+        '    If CheckBoxList1.Items(i).Selected Then
 
-                'Inserta tarifas
-                agente.id_tarifa_tipo = CheckBoxList1.Items(i).Value
-                agente.id_agente = nuevo_agente
-                agente.factor_tarifa = TextBox1.Text
-                crea_agente.insetar_tarifas(agente)
+        '        'Inserta tarifas
+        '        agente.id_tarifa_tipo = CheckBoxList1.Items(i).Value
+        '        agente.id_agente = nuevo_agente
+        '        agente.factor_tarifa = TextBox1.Text
+        '        crea_agente.insetar_tarifas(agente)
 
-                'Inserta comisiones
-                agente.comision_moneda = TextBox2.Text
-                agente.comision_porcent = TextBox3.Text
-                crea_agente.insertar_comisiones(agente)
+        '        'Inserta comisiones
+        '        agente.comision_moneda = TextBox2.Text
+        '        agente.comision_porcent = TextBox3.Text
+        '        crea_agente.insertar_comisiones(agente)
 
-                'Inserta tarifas sobrepeso
-                '----Las tarifas por sobrepeso serán tomadas c_tarifas_sobrepeso
-                '----por omisón para evitar genear registros inecesarios.
-                '--- Esta tabla se llenará solo en caso de requerir tarifas por sobrepeso especiales para un agente.
+        '        'Inserta tarifas sobrepeso
+        '        '----Las tarifas por sobrepeso serán tomadas c_tarifas_sobrepeso
+        '        '----por omisón para evitar genear registros inecesarios.
+        '        '--- Esta tabla se llenará solo en caso de requerir tarifas por sobrepeso especiales para un agente.
 
-                'agente.id_moneda = DropDownMoneda.SelectedValue
-                'crea_agente.insertar_tarifas_sobrepeso(agente)
+        '        'agente.id_moneda = DropDownMoneda.SelectedValue
+        '        'crea_agente.insertar_tarifas_sobrepeso(agente)
 
-            End If
-        Next
+        '    End If
+        'Next
         GridView1.DataBind()
 
         'Limpiar campos

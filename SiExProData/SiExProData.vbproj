@@ -77,6 +77,9 @@
     <Compile Include="Agencias.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="AuditLog.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="CiudadesRutas.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
@@ -89,6 +92,9 @@
     <Compile Include="CodigosServiciosSat.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DeliveryConfirmation.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Destinatario.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
@@ -99,6 +105,9 @@
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EnvioDatos.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnviosPreAsignados.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EstadosGombar.vb">
@@ -156,6 +165,21 @@
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="TarifaAgencia.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TarifaAgenciaDliverExpress.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TarifaAgenciaDraft.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TarifaAgenciaEstafeta.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TarifaAgenciaFedex.vb">
+      <DependentUpon>SiExProModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TarifaAgenciaPaqueteExpress.vb">
       <DependentUpon>SiExProModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Zonas.vb">

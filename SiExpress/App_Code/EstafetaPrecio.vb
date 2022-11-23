@@ -20,6 +20,11 @@ Public Class EstafetaPrecio
     Public Property AmountGombarExpress() As Decimal
     Public Property AmountGombarTarima() As Decimal
     Public Property AmountGombarNacional() As Decimal
+    Public Property AmountGombarDLRutaLeonPueCdmx() As Decimal
+    Public Property AmountGombarDLTarimasRutaLeonPueCdmx() As Decimal
+    Public Property AmountGombarDLRutaPacifico() As Decimal
+    Public Property AmountGombarDLTarimasRutaPacifico() As Decimal
+    Public Property AmountGombarDLTarimasOcurreRutaPacifico() As Decimal
 End Class
 
 Public Class EstafetaTarimas
