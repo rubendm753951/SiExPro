@@ -1,0 +1,117 @@
+﻿<%@ Master Language="VB" CodeFile="Site.master.vb" Inherits="Site" %>
+
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>Sitio de Pruebas</title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+    <link type="text/css" href="~/Skin/CSS/bootstrap.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/metisMenu.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/dataTables.bootstrap.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/dataTables.responsive.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/sb-admin-2.min.css" rel="stylesheet" />
+    <link type="text/css" href="~/Skin/CSS/font-awesome.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .errorVal {
+            color: red;
+            display: inline;
+            font-style: italic;
+            font-size: small;
+            font-weight: lighter;
+            position: relative;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+
+        <form id="Form1" runat="server">
+            <asp:ToolkitScriptManager ID="ToolkitScriptManager1" runat="server">
+            </asp:ToolkitScriptManager>
+
+            <div id="header" style="text-align: center; width: 1056px; height: 0.01em;">
+                <div style="left: 301px; width: 398px; position: absolute; top: 4px; height: 104px">
+                    <asp:Image ID="Image1" runat="server" ImageUrl="/Images/451logoUnavailable.png" Height="69px"
+                        Width="280px" /><br />
+                    <asp:Label ID="Label1" runat="server"
+                        Width="384px" Font-Bold="True" Font-Names="Arial" ForeColor="Blue" Height="16px"></asp:Label><br />
+                    <asp:Label ID="Label2" runat="server" Text="" Width="161px"></asp:Label><br />
+                    <h4><a href="../admin_pages/admin_adeudo_empresa.aspx"><asp:Label ID="lblAdeudo" runat="server"   CssClass="label label-danger" Text="" Width="561px"></asp:Label></a></h4>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <span class="breadcrumb">
+                    <asp:SiteMapPath 
+                        ID="Breadcrumb"
+                        runat="server"
+                        PathSeparator=" > " 
+                        ParentLevelsDisplayed="1" 
+                        PathDirection="RootToCurrent" 
+                        RenderCurrentNodeAsLink="false" 
+                        ShowToolTips="true"
+                        CssClass="breadcrumb">
+                    </asp:SiteMapPath>
+                </span>
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+            
+                <div class="navbar-default sidebar" role="navigation">
+                <div class="bs-sidebar affix">
+                    <ul class="nav bs-sidenav" id="side-menu"> 
+                    <asp:Menu IncludeStyleBlock="False"  ID="Menu1" runat="server" DataSourceID="SiteMapDataSource1"
+                    DynamicHorizontalOffset="2" EnableTheming="False" Font-Names="Verdana" Font-Size="0.8em"
+                    ForeColor="White" Height="94px" StaticDisplayLevels="2" MaximumDynamicDisplayLevels="3" StaticSubMenuIndent="10px"
+                    Width="169px" ItemWrap="True"
+                    CssClass="navbar navbar-fixed-top"
+                    StaticMenuStyle-CssClass="nav"
+                    StaticSelectedStyle-CssClass="active"
+                    DynamicMenuStyle-CssClass="dropdown-menu" >
+                    <LevelMenuItemStyles>
+                                           
+                    </LevelMenuItemStyles>
+                    <DataBindings>
+                        <asp:MenuItemBinding DataMember="SiteMapNode" NavigateUrlField="Url" />
+                    </DataBindings>
+                    <StaticItemTemplate>
+                        <%#Eval("text")%>
+                    </StaticItemTemplate>
+                    <DynamicItemTemplate>
+                        <%# Eval("Text") %>
+                    </DynamicItemTemplate>
+                </asp:Menu>
+                        </ul>
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+            
+            <div id="content">
+                <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+                <br />
+            </div>
+            <asp:SiteMapDataSource ID="SiteMapDataSource1" ShowStartingNode="false" runat="server" />
+            <br />
+
+        </form>
+    </div>
+    <script type="text/javascript" src="../Skin/js/jquery.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/metisMenu.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" src="../Skin/js/dataTables.responsive.js"></script>
+    <script type="text/javascript" src="../Skin/js/sb-admin-2.min.js"></script>
+</body>
+</html>
