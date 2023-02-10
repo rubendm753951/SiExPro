@@ -1,4 +1,4 @@
-<%@ Page Language="VB" MasterPageFile="~/DefaultMasterPage.master" AutoEventWireup="false" CodeFile="About.aspx.vb" Inherits="About" title="Acerca de" %>
+<%@ Page Language="VB" MasterPageFile="~/DefaultMasterPage.master" AutoEventWireup="false" CodeFile="About.aspx.vb" Inherits="About" title="Acerca De XX" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="DefaultContent" Runat="Server">
     
